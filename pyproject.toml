@@ -1,5 +1,5 @@
 [project]
-name = "ba-tools"
+name = "nonebot-plugin-ba-tools"
 version = "0.1.0"
 description = "ba-tools"
 readme = "README.md"
