@@ -1,18 +1,26 @@
-[project]
-name = "nonebot-plugin-ba-tools"
-version = "0.1.1"
-description = "ba-tools"
-authors = [
-    { name = "hanasa2023", email = "hanasakayui2022@gmail.com" },
-    { name = "TheresaKugua", email = "2277044081@qq.com" },
-]
-dependencies = ["pydantic>=2.8.2", "nonebot-plugin-apscheduler>=0.5.0"]
-readme = "README.md"
-requires-python = ">=3.9, <4.0"
+# [project]
+# name = "nonebot-plugin-ba-tools"
+# version = "0.1.1"
+# description = "ba-tools"
+# authors = [
+#     { name = "hanasa2023", email = "hanasakayui2022@gmail.com" },
+#     { name = "TheresaKugua", email = "2277044081@qq.com" },
+# ]
+# dependencies = ["pydantic>=2.8.2", "nonebot-plugin-apscheduler>=0.5.0"]
+# readme = "README.md"
+# requires-python = ">=3.9, <4.0"
 
-[project.urls]
-homepage = "https://github.com/hanasa2023/nonebot-plugin-ba-tools#readme"
-repository = "https://github.com/hanasa2023/nonebot-plugin-ba-tools#readme"
+# [project.urls]
+# homepage = "https://github.com/hanasa2023/nonebot-plugin-ba-tools#readme"
+# repository = "https://github.com/hanasa2023/nonebot-plugin-ba-tools#readme"
+
+# [tool.pdm]
+# distribution = true
+# build = { includes = ["nonebot_plugin_ba_tools"] }
+# dev-dependencies = { dev = [
+#     "nonebot2[fastapi, uvicorn]>=2.3.2",
+#     "nonebot-adapter-onebot>=2.4.4",
+# ] }
 
 [tool.poetry]
 name = "nonebot-plugin-ba-tools"
@@ -30,10 +38,10 @@ repository = "https://github.com/hanasa2023/nonebot-plugin-ba-tools"
 
 [tool.poetry.dependencies]
 python = ">=3.9, <4.0"
-nonebot2 = { version = ">=2.3.0", extras = [] }
 pydantic = ">=2.8.2"
 nonebot-plugin-apscheduler = ">=0.5.0"
 tortoise-orm = "^0.21.5"
+nonebot-adapter-onebot = ">=2.4.4"
 
 [tool.poetry.dev-dependencies]
 nonebot2 = { version = ">=2.3.2", extras = ["fastapi", "uvicorn"] }
@@ -44,13 +52,6 @@ name = "mirrors"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
 priority = "primary"
 
-[tool.pdm]
-distribution = true
-build = { includes = ["nonebot_plugin_ba_tools"] }
-dev-dependencies = { dev = [
-    "nonebot2[fastapi, uvicorn]>=2.3.2",
-    "nonebot-adapter-onebot>=2.4.4",
-] }
 
 [build-system]
 requires = ["pdm-backend"]
