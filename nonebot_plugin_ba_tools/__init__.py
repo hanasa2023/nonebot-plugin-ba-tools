@@ -6,7 +6,7 @@ from .config import Config
 from .send_birthday_info import send_birthday_info
 
 
-__version__ = "0.0.1"
+__version__ = "0.1.1"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",

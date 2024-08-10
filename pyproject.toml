@@ -1,6 +1,6 @@
 [project]
 name = "nonebot-plugin-ba-tools"
-version = "0.0.1"
+version = "0.1.1"
 description = "ba-tools"
 authors = [
     { name = "hanasa2023", email = "hanasakayui2022@gmail.com" },
@@ -16,7 +16,7 @@ repository = "https://github.com/hanasa2023/nonebot-plugin-ba-tools#readme"
 
 [tool.poetry]
 name = "nonebot-plugin-ba-tools"
-version = "0.1.0"
+version = "0.1.1"
 description = "一个BlueArchive的工具箱"
 authors = [
     "hanasa2023 <hanasakayui2022@gmail.com>",
