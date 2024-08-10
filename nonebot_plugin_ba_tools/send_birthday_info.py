@@ -16,7 +16,7 @@ from .utils.types import StudentParser
 plugin_config = get_plugin_config(Config)
 
 
-@scheduler.scheduled_job("cron", hour=23, minute=57, id="send_birthday_info")
+@scheduler.scheduled_job("cron", hour=0, minute=0, id="send_birthday_info")
 async def send_birthday_info():
     # 解析student.json
     parser = StudentParser("asserts/data/zh/students.json")
