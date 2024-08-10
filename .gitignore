@@ -4,6 +4,7 @@
 
 ### asserts ###
 asserts
+asserts.*
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
