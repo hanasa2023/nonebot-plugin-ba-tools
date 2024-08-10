@@ -56,3 +56,21 @@ class StudentParser:
         with open(self.file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
             return [Student(student) for student in data]
+
+
+class BirthdayItem:
+    def __init__(self, Id: int, Name: str, PersonalName: str, Birthday: str) -> None:
+        self.id = Id
+        self.name = Name
+        self.personal_name = PersonalName
+        self.birthday = Birthday
+
+
+class BirthdayItemParser:
+    def __init__(self, file_path: str) -> None:
+        self.file_path = file_path
+
+    def parse(self) -> List[BirthdayItem]:
+        with open(self.file_path, "r", encoding="utf-8") as file:
+            data = json.load(file)
+            return [BirthdayItem(**d) for d in data]

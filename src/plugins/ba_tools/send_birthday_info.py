@@ -1,4 +1,3 @@
-import os
 import re
 from typing import Dict
 from datetime import datetime
@@ -43,9 +42,8 @@ async def send_birthday_info():
                 and hash_map.get(student.personal_name) == None
             ):
                 hash_map[student.personal_name] = True
-                image_path = os.path.join(
-                    plugin_config.assert_path,
-                    f"images/student/l2d/{student.id}.png",
+                image_path = plugin_config.assert_path.joinpath(
+                    f"images/student/l2d/{student.id}.png"
                 )
 
                 message: Message = Message(
