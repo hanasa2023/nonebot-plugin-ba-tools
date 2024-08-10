@@ -6,7 +6,7 @@ from .config import Config
 from .send_birthday_info import send_birthday_info
 
 
-__version__ = "0.1.0"
+__version__ = "0.0.1"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",
@@ -15,9 +15,13 @@ __plugin_meta__ = PluginMetadata(
     homepage="https://github.com/hanasa2023/ba-tools#readme",
     config=Config,
     supported_adapters={"~onebot.v11"},
-    extra={"version": __version__, "author": "hanasa2023 <hanasakayui2022@gmail.com>"},
+    extra={
+        "version": __version__,
+        "authors": [
+            "hanasa2023 <hanasakayui2022@gmail.com>",
+            "TheresaKugua <2277044081@qq.com>",
+        ],
+    },
 )
 
 config = get_plugin_config(Config)
-
-sub_plugins = load_plugins(str(Path(__file__).parent.joinpath("plugins").resolve()))

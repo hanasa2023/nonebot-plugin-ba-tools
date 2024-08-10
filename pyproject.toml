@@ -1,13 +1,63 @@
 [project]
 name = "nonebot-plugin-ba-tools"
-version = "0.1.0"
+version = "0.0.1"
 description = "ba-tools"
+authors = [
+    { name = "hanasa2023", email = "hanasakayui2022@gmail.com" },
+    { name = "TheresaKugua", email = "2277044081@qq.com" },
+]
+dependencies = ["pydantic>=2.8.2", "nonebot-plugin-apscheduler>=0.5.0"]
 readme = "README.md"
-requires-python = ">=3.8, <4.0"
+requires-python = ">=3.9, <4.0"
+
+[project.urls]
+homepage = "https://github.com/hanasa2023/nonebot-plugin-ba-tools#readme"
+repository = "https://github.com/hanasa2023/nonebot-plugin-ba-tools#readme"
+
+[tool.poetry]
+name = "nonebot-plugin-ba-tools"
+version = "0.1.0"
+description = "一个BlueArchive的工具箱"
+authors = [
+    "hanasa2023 <hanasakayui2022@gmail.com>",
+    "TheresaKugua <2277044081@qq.com>",
+]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "nonebot_plugin_ba_tools" }]
+homepage = "https://github.com/hanasa2023/nonebot-plugin-ba-tools#readme"
+repository = "https://github.com/hanasa2023/nonebot-plugin-ba-tools"
+
+[tool.poetry.dependencies]
+python = ">=3.9, <4.0"
+nonebot2 = { version = ">=2.3.0", extras = [] }
+pydantic = ">=2.8.2"
+nonebot-plugin-apscheduler = ">=0.5.0"
+
+[tool.poetry.dev-dependencies]
+nonebot2 = { version = ">=2.3.2", extras = ["fastapi", "uvicorn"] }
+nonebot-adapter-onebot = ">=2.4.4"
+
+[[tool.poetry.source]]
+name = "mirrors"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+priority = "primary"
+
+[tool.pdm]
+distribution = true
+build = { includes = ["nonebot_plugin_ba_tools"] }
+dev-dependencies = { dev = [
+    "nonebot2[fastapi, uvicorn]>=2.3.2",
+    "nonebot-adapter-onebot>=2.4.4",
+] }
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm"
 
 [tool.nonebot]
 adapters = [
-    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" }
+    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" },
 ]
 plugins = ["nonebot_plugin_apscheduler"]
 plugin_dirs = ["src/plugins"]
