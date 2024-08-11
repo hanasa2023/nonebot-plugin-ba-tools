@@ -20,7 +20,7 @@ plugin_config = get_plugin_config(Config)
 @scheduler.scheduled_job("cron", hour=0, minute=0, id="send_birthday_info")
 async def send_birthday_info():
     # 解析student.json
-    parser = StudentParser("asserts/data/zh/students.json")
+    parser = StudentParser(plugin_config.assert_path / "data/zh/students.json")
     students = parser.parse()
     # 获取当前月份及日期
     current_datetime = datetime.now()

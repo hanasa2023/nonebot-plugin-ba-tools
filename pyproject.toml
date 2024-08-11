@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-ba-tools"
-version = "0.1.4"
+version = "0.1.5"
 description = "一个BlueArchive的工具箱"
 authors = [
     "hanasaki <hanasakayui2022@gmail.com>",
@@ -15,9 +15,14 @@ repository = "https://github.com/hanasa2023/nonebot-plugin-ba-tools"
 [tool.poetry.dependencies]
 python = ">=3.9, <4.0"
 nonebot2 = ">=2.3.2"
+pydantic = ">=1.10.11"
 nonebot-plugin-alconna = ">=0.51.1"
 nonebot-plugin-apscheduler = ">=0.5.0"
 nonebot-plugin-localstore = ">=0.7.1"
+
+[tool.poetry.dev-dependencies]
+nonebot2 = { version = ">=2.3.2", extras = ["fastapi", "uvicorn"] }
+nonebot-adapter-onebot = ">=2.4.4"
 
 [[tool.poetry.source]]
 name = "mirrors"
