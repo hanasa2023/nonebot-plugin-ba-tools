@@ -4,9 +4,9 @@ from datetime import datetime
 from nonebot import get_plugin_config, require
 
 require("nonebot_plugin_apscheduler")
-require("nonebot_plugin_alconna")
-
 from nonebot_plugin_apscheduler import scheduler
+
+require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Emoji, Image, Target, UniMessage
 
 from ..config import Config
