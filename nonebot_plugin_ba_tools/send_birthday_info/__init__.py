@@ -1,14 +1,15 @@
 import re
 from typing import Dict
 from datetime import datetime
-from nonebot import get_bot, get_plugin_config, require
-from nonebot.adapters.onebot.v11 import MessageSegment, Message
+from nonebot import get_plugin_config, require
 
 require("nonebot_plugin_apscheduler")
+require("nonebot_plugin_alconna")
 
 from nonebot_plugin_apscheduler import scheduler
+from nonebot_plugin_alconna import Emoji, Image, Target, UniMessage
 
-from .config import Config
+from ..config import Config
 
 from .utils.types import StudentParser
 
@@ -25,8 +26,6 @@ async def send_birthday_info():
     current_datetime = datetime.now()
     current_month = current_datetime.month
     current_day = current_datetime.day
-    # 获取bot实例
-    bot = get_bot()
     # 创建hasp map用来过滤重复学生
     hash_map: Dict[str, bool] = {}
 
@@ -46,15 +45,14 @@ async def send_birthday_info():
                     f"images/student/l2d/{student.id}.png"
                 )
 
-                message: Message = Message(
+                message = UniMessage(
                     [
-                        MessageSegment.text(
-                            f"今天是{student.name}的生日哦，在学生值日的前提下，切换为非l2d的值日模式，可以听到特殊语音哦。让我们一起祝福{student.name}生日快乐吧!"
-                        ),
-                        MessageSegment.face("144"),
-                        MessageSegment.image(f"file://{image_path}"),
+                        f"今天是{student.name}的生日哦，在学生值日的前提下，切换为非l2d的值日模式，可以听到特殊语音哦。让我们一起祝福{student.name}生日快乐吧!",
+                        Emoji(id="144"),
+                        Image(path=image_path),
                     ]
                 )
-                # 在订阅此消息的群聊中推送学生生日消息
+                # # 在订阅此消息的群聊中推送学生生日消息
                 for group_id in plugin_config.send_daily_info_group_list:
-                    await bot.send_group_msg(group_id=group_id, message=message)
+                    target = Target(group_id)
+                    await message.send(target=target)
