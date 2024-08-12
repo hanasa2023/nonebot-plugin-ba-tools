@@ -1,8 +1,8 @@
 import json
-from nonebot import logger
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 from httpx import AsyncClient, HTTPStatusError
+from nonebot import logger
 
 
 class Student:

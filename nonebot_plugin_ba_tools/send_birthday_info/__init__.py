@@ -1,8 +1,8 @@
 import re
-from typing import Dict
 from datetime import datetime
-from nonebot import get_plugin_config, require
+from typing import Dict
 
+from nonebot import get_plugin_config, require
 
 require("nonebot_plugin_apscheduler")
 from nonebot_plugin_apscheduler import scheduler
@@ -11,10 +11,8 @@ require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Emoji, Image, Target, UniMessage
 
 from ..config import Config
-
-from .utils.types import StudentParser
 from ..utils.constants import ASSERTS_URL
-
+from .utils.types import StudentParser
 
 plugin_config = get_plugin_config(Config)
 

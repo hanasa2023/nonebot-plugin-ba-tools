@@ -1,11 +1,12 @@
-from typing import List
 from pathlib import Path
+from typing import List
+
 from nonebot import require
 from pydantic import BaseModel
 
 require("nonebot_plugin_localstore")
 
-from nonebot_plugin_localstore import get_plugin_cache_dir
+from nonebot_plugin_localstore import get_plugin_cache_dir  # noqa: E402
 
 
 class Config(BaseModel):
