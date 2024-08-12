@@ -1,8 +1,8 @@
+<div align="center">
+
 # nonebot-plugin-ba-tools
 
-![NoneBotPluginBaToolsLogo](https://github.com/hanasa2023/nonebot-plugin-ba-tools/blob/logo.png)
-
-<div align="center">
+![NoneBotPluginBaToolsLogo](https://github.com/hanasa2023/nonebot-plugin-ba-tools/blob/main/logo.png)
 
 [![license](https://img.shields.io/github/license/hanasa2023/nonebot-plugin-ba-tools.svg)](./LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/nonebot-plugin-ba-tools.svg)](https://pypi.python.org/pypi/nonebot-plugin-ba-tools)
