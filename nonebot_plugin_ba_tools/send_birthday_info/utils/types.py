@@ -1,5 +1,8 @@
 import json
+from nonebot import logger
 from typing import List, Dict, Any
+
+from httpx import AsyncClient, HTTPStatusError
 
 
 class Student:
@@ -25,52 +28,59 @@ class Effect:
     def __init__(self, data: Dict[str, Any]):
         self.type = data.get("Type")
         self.value = data.get("Value")
-        # Add other fields as necessary
 
 
 class Weapon:
     def __init__(self, data: Dict[str, Any]):
         self.name = data.get("Name")
         self.desc = data.get("Desc")
-        # Add other fields as necessary
 
 
 class Gear:
     def __init__(self, data: Dict[str, Any]):
         self.released = data.get("Released")
-        # Add other fields as necessary
 
 
 class Summon:
     def __init__(self, data: Dict[str, Any]):
         self.name = data.get("Name")
         self.desc = data.get("Desc")
-        # Add other fields as necessary
+
+
+class DataLoadError(Exception):
+    pass
 
 
 class StudentParser:
-    def __init__(self, file_path: str):
+    """对students.json的解析类，若file_path属性不为空，则从解析本地文件，若url不为空，则解析网络文件，否则抛出异常"""
+
+    def __init__(self, file_path: str | None = None, url: str | None = None):
         self.file_path = file_path
+        self.url = url
 
-    def parse(self) -> List[Student]:
-        with open(self.file_path, "r", encoding="utf-8") as file:
-            data = json.load(file)
-            return [Student(student) for student in data]
+    async def parse(self) -> List[Student]:
+        """students.json的解析方法
 
-
-class BirthdayItem:
-    def __init__(self, Id: int, Name: str, PersonalName: str, Birthday: str) -> None:
-        self.id = Id
-        self.name = Name
-        self.personal_name = PersonalName
-        self.birthday = Birthday
-
-
-class BirthdayItemParser:
-    def __init__(self, file_path: str) -> None:
-        self.file_path = file_path
-
-    def parse(self) -> List[BirthdayItem]:
-        with open(self.file_path, "r", encoding="utf-8") as file:
-            data = json.load(file)
-            return [BirthdayItem(**d) for d in data]
+        Returns:
+            List[Student]: Student类的列表
+        """
+        if self.file_path:
+            async with open(self.file_path, "r", encoding="utf-8") as file:
+                data = json.load(file)
+                return [Student(student) for student in data]
+        elif self.ur:
+            async with AsyncClient() as client:
+                try:
+                    response = await client.get(self.url)
+                    response.raise_for_status()
+                    data = response.json()
+                    return [Student(student) for student in data]
+                except HTTPStatusError as e:
+                    logger.error(e)
+                except Exception as e:
+                    logger.error(e)
+        else:
+            try:
+                raise DataLoadError("数据加载错误,请检查file_path或url是否正确")
+            except DataLoadError as e:
+                logger.error(e)
