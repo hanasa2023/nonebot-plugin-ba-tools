@@ -1,18 +1,18 @@
 import re
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List
 
-from nonebot import get_plugin_config, require
+from nonebot import get_plugin_config, on_command, require
 
 require("nonebot_plugin_apscheduler")
-from nonebot_plugin_apscheduler import scheduler
+from nonebot_plugin_apscheduler import scheduler  # noqa: E402
 
 require("nonebot_plugin_alconna")
-from nonebot_plugin_alconna import Emoji, Image, Target, UniMessage
+from nonebot_plugin_alconna import Emoji, Image, Target, UniMessage  # noqa: E402
 
-from ..config import Config
-from ..utils.constants import ASSERTS_URL
-from .utils.types import StudentParser
+from ..config import Config  # noqa: E402
+from ..utils.constants import ASSERTS_URL  # noqa: E402
+from ..utils.types import Student, StudentParser  # noqa: E402
 
 plugin_config = get_plugin_config(Config)
 
@@ -23,7 +23,7 @@ plugin_config = get_plugin_config(Config)
 async def send_birthday_info():
     # 解析student.json
     parser = StudentParser(url=ASSERTS_URL + "/data/zh/students.json")
-    students = await parser.parse()
+    students: List[Student] = await parser.parse()
     # 获取当前月份及日期
     current_datetime = datetime.now()
     current_month = current_datetime.month
@@ -40,7 +40,7 @@ async def send_birthday_info():
             if (
                 int(month) == current_month
                 and int(day) == current_day
-                and hash_map.get(student.personal_name) == None
+                and hash_map.get(student.personal_name) is None
             ):
                 hash_map[student.personal_name] = True
 
