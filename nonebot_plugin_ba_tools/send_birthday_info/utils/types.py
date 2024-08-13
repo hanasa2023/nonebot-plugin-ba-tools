@@ -68,7 +68,7 @@ class StudentParser:
             async with open(self.file_path, "r", encoding="utf-8") as file:
                 data = json.load(file)
                 return [Student(student) for student in data]
-        elif self.ur:
+        elif self.url:
             async with AsyncClient() as client:
                 try:
                     response = await client.get(self.url)
