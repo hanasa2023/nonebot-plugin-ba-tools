@@ -1,1 +1,1 @@
-ASSERTS_URL = "https://api.hanasaki.tech"
+ASSERTS_URL = "https://api.hanasaki.tech/"
