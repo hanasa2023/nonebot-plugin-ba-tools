@@ -1,11 +1,10 @@
 [tool.poetry]
 name = "nonebot-plugin-ba-tools"
-version = "0.1.7"
+version = "0.1.8"
 description = "一个BlueArchive的工具箱"
 authors = [
     "hanasaki <hanasakayui2022@gmail.com>",
-    "TheresaKugua <2277044081@qq.com>",
-    "kawaiior <703360843@qq.com>",
+    "kawaiior <kawaiiorv@gmail.com>",
 ]
 license = "MIT"
 readme = "README.md"

@@ -2,9 +2,9 @@ from nonebot import get_plugin_config
 from nonebot.plugin import PluginMetadata, inherit_supported_adapters
 
 from .config import Config
-from .send_birthday_info import send_birthday_info
+from .send_birthday_info import send_birthday_info as send_birthday_info
 
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",
@@ -17,8 +17,7 @@ __plugin_meta__ = PluginMetadata(
         "version": __version__,
         "authors": [
             "hanasa2023 <hanasakayui2022@gmail.com>",
-            "TheresaKugua <2277044081@qq.com>",
-            "kawaiior <703360843@qq.com>",
+            "kawaiior <kawaiiorv@gmail.com>",
         ],
     },
 )
