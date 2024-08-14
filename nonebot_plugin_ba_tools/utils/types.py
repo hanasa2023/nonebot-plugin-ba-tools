@@ -1,64 +1,41 @@
-from typing import Any, Dict, List
-from .dataloader import DataLoader, DataLoadError
+from typing import List
+
+from pydantic import BaseModel
 
 
-class Student:
-    def __init__(self, data: Dict[str, Any]):
-        self.id: int = int(data.get("Id", -1))
-        self.is_released: List[bool] = [d for d in data.get("IsReleased", [])]
-        self.name: str = str(data.get("Name", "-"))
-        self.personal_name: str = str(data.get("PersonalName", "-"))
-        self.birthday: str = str(data.get("Birthday", "-"))
-        self.skills: List[Skill] = [Skill(skill) for skill in data.get("Skills", [])]
-        self.weapon: Weapon = Weapon(data.get("Weapon", {}))
-        self.gear: Gear = Gear(data.get("Gear", {}))
-        self.summons: List[Summon] = [Summon(summon) for summon in data.get("Summons", [])]
+class Effect(BaseModel):
+    type: str
+    hits: List[int]
+    scale: List[int]
 
 
-class Skill:
-    def __init__(self, data: Dict[str, Any]):
-        self.skill_type = data.get("SkillType")
-        self.effects = [Effect(effect) for effect in data.get("Effects", [])]
+class Skill(BaseModel):
+    skill_type: str
+    effects: List[Effect]
 
 
-class Effect:
-    def __init__(self, data: Dict[str, Any]):
-        self.type = data.get("Type")
-        self.value = data.get("Value")
+class Weapon(BaseModel):
+    name: str
+    desc: str
 
 
-class Weapon:
-    def __init__(self, data: Dict[str, Any]):
-        self.name = data.get("Name")
-        self.desc = data.get("Desc")
+class Gear(BaseModel):
+    released: List[bool]
 
 
-class Gear:
-    def __init__(self, data: Dict[str, Any]):
-        self.released = data.get("Released")
+class Summon(BaseModel):
+    name: str
+    desc: str
 
 
-class Summon:
-    def __init__(self, data: Dict[str, Any]):
-        self.name = data.get("Name")
-        self.desc = data.get("Desc")
-
-
-class StudentParser:
-    """对students.json的解析类，若file_path属性不为空，则从解析本地文件，若url不为空，则解析网络文件，否则抛出异常"""
-
-    def __init__(self, file_path: str):
-        self.file_path = file_path
-
-
-    async def parse(self) -> List[Student]:
-        """students.json的解析方法
-
-        Returns:
-            List[Student]: Student类的列表
-        """
-
-        data = await DataLoader(self.file_path).load()
-        if data is None:
-            raise DataLoadError("数据加载错误,请检查file_path是否正确")
-        return [Student(student) for student in data]
+# TODO: 完善对Student的解析
+class Student(BaseModel):
+    id: int
+    is_released: List[bool]
+    name: str
+    personal_name: str
+    birthday: str
+    skills: List[Skill]
+    weapon: Weapon
+    gear: Gear
+    summons: List[Summon]

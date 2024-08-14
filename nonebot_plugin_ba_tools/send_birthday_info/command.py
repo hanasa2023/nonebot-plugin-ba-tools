@@ -3,8 +3,8 @@ from typing import List
 
 from arclet.alconna import Alconna, Subcommand
 from nonebot import logger
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent
-from nonebot_plugin_alconna import Arparma, on_alconna
+from nonebot.adapters import Bot, Event
+from nonebot_plugin_alconna import Arparma, Target, UniMessage, on_alconna
 
 from ..config import DRIVER, plugin_config
 from ..utils.constants import BIRTHDAY_INFO_GROUP_LIST_FILE
@@ -41,15 +41,16 @@ async def _():
         GROUP_LIST = json.load(f)
 
 
-birthday_info = Alconna("birthday_info", Subcommand("on"), Subcommand("off"))
+birthday_info = Alconna(["/"], "birthday_info", Subcommand("on"), Subcommand("off"))
 birthday_info_switch = on_alconna(birthday_info)
 
 
 # TODO: 添加命令别名
 @birthday_info_switch.handle()
-async def _(bot: Bot, event: GroupMessageEvent, result: Arparma):
+async def _(bot: Bot, event: Event, result: Arparma):
+    target: Target = UniMessage.get_target(event, bot)
     # 群主、管理员、SUPERUSER可以使用此命令
-    user_info = await get_group_user_info(bot, event.user_id, event.group_id)
+    user_info = await get_group_user_info(bot, event.get_user_id(), target.id)
     if (
         not is_group_owner(user_info)
         and not is_group_admin(user_info)
