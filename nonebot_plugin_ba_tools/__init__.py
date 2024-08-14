@@ -1,8 +1,8 @@
 from nonebot import get_plugin_config
-from nonebot.plugin import PluginMetadata, inherit_supported_adapters
+from nonebot.plugin import PluginMetadata
 
 from .config import Config
-from .send_birthday_info import *
+from .send_birthday_info import *  # noqa: F403
 
 __version__ = "0.1.8"
 __plugin_meta__ = PluginMetadata(
@@ -12,7 +12,7 @@ __plugin_meta__ = PluginMetadata(
     type="application",
     homepage="https://github.com/hanasa2023/ba-tools#readme",
     config=Config,
-    supported_adapters=inherit_supported_adapters("nonebot_plugin_alconna"),
+    supported_adapters={"~onebot.v11"},
     extra={
         "version": __version__,
         "authors": [

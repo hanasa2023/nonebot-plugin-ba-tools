@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import List
 
 from httpx import AsyncClient
 from nonebot import get_plugin_config, logger
