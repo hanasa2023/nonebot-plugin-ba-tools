@@ -1,12 +1,15 @@
 from pathlib import Path
-from typing import List, Set
+from typing import Set
 
-from nonebot import require, get_plugin_config, get_driver
+from nonebot import get_driver, get_plugin_config, require
 from pydantic import BaseModel
 
 require("nonebot_plugin_localstore")
 
-from nonebot_plugin_localstore import get_plugin_cache_dir, get_plugin_data_dir  # noqa: E402
+from nonebot_plugin_localstore import (  # noqa: E402
+    get_plugin_cache_dir,
+    get_plugin_data_dir,
+)
 
 
 class Config(BaseModel):
@@ -16,8 +19,6 @@ class Config(BaseModel):
     assert_path: Path = get_plugin_cache_dir() / "asserts"
     # 设置文件路径
     setting_path: Path = get_plugin_data_dir() / "setting"
-    # 订阅推送消息的群聊列表
-    send_daily_info_group_list: List[str] = []
 
 
 plugin_config = get_plugin_config(Config)

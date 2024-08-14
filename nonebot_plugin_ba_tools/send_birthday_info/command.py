@@ -41,8 +41,8 @@ async def _():
         GROUP_LIST = json.load(f)
 
 
-birthday_info = Alconna(["/"], "birthday_info", Subcommand("on"), Subcommand("off"))
-birthday_info_switch = on_alconna(birthday_info)
+birthday_info = Alconna("ba_birthday_info", Subcommand("on"), Subcommand("off"))
+birthday_info_switch = on_alconna(birthday_info, use_cmd_start=True)
 
 
 # TODO: 添加命令别名

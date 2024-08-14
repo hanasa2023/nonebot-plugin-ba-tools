@@ -6,7 +6,7 @@ from httpx import AsyncClient
 from nonebot import get_plugin_config, logger
 
 from ..config import Config
-from ..utils.types import Student
+from ..utils.types import Student, Students
 from .constants import ASSERTS_URL
 
 plugin_config = get_plugin_config(Config)
@@ -50,5 +50,4 @@ class DataLoader:
         except Exception as e:
             logger.exception(e)
         finally:
-            # return data
-            return [Student(student) for student in data]
+            return Students.model_validate(data).root

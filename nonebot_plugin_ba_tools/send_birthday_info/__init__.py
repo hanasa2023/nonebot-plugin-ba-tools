@@ -1,8 +1,10 @@
 import re
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List, Match
 
 from nonebot import require
+
+from nonebot_plugin_ba_tools.utils.types import Student
 
 require("nonebot_plugin_apscheduler")
 from nonebot_plugin_apscheduler import scheduler  # noqa: E402
@@ -19,17 +21,17 @@ from .command import *  # noqa: E402, F403
 async def send_birthday_info():
     # 解析student.json
     logger.debug("处理生日信息推送")  # noqa: F405
-    students = await get_all_students()
+    students: List[Student] = await get_all_students()
 
     # 获取当前月份及日期
-    current_datetime = datetime.now()
-    current_month = current_datetime.month
-    current_day = current_datetime.day
+    current_datetime: datetime = datetime.now()
+    current_month: int = current_datetime.month
+    current_day: int = current_datetime.day
     # 创建hasp map用来过滤重复学生
     hash_map: Dict[str, bool] = {}
 
     for student in students:
-        match = re.search(r"(\d+)月(\d+)日", student.birthday)
+        match: Match[str] | None = re.search(r"(\d+)月(\d+)日", student.birthday)
         if match:
             month: str = match.group(1)
             day: str = match.group(2)
@@ -52,5 +54,5 @@ async def send_birthday_info():
                 )
                 # 在订阅此消息的群聊中推送学生生日消息
                 for group_id in GROUP_LIST:  # noqa: F405
-                    target = Target(str(group_id))
+                    target: Target = Target(str(group_id))
                     await message.send(target=target)
