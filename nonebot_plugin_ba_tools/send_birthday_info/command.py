@@ -1,20 +1,28 @@
 import json
 from typing import List
 
-from nonebot import on_command, logger
-from nonebot.adapters.onebot.v11 import GroupMessageEvent, Bot
+from arclet.alconna import Alconna, Subcommand
+from nonebot import logger
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent
+from nonebot_plugin_alconna import Arparma, on_alconna
 
-from ..config import plugin_config, DRIVER
+from ..config import DRIVER, plugin_config
 from ..utils.constants import BIRTHDAY_INFO_GROUP_LIST_FILE
-from ..utils.user_info import is_group_owner, is_group_admin, is_superuser, get_group_user_info
+from ..utils.user_info import (
+    get_group_user_info,
+    is_group_admin,
+    is_group_owner,
+    is_superuser,
+)
 
 GROUP_LIST: List[int] = []
+
 
 def save_group_list():
     full_path = plugin_config.setting_path / BIRTHDAY_INFO_GROUP_LIST_FILE
     if not plugin_config.setting_path.exists():
         plugin_config.setting_path.mkdir(parents=True, exist_ok=True)
-    with open(full_path, 'w', encoding='utf-8') as f:
+    with open(full_path, "w", encoding="utf-8") as f:
         json.dump(GROUP_LIST, f, ensure_ascii=False, indent=4)
 
 
@@ -26,17 +34,20 @@ async def _():
     if not full_path.exists():
         if not plugin_config.setting_path.exists():
             plugin_config.setting_path.mkdir(parents=True, exist_ok=True)
-        with open(full_path, 'w', encoding='utf-8') as f:
-            f.write('[]')
+        with open(full_path, "w", encoding="utf-8") as f:
+            f.write("[]")
         return
-    with open(full_path, 'r', encoding='utf-8') as f:
+    with open(full_path, "r", encoding="utf-8") as f:
         GROUP_LIST = json.load(f)
 
 
+birthday_info = Alconna("birthday_info", Subcommand("on"), Subcommand("off"))
+birthday_info_switch = on_alconna(birthday_info)
+
+
 # TODO: 添加命令别名
-birthday_info_on = on_command("birthday_info_on")
-@birthday_info_on.handle()
-async def _(bot: Bot, event: GroupMessageEvent):
+@birthday_info_switch.handle()
+async def _(bot: Bot, event: GroupMessageEvent, result: Arparma):
     # 群主、管理员、SUPERUSER可以使用此命令
     user_info = await get_group_user_info(bot, event.user_id, event.group_id)
     if (
@@ -44,29 +55,18 @@ async def _(bot: Bot, event: GroupMessageEvent):
         and not is_group_admin(user_info)
         and not is_superuser(event.user_id)
     ):
-        await birthday_info_on.finish("权限不足")
-    if event.group_id not in GROUP_LIST:
-        GROUP_LIST.append(event.group_id)
-        save_group_list()
-        await birthday_info_on.finish("已开启生日信息推送")
-    else:
-        await birthday_info_on.finish("已开启生日信息推送")
-
-
-birthday_info_off = on_command("birthday_info_off")
-@birthday_info_off.handle()
-async def _(bot: Bot, event: GroupMessageEvent):
-    # 群主、管理员、SUPERUSER可以使用此命令
-    user_info = await get_group_user_info(bot, event.user_id, event.group_id)
-    if (
-        not is_group_owner(user_info)
-        and not is_group_admin(user_info)
-        and not is_superuser(event.user_id)
-    ):
-        await birthday_info_on.finish("权限不足")
-    if event.group_id in GROUP_LIST:
-        GROUP_LIST.remove(event.group_id)
-        save_group_list()
-        await birthday_info_off.finish("已关闭生日信息推送")
-    else:
-        await birthday_info_off.finish("已关闭生日信息推送")
+        await birthday_info_switch.finish("权限不足")
+    if result.find("on"):
+        if event.group_id not in GROUP_LIST:
+            GROUP_LIST.append(event.group_id)
+            save_group_list()
+            await birthday_info_switch.finish("已开启生日信息推送")
+        else:
+            await birthday_info_switch.finish("已开启生日信息推送")
+    elif result.find("off"):
+        if event.group_id in GROUP_LIST:
+            GROUP_LIST.remove(event.group_id)
+            save_group_list()
+            await birthday_info_switch.finish("已关闭生日信息推送")
+        else:
+            await birthday_info_switch.finish("已关闭生日信息推送")
