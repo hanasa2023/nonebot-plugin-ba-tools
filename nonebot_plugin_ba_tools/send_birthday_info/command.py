@@ -44,7 +44,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
         and not is_group_admin(user_info)
         and not is_superuser(event.user_id)
     ):
-        return await birthday_info_on.finish("权限不足")
+        await birthday_info_on.finish("权限不足")
     if event.group_id not in GROUP_LIST:
         GROUP_LIST.append(event.group_id)
         save_group_list()
@@ -63,7 +63,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
         and not is_group_admin(user_info)
         and not is_superuser(event.user_id)
     ):
-        return await birthday_info_on.finish("权限不足")
+        await birthday_info_on.finish("权限不足")
     if event.group_id in GROUP_LIST:
         GROUP_LIST.remove(event.group_id)
         save_group_list()

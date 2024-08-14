@@ -11,24 +11,17 @@ require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Emoji, Image, Target, UniMessage  # noqa: E402
 
 
-from ..utils.constants import ASSERTS_URL, DATA_STUDENTS_JSON_FILE_PATH  # noqa: E402
-from ..utils.types import StudentParser  # noqa: E402
+from ..utils.constants import ASSERTS_URL  # noqa: E402
+from ..utils.common import get_all_students  # noqa: E402
 
-from .command import *  # noqa: E402
-
-# TODO:实现使用命令增加/删除订阅群聊
+from .command import *  # noqa: E402, F403
 
 
 @scheduler.scheduled_job("cron", hour=0, minute=0, id="send_birthday_info")
 async def send_birthday_info():
     # 解析student.json
-    logger.debug("处理生日信息推送")
-    parser = StudentParser(DATA_STUDENTS_JSON_FILE_PATH)
-    students = await parser.parse()
-
-    # 建议使用 get_all_students() 获取所有学生
-    # from ..utils.common import get_all_students
-    # students = await get_all_students()
+    logger.debug("处理生日信息推送")  # noqa: F405
+    students = await get_all_students()
 
     # 获取当前月份及日期
     current_datetime = datetime.now()
@@ -60,6 +53,6 @@ async def send_birthday_info():
                     ]
                 )
                 # 在订阅此消息的群聊中推送学生生日消息
-                for group_id in GROUP_LIST:
+                for group_id in GROUP_LIST:  # noqa: F405
                     target = Target(str(group_id))
                     await message.send(target=target)
