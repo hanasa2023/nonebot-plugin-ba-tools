@@ -1,10 +1,10 @@
 from typing import Any, Dict, List
-from .dataloader import DataLoader
+from .dataloader import DataLoader, DataLoadError
 
 
 class Student:
     def __init__(self, data: Dict[str, Any]):
-        self.id: str = str(data.get("Id", "-1"))
+        self.id: int = int(data.get("Id", -1))
         self.is_released: List[bool] = [d for d in data.get("IsReleased", [])]
         self.name: str = str(data.get("Name", "-"))
         self.personal_name: str = str(data.get("PersonalName", "-"))
@@ -42,10 +42,6 @@ class Summon:
     def __init__(self, data: Dict[str, Any]):
         self.name = data.get("Name")
         self.desc = data.get("Desc")
-
-
-class DataLoadError(Exception):
-    pass
 
 
 class StudentParser:

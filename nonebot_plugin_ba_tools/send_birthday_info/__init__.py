@@ -12,7 +12,7 @@ from nonebot_plugin_alconna import Emoji, Image, Target, UniMessage  # noqa: E40
 
 
 from ..config import Config  # noqa: E402
-from ..utils.constants import ASSERTS_URL  # noqa: E402
+from ..utils.constants import ASSERTS_URL, DATA_STUDENTS_JSON_FILE_PATH  # noqa: E402
 from ..utils.types import Student, StudentParser  # noqa: E402
 
 plugin_config = get_plugin_config(Config)
@@ -23,7 +23,7 @@ plugin_config = get_plugin_config(Config)
 @scheduler.scheduled_job("cron", hour=0, minute=0, id="send_birthday_info")
 async def send_birthday_info():
     # 解析student.json
-    parser = StudentParser("data/zh/students.json")
+    parser = StudentParser(DATA_STUDENTS_JSON_FILE_PATH)
     students = await parser.parse()
     # 获取当前月份及日期
     current_datetime = datetime.now()

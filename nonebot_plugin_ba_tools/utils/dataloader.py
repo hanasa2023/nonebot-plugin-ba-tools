@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from typing import Union, List, Dict
 
 from httpx import AsyncClient
@@ -10,12 +11,16 @@ from ..config import Config
 plugin_config = get_plugin_config(Config)
 
 
+class DataLoadError(Exception):
+    pass
+
+
 class DataLoader:
     """数据加载器，如果指定路径的文件不存在，则通过网络下载"""
 
     def __init__(self, _path: str):
-        self.file_path = plugin_config.assert_path / _path
-        self.file_url = ASSERTS_URL + _path
+        self.file_path: Path = plugin_config.assert_path / _path
+        self.file_url: str = ASSERTS_URL + _path
 
     async def load(self) -> Union[List, Dict, None]:
         data = None
