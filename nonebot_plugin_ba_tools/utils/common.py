@@ -1,20 +1,21 @@
 import json
+from typing import List
 
-from nonebot import get_plugin_config
 
 from .constants import DATA_STUDENT_JSON_FOLDER_PATH, DATA_STUDENTS_JSON_FILE_PATH
 from .dataloader import DataLoader, DataLoadError
 from .types import Student
-from ..config import Config
-
-plugin_config = get_plugin_config(Config)
+from ..config import plugin_config
 
 
 # TODO: 构建一个student map，能够通过 生日/姓名/别名... 查询学生
 
 
-
-async def get_student(student_id: int):
+async def get_student_by_id(student_id: int) -> Student:
+    """
+    获取学生信息
+    @param student_id: 学生ID
+    """
     student_folder = plugin_config.assert_path / DATA_STUDENT_JSON_FOLDER_PATH
     student_json_path = student_folder / f"{student_id}.json"
     if student_json_path.exists():
@@ -33,8 +34,9 @@ async def get_student(student_id: int):
             with open(student_json_path, "w", encoding="utf-8") as f:
                 f.write(json.dumps(student, ensure_ascii=False, indent=4))
             return Student(student)
-    raise DataLoadError(f"学生ID为{student_id}的学生不存在！")
+    raise DataLoadError(f"ID为{student_id}的学生不存在！")
 
 
-async def get_all_students():
-    pass
+async def get_all_students() -> List[Student]:
+    """获取所有学生信息"""
+    return await DataLoader(DATA_STUDENTS_JSON_FILE_PATH).load()

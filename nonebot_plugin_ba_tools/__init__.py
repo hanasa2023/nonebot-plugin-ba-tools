@@ -2,7 +2,7 @@ from nonebot import get_plugin_config
 from nonebot.plugin import PluginMetadata, inherit_supported_adapters
 
 from .config import Config
-from .send_birthday_info import send_birthday_info as send_birthday_info
+from .send_birthday_info import *
 
 __version__ = "0.1.8"
 __plugin_meta__ = PluginMetadata(

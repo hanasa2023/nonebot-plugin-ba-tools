@@ -1,8 +1,8 @@
 import re
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict
 
-from nonebot import get_plugin_config, on_command, require
+from nonebot import require
 
 require("nonebot_plugin_apscheduler")
 from nonebot_plugin_apscheduler import scheduler  # noqa: E402
@@ -11,11 +11,10 @@ require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Emoji, Image, Target, UniMessage  # noqa: E402
 
 
-from ..config import Config  # noqa: E402
 from ..utils.constants import ASSERTS_URL, DATA_STUDENTS_JSON_FILE_PATH  # noqa: E402
-from ..utils.types import Student, StudentParser  # noqa: E402
+from ..utils.types import StudentParser  # noqa: E402
 
-plugin_config = get_plugin_config(Config)
+from .command import *  # noqa: E402
 
 # TODO:实现使用命令增加/删除订阅群聊
 
@@ -23,8 +22,14 @@ plugin_config = get_plugin_config(Config)
 @scheduler.scheduled_job("cron", hour=0, minute=0, id="send_birthday_info")
 async def send_birthday_info():
     # 解析student.json
+    logger.debug("处理生日信息推送")
     parser = StudentParser(DATA_STUDENTS_JSON_FILE_PATH)
     students = await parser.parse()
+
+    # 建议使用 get_all_students() 获取所有学生
+    # from ..utils.common import get_all_students
+    # students = await get_all_students()
+
     # 获取当前月份及日期
     current_datetime = datetime.now()
     current_month = current_datetime.month
@@ -55,6 +60,6 @@ async def send_birthday_info():
                     ]
                 )
                 # 在订阅此消息的群聊中推送学生生日消息
-                for group_id in plugin_config.send_daily_info_group_list:
-                    target = Target(group_id)
+                for group_id in GROUP_LIST:
+                    target = Target(str(group_id))
                     await message.send(target=target)
