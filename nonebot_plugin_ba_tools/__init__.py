@@ -4,7 +4,7 @@ from nonebot.plugin import PluginMetadata
 from .config import Config
 from .send_birthday_info import *  # noqa: F403
 
-__version__ = "0.1.9"
+__version__ = "0.2.0"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",
