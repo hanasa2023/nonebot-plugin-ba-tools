@@ -18,7 +18,7 @@ async def get_student_by_id(student_id: int) -> Student:
     student_json_path = student_folder / f"{student_id}.json"
     if student_json_path.exists():
         with open(student_json_path, "r", encoding="utf-8") as f:
-            return Student(json.load(f))
+            return Student.model_validate(json.load(f))
     if not student_folder.exists():
         student_folder.mkdir(parents=True, exist_ok=True)
 

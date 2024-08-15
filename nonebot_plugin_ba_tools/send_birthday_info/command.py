@@ -3,8 +3,8 @@ from typing import List
 
 from arclet.alconna import Alconna, Subcommand
 from nonebot import logger
-from nonebot.adapters import Bot, Event
-from nonebot_plugin_alconna import Arparma, Target, UniMessage, on_alconna
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent
+from nonebot_plugin_alconna import Arparma, on_alconna
 
 from ..config import DRIVER, plugin_config
 from ..utils.constants import BIRTHDAY_INFO_GROUP_LIST_FILE
@@ -47,27 +47,29 @@ birthday_info_switch = on_alconna(birthday_info, use_cmd_start=True)
 
 # TODO: 添加命令别名
 @birthday_info_switch.handle()
-async def _(bot: Bot, event: Event, result: Arparma):
-    target: Target = UniMessage.get_target(event, bot)
+async def _(bot: Bot, event: GroupMessageEvent, result: Arparma):
     # 群主、管理员、SUPERUSER可以使用此命令
-    user_info = await get_group_user_info(bot, event.get_user_id(), target.id)
+    user_info = await get_group_user_info(bot, event.user_id, event.group_id)
     if (
-        not is_group_owner(user_info)
-        and not is_group_admin(user_info)
-        and not is_superuser(event.user_id)
+        is_group_owner(user_info)
+        or is_group_admin(user_info)
+        or is_superuser(event.user_id)
     ):
+        if result.find("on"):
+            if event.group_id not in GROUP_LIST:
+                GROUP_LIST.append(event.group_id)
+                save_group_list()
+                await birthday_info_switch.finish("已开启生日信息推送")
+            else:
+                await birthday_info_switch.finish("已开启生日信息推送")
+        elif result.find("off"):
+            if event.group_id in GROUP_LIST:
+                GROUP_LIST.remove(event.group_id)
+                save_group_list()
+                await birthday_info_switch.finish("已关闭生日信息推送")
+            else:
+                await birthday_info_switch.finish("已关闭生日信息推送")
+        else:
+            await birthday_info_switch.finish("无效的指令")
+    else:
         await birthday_info_switch.finish("权限不足")
-    if result.find("on"):
-        if event.group_id not in GROUP_LIST:
-            GROUP_LIST.append(event.group_id)
-            save_group_list()
-            await birthday_info_switch.finish("已开启生日信息推送")
-        else:
-            await birthday_info_switch.finish("已开启生日信息推送")
-    elif result.find("off"):
-        if event.group_id in GROUP_LIST:
-            GROUP_LIST.remove(event.group_id)
-            save_group_list()
-            await birthday_info_switch.finish("已关闭生日信息推送")
-        else:
-            await birthday_info_switch.finish("已关闭生日信息推送")
