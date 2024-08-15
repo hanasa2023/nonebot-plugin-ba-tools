@@ -4,18 +4,16 @@
 
 from __future__ import annotations
 
-from typing import List, Optional, Union
-
 from pydantic import BaseModel, Field, RootModel
 
 
 class Summon(BaseModel):
     Id: int
     SourceSkill: str
-    InheritCasterStat: List[str]
-    InheritCasterAmount: List[List[int]]
-    ObstacleMaxHP1: Optional[int] = None
-    ObstacleMaxHP100: Optional[int] = None
+    InheritCasterStat: list[str]
+    InheritCasterAmount: list[list[int]]
+    ObstacleMaxHP1: int | None = None
+    ObstacleMaxHP100: int | None = None
 
 
 class Frame(BaseModel):
@@ -25,92 +23,92 @@ class Frame(BaseModel):
     AttackBurstRoundOverDelay: int
     AttackIngDuration: int
     AttackReloadDuration: int
-    AttackReadyStartDuration: Optional[int] = None
-    AttackReadyEndDuration: Optional[int] = None
+    AttackReadyStartDuration: int | None = None
+    AttackReadyEndDuration: int | None = None
 
 
 class Restriction(BaseModel):
     Property: str
     Operand: str
-    Value: Union[int, str]
+    Value: int | str
 
 
 class ExtraDamageSourceData(BaseModel):
     Side: str
     Stat: str
-    Multiplier: List[int]
+    Multiplier: list[int]
     SliderTranslation: str
-    SliderStep: List[float]
-    SliderLabel: List[int]
+    SliderStep: list[float]
+    SliderLabel: list[int]
     SliderLabelSuffix: str
     SimulatePerHit: bool
 
 
 class Effect(BaseModel):
     Type: str
-    Hits: Optional[List[int]] = None
-    Scale: Optional[List[int]] = None
-    Frames: Optional[Frame] = None
-    CriticalCheck: Optional[str] = None
-    Stat: Optional[str] = None
-    Value: Optional[List[List[int]]] = None
-    Channel: Optional[int] = None
-    Duration: Optional[int] = None
-    Period: Optional[int] = None
-    ExtraStatSource: Optional[str] = None
-    ExtraStatRate: Optional[List[int]] = None
-    HitsParameter: Optional[int] = None
-    Chance: Optional[int] = None
-    Icon: Optional[str] = None
-    SubstituteCondition: Optional[str] = None
-    SubstituteScale: Optional[List[int]] = None
-    MultiplySource: Optional[str] = None
-    MultiplierConstant: Optional[List[int]] = None
-    HitFrames: Optional[List[int]] = None
-    IgnoreDelay: Optional[List[int]] = None
-    StackSame: Optional[int] = None
-    IgnoreDef: Optional[List[int]] = None
-    OverrideSlot: Optional[str] = None
-    Restrictions: Optional[List[Restriction]] = None
-    ZoneHitInterval: Optional[int] = None
-    ZoneDuration: Optional[int] = None
-    Critical: Optional[int] = None
-    HideFormChangeIcon: Optional[bool] = None
-    SourceStat: Optional[str] = None
-    ExtraDamageSource: Optional[ExtraDamageSourceData] = None
+    Hits: list[int] | None = None
+    Scale: list[int] | None = None
+    Frames: Frame | None = None
+    CriticalCheck: str | None = None
+    Stat: str | None = None
+    Value: list[list[int]] | None = None
+    Channel: int | None = None
+    Duration: int | None = None
+    Period: int | None = None
+    ExtraStatSource: str | None = None
+    ExtraStatRate: list[int] | None = None
+    HitsParameter: int | None = None
+    Chance: int | None = None
+    Icon: str | None = None
+    SubstituteCondition: str | None = None
+    SubstituteScale: list[int] | None = None
+    MultiplySource: str | None = None
+    MultiplierConstant: list[int] | None = None
+    HitFrames: list[int] | None = None
+    IgnoreDelay: list[int] | None = None
+    StackSame: int | None = None
+    IgnoreDef: list[int] | None = None
+    OverrideSlot: str | None = None
+    Restrictions: list[Restriction] | None = None
+    ZoneHitInterval: int | None = None
+    ZoneDuration: int | None = None
+    Critical: int | None = None
+    HideFormChangeIcon: bool | None = None
+    SourceStat: str | None = None
+    ExtraDamageSource: ExtraDamageSourceData | None = None
 
 
 class Radiu(BaseModel):
     Type: str
-    Radius: Optional[int] = None
-    Degree: Optional[int] = None
-    Width: Optional[int] = None
-    Height: Optional[int] = None
-    ExcludeRadius: Optional[int] = None
+    Radius: int | None = None
+    Degree: int | None = None
+    Width: int | None = None
+    Height: int | None = None
+    ExcludeRadius: int | None = None
 
 
 class EffectCombineLabelData(BaseModel):
-    Icon: Optional[List[str]] = None
-    StackLabelTranslated: Optional[List[str]] = None
-    DisableFirst: Optional[bool] = None
-    StackLabel: Optional[List[str]] = None
+    Icon: list[str] | None = None
+    StackLabelTranslated: list[str] | None = None
+    DisableFirst: bool | None = None
+    StackLabel: list[str] | None = None
 
 
 class Radiu1(BaseModel):
     Type: str
-    Radius: Optional[int] = None
-    Width: Optional[int] = None
-    Height: Optional[int] = None
+    Radius: int | None = None
+    Width: int | None = None
+    Height: int | None = None
 
 
 class Effect1(BaseModel):
     Type: str
     CriticalCheck: str
-    Hits: Optional[List[int]] = None
-    HitsParameter: Optional[int] = None
-    Scale: List[int]
-    IgnoreDef: Optional[List[int]] = None
-    ApplyStability: Optional[bool] = None
+    Hits: list[int] | None = None
+    HitsParameter: int | None = None
+    Scale: list[int]
+    IgnoreDef: list[int] | None = None
+    ApplyStability: bool | None = None
 
 
 class ExtraSkill(BaseModel):
@@ -118,14 +116,14 @@ class ExtraSkill(BaseModel):
     SkillType: str
     Name: str
     Desc: str
-    Parameters: List[List[str]]
-    Radius: Optional[List[Radiu1]] = None
+    Parameters: list[list[str]]
+    Radius: list[Radiu1] | None = None
     Icon: str
-    Effects: List[Effect1]
-    Duration: Optional[int] = None
-    Range: Optional[int] = None
-    Cost: Optional[List[int]] = None
-    TSAId: Optional[int] = None
+    Effects: list[Effect1]
+    Duration: int | None = None
+    Range: int | None = None
+    Cost: list[int] | None = None
+    TSAId: int | None = None
 
 
 class InheritScaleData(BaseModel):
@@ -136,20 +134,20 @@ class InheritScaleData(BaseModel):
 
 class Skill(BaseModel):
     SkillType: str
-    Effects: List[Effect]
-    Name: Optional[str] = None
-    Desc: Optional[str] = None
-    Parameters: Optional[List[List[str]]] = None
-    Cost: Optional[List[int]] = None
-    Duration: Optional[int] = None
-    Range: Optional[int] = None
-    Radius: Optional[List[Radiu]] = None
-    Icon: Optional[str] = None
-    EffectCombine: Optional[List[str]] = None
-    EffectCombineLabel: Optional[EffectCombineLabelData] = None
-    ExtraSkills: Optional[List[ExtraSkill]] = None
-    InheritScale: Optional[InheritScaleData] = None
-    HideCalculation: Optional[bool] = None
+    Effects: list[Effect]
+    Name: str | None = None
+    Desc: str | None = None
+    Parameters: list[list[str]] | None = None
+    Cost: list[int] | None = None
+    Duration: int | None = None
+    Range: int | None = None
+    Radius: list[Radiu] | None = None
+    Icon: str | None = None
+    EffectCombine: list[str] | None = None
+    EffectCombineLabel: EffectCombineLabelData | None = None
+    ExtraSkills: list[ExtraSkill] | None = None
+    InheritScale: InheritScaleData | None = None
+    HideCalculation: bool | None = None
 
 
 class Weapon(BaseModel):
@@ -167,18 +165,18 @@ class Weapon(BaseModel):
 
 
 class Gear(BaseModel):
-    Released: Optional[List[bool]] = None
-    StatType: Optional[List[str]] = None
-    StatValue: Optional[List[List[int]]] = None
-    Name: Optional[str] = None
-    Desc: Optional[str] = None
-    TierUpMaterial: Optional[List[List[int]]] = None
-    TierUpMaterialAmount: Optional[List[List[int]]] = None
+    Released: list[bool] | None = None
+    StatType: list[str] | None = None
+    StatValue: list[list[int]] | None = None
+    Name: str | None = None
+    Desc: str | None = None
+    TierUpMaterial: list[list[int]] | None = None
+    TierUpMaterialAmount: list[list[int]] | None = None
 
 
 class Student(BaseModel):
     id: int = Field(..., alias="Id")
-    is_released: List[bool] = Field(..., alias="IsReleased")
+    is_released: list[bool] = Field(..., alias="IsReleased")
     default_order: int = Field(..., alias="DefaultOrder")
     path_name: str = Field(..., alias="PathName")
     dev_name: str = Field(..., alias="DevName")
@@ -188,7 +186,7 @@ class Student(BaseModel):
     star_grade: int = Field(..., alias="StarGrade")
     squad_type: str = Field(..., alias="SquadType")
     tactic_role: str = Field(..., alias="TacticRole")
-    summons: List[Summon] = Field(..., alias="Summons")
+    summons: list[Summon] = Field(..., alias="Summons")
     position: str = Field(..., alias="Position")
     bullet_type: str = Field(..., alias="BulletType")
     armor_type: str = Field(..., alias="ArmorType")
@@ -198,7 +196,7 @@ class Student(BaseModel):
     weapon_type: str = Field(..., alias="WeaponType")
     weapon_img: str = Field(..., alias="WeaponImg")
     cover: bool = Field(..., alias="Cover")
-    equipment: List[str] = Field(..., alias="Equipment")
+    equipment: list[str] = Field(..., alias="Equipment")
     collection_bg: str = Field(..., alias="CollectionBG")
     family_name: str = Field(..., alias="FamilyName")
     personal_name: str = Field(..., alias="PersonalName")
@@ -213,7 +211,7 @@ class Student(BaseModel):
     illustrator: str = Field(..., alias="Illustrator")
     designer: str = Field(..., alias="Designer")
     char_height_metric: str = Field(..., alias="CharHeightMetric")
-    char_height_imperial: Optional[str] = Field(None, alias="CharHeightImperial")
+    char_height_imperial: str | None = Field(None, alias="CharHeightImperial")
     stability_point: int = Field(..., alias="StabilityPoint")
     attack_power1: int = Field(..., alias="AttackPower1")
     attack_power100: int = Field(..., alias="AttackPower100")
@@ -231,32 +229,32 @@ class Student(BaseModel):
     ammo_cost: int = Field(..., alias="AmmoCost")
     range: int = Field(..., alias="Range")
     regen_cost: int = Field(..., alias="RegenCost")
-    skills: List[Skill] = Field(..., alias="Skills")
-    favor_stat_type: List[str] = Field(..., alias="FavorStatType")
-    favor_stat_value: List[List[int]] = Field(..., alias="FavorStatValue")
-    favor_alts: List[int] = Field(..., alias="FavorAlts")
-    memory_lobby: List[int] = Field(..., alias="MemoryLobby")
+    skills: list[Skill] = Field(..., alias="Skills")
+    favor_stat_type: list[str] = Field(..., alias="FavorStatType")
+    favor_stat_value: list[list[int]] = Field(..., alias="FavorStatValue")
+    favor_alts: list[int] = Field(..., alias="FavorAlts")
+    memory_lobby: list[int] = Field(..., alias="MemoryLobby")
     memory_lobby_bgm: str = Field(..., alias="MemoryLobbyBGM")
-    furniture_interaction: List[List[List[int]]] = Field(
+    furniture_interaction: list[list[list[int]]] = Field(
         ..., alias="FurnitureInteraction"
     )
-    favor_item_tags: List[str] = Field(..., alias="FavorItemTags")
-    favor_item_unique_tags: List[str] = Field(..., alias="FavorItemUniqueTags")
+    favor_item_tags: list[str] = Field(..., alias="FavorItemTags")
+    favor_item_unique_tags: list[str] = Field(..., alias="FavorItemUniqueTags")
     is_limited: int = Field(..., alias="IsLimited")
     weapon: Weapon = Field(..., alias="Weapon")
     gear: Gear = Field(..., alias="Gear")
-    skill_ex_material: List[List[int]] = Field(..., alias="SkillExMaterial")
-    skill_ex_material_amount: List[List[int]] = Field(
+    skill_ex_material: list[list[int]] = Field(..., alias="SkillExMaterial")
+    skill_ex_material_amount: list[list[int]] = Field(
         ..., alias="SkillExMaterialAmount"
     )
-    skill_material: List[List[int]] = Field(..., alias="SkillMaterial")
-    skill_material_amount: List[List[int]] = Field(..., alias="SkillMaterialAmount")
-    tsa_id: Optional[int] = Field(None, alias="TSAId")
-    defense_penetration1: Optional[int] = Field(None, alias="DefensePenetration1")
-    defense_penetration100: Optional[int] = Field(None, alias="DefensePenetration100")
-    linked_character_id: Optional[int] = Field(None, alias="LinkedCharacterId")
-    style_id: Optional[int] = Field(None, alias="StyleId")
+    skill_material: list[list[int]] = Field(..., alias="SkillMaterial")
+    skill_material_amount: list[list[int]] = Field(..., alias="SkillMaterialAmount")
+    tsa_id: int | None = Field(None, alias="TSAId")
+    defense_penetration1: int | None = Field(None, alias="DefensePenetration1")
+    defense_penetration100: int | None = Field(None, alias="DefensePenetration100")
+    linked_character_id: int | None = Field(None, alias="LinkedCharacterId")
+    style_id: int | None = Field(None, alias="StyleId")
 
 
-class Students(RootModel[List[Student]]):
-    root: List[Student]
+class Students(RootModel[list[Student]]):
+    root: list[Student]

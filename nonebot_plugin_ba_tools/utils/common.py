@@ -1,5 +1,4 @@
 import json
-from typing import List
 
 from ..config import plugin_config
 from .constants import DATA_STUDENT_JSON_FOLDER_PATH, DATA_STUDENTS_JSON_FILE_PATH
@@ -22,7 +21,7 @@ async def get_student_by_id(student_id: int) -> Student:
     if not student_folder.exists():
         student_folder.mkdir(parents=True, exist_ok=True)
 
-    students: List[Student] = await DataLoader(DATA_STUDENTS_JSON_FILE_PATH).load()
+    students: list[Student] = await DataLoader(DATA_STUDENTS_JSON_FILE_PATH).load()
     for student in students:
         this_student_json_path = student_folder / f"{student.id}.json"
         if not this_student_json_path.exists():
@@ -35,6 +34,6 @@ async def get_student_by_id(student_id: int) -> Student:
     raise DataLoadError(f"ID为{student_id}的学生不存在！")
 
 
-async def get_all_students() -> List[Student]:
+async def get_all_students() -> list[Student]:
     """获取所有学生信息"""
     return await DataLoader(DATA_STUDENTS_JSON_FILE_PATH).load()

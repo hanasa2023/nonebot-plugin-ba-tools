@@ -1,5 +1,4 @@
 import json
-from typing import List
 
 from arclet.alconna import Alconna, Subcommand
 from nonebot import logger
@@ -15,7 +14,7 @@ from ..utils.user_info import (
     is_superuser,
 )
 
-GROUP_LIST: List[int] = []
+GROUP_LIST: list[int] = []
 
 
 def save_group_list():

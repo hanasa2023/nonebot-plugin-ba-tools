@@ -1,15 +1,12 @@
 from pathlib import Path
-from typing import Set
 
 from nonebot import get_driver, get_plugin_config, require
 from pydantic import BaseModel
 
 require("nonebot_plugin_localstore")
 
-from nonebot_plugin_localstore import (  # noqa: E402
-    get_plugin_cache_dir,
-    get_plugin_data_dir,
-)
+from nonebot_plugin_localstore import get_plugin_cache_dir  # noqa: E402
+from nonebot_plugin_localstore import get_plugin_data_dir  # noqa: E402;
 
 
 class Config(BaseModel):
@@ -27,4 +24,4 @@ DRIVER = get_driver()
 
 config = DRIVER.config
 
-SUPERUSERS: Set[str] = config.superusers
+SUPERUSERS: set[str] = config.superusers

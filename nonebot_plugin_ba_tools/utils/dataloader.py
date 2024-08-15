@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import List
+from typing import Any
 
 from httpx import AsyncClient
 from nonebot import get_plugin_config, logger
@@ -23,8 +23,8 @@ class DataLoader:
         self.file_path: Path = plugin_config.assert_path / _path
         self.file_url: str = ASSERTS_URL + _path
 
-    async def load(self) -> List[Student]:
-        data = None
+    async def load(self) -> list[Student]:
+        data: Any | None = None
         try:
             # 如果文件存在，则从文件中读取数据
             if self.file_path.exists():

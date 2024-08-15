@@ -1,6 +1,5 @@
 import re
 from datetime import datetime
-from typing import Dict, List, Match
 
 from nonebot import require
 
@@ -21,17 +20,17 @@ from .command import *  # noqa: E402, F403
 async def send_birthday_info():
     # 解析student.json
     logger.debug("处理生日信息推送")  # noqa: F405
-    students: List[Student] = await get_all_students()
+    students: list[Student] = await get_all_students()
 
     # 获取当前月份及日期
     current_datetime: datetime = datetime.now()
     current_month: int = current_datetime.month
     current_day: int = current_datetime.day
     # 创建hasp map用来过滤重复学生
-    hash_map: Dict[str, bool] = {}
+    hash_map: dict[str, bool] = {}
 
     for student in students:
-        match: Match[str] | None = re.search(r"(\d+)月(\d+)日", student.birthday)
+        match: re.Match[str] | None = re.search(r"(\d+)月(\d+)日", student.birthday)
         if match:
             month: str = match.group(1)
             day: str = match.group(2)
