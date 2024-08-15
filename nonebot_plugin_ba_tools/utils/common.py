@@ -1,11 +1,26 @@
 import json
 
 from ..config import plugin_config
-from .constants import DATA_STUDENT_JSON_FOLDER_PATH, DATA_STUDENTS_JSON_FILE_PATH
+from .constants import (
+    BIRTHDAY_INFO_GROUP_LIST_FILE,
+    DATA_STUDENT_JSON_FOLDER_PATH,
+    DATA_STUDENTS_JSON_FILE_PATH,
+)
 from .dataloader import DataLoader, DataLoadError
 from .types import Student
 
 # TODO: 构建一个student map，能够通过 生日/姓名/别名... 查询学生
+
+
+def load_group_list() -> list[int]:
+    """
+    获取已订阅的群组列表
+    """
+    group_list: list[int]
+    full_path = plugin_config.setting_path / BIRTHDAY_INFO_GROUP_LIST_FILE
+    with open(full_path, "r", encoding="utf-8") as f:
+        group_list = json.load(f)
+    return group_list
 
 
 async def get_student_by_id(student_id: int) -> Student:

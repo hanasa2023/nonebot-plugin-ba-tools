@@ -32,6 +32,11 @@ name = "mirrors"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
 priority = "primary"
 
+
+[tool.poetry.group.test.dependencies]
+nonebug = "^0.3.7"
+pytest-asyncio = "^0.23.8"
+
 [tool.basedpyright]
 typeCheckingMode = "standard"
 
