@@ -38,6 +38,7 @@ async def _():
         return
     with open(full_path, "r", encoding="utf-8") as f:
         GROUP_LIST = json.load(f)
+        logger.debug(f"group list is: {GROUP_LIST}")
 
 
 birthday_info = Alconna("ba_birthday_info", Subcommand("on"), Subcommand("off"))
@@ -47,6 +48,7 @@ birthday_info_switch = on_alconna(birthday_info, use_cmd_start=True)
 # TODO: 添加命令别名
 @birthday_info_switch.handle()
 async def _(bot: Bot, event: GroupMessageEvent, result: Arparma):
+    global GROUP_LIST
     # 群主、管理员、SUPERUSER可以使用此命令
     user_info = await get_group_user_info(bot, event.user_id, event.group_id)
     if (

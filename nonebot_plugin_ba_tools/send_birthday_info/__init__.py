@@ -11,7 +11,7 @@ from nonebot_plugin_apscheduler import scheduler  # noqa: E402
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Emoji, Image, Target, UniMessage  # noqa: E402
 
-from ..utils.common import get_all_students  # noqa: E402
+from ..utils.common import get_all_students, load_group_list  # noqa: E402
 from ..utils.constants import ASSERTS_URL  # noqa: E402
 from .command import *  # noqa: E402, F403
 
@@ -22,10 +22,14 @@ async def send_birthday_info():
     logger.debug("处理生日信息推送")  # noqa: F405
     students: list[Student] = await get_all_students()
 
+    # 获取当前已订阅的群组列表
+    group_list: list[int] = load_group_list()
+
     # 获取当前月份及日期
     current_datetime: datetime = datetime.now()
     current_month: int = current_datetime.month
     current_day: int = current_datetime.day
+    logger.debug(f"m:{current_month}, d: {current_day}")  # noqa: F405
     # 创建hasp map用来过滤重复学生
     hash_map: dict[str, bool] = {}
 
@@ -52,6 +56,7 @@ async def send_birthday_info():
                     ]
                 )
                 # 在订阅此消息的群聊中推送学生生日消息
-                for group_id in GROUP_LIST:  # noqa: F405
+                for group_id in group_list:  # noqa: F405
+                    logger.debug(f"group_id: {group_id}")  # noqa: F405
                     target: Target = Target(str(group_id))
                     await message.send(target=target)

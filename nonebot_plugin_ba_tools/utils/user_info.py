@@ -29,4 +29,4 @@ def is_group_admin(user_info: dict[str, str]) -> bool:
 
 
 def is_superuser(user_id: int | str) -> bool:
-    return user_id in SUPERUSERS
+    return str(user_id) in SUPERUSERS
