@@ -25,12 +25,15 @@ nonebot-plugin-apscheduler = ">=0.5.0"
 [tool.poetry.dev-dependencies]
 nonebot2 = { version = ">=2.3.2", extras = ["fastapi", "uvicorn"] }
 nonebot-adapter-onebot = ">=2.1.0"
+basedpyright = ">=1.16.0"
 
 [[tool.poetry.source]]
 name = "mirrors"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
 priority = "primary"
 
+[tool.basedpyright]
+typeCheckingMode = "standard"
 
 [build-system]
 requires = ["poetry-core"]
