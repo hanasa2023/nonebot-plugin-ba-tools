@@ -1,10 +1,12 @@
 from nonebot import get_plugin_config
 from nonebot.plugin import PluginMetadata
 
+from .ba_clairvoyance import get_ba_clairvoyance  # noqa: F401
 from .config import Config
-from .send_birthday_info import *  # noqa: F403
+from .get_activity_info import get_ba_activity_info  # noqa: F401
+from .send_birthday_info import birthday_info_switch, send_birthday_info  # noqa: F401
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",
@@ -22,4 +24,4 @@ __plugin_meta__ = PluginMetadata(
     },
 )
 
-config = get_plugin_config(Config)
+config: Config = get_plugin_config(Config)
