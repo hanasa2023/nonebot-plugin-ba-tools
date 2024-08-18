@@ -4,7 +4,7 @@ from pathlib import Path
 
 import httpx
 from bs4 import BeautifulSoup, NavigableString, ResultSet, Tag
-from nonebot_plugin_htmlrender import get_new_page
+from nonebot import require
 from tarina.date import datetime
 
 from ..config import plugin_config
@@ -18,6 +18,9 @@ from .constants import (
 )
 from .dataloader import DataLoader, DataLoadError
 from .types import Student
+
+require("nonebot_plugin_htmlrender")
+from nonebot_plugin_htmlrender import get_new_page  # noqa: E402
 
 # TODO: 构建一个student map，能够通过 生日/姓名/别名... 查询学生
 
