@@ -37,6 +37,28 @@ async def get_wiki_url_from_title(title: str) -> str | None:
             return None
 
 
+async def get_wiki_urls_from_title(title: str) -> list[str]:
+    """通过url获取bawiki上指定title的多个元素href
+
+    Args:
+        title (str): 对应的title名
+
+    Returns:
+        list[str]: 对应的url列表
+    """
+    async with httpx.AsyncClient() as ctx:
+        response: httpx.Response = await ctx.get(BA_WIKI_URL)
+        response.encoding = "utf-8"
+        soup: BeautifulSoup = BeautifulSoup(response.text, "html.parser")
+        tags: ResultSet[Tag] = soup.find_all("a", {"title": title})
+        hrefs: list[str] = []
+        for tag in tags:
+            href: str | list[str] | None = tag.get("href")
+            if isinstance(href, str):
+                hrefs.append(WIKI_BASE_URL + href)
+        return hrefs
+
+
 async def get_activity_table(url: str, index: int):
     """从指定活动url获取相应活动的表格
 
@@ -150,21 +172,42 @@ async def create_activity_pic(url: str, base_year: int) -> bytes | None:
         return None
 
 
-async def get_walkthrough_img(url: str) -> list[str]:
-    """从网页获取关卡攻略
+async def get_img_from_url(url: str) -> list[str]:
+    """从bawiki网页获取图片
 
     Args:
         url (int): 网页url
     Returns:
-        list[str]: 关卡攻略url列表
+        list[str]: 图片url列表
     """
     imgs_url: list[str] = []
-    text = await get_data_from_html(url)
-    soup = BeautifulSoup(text, "html.parser")
+    text: str = await get_data_from_html(url)
+    soup: BeautifulSoup = BeautifulSoup(text, "html.parser")
     imgs: ResultSet[Tag] = soup.css.select(".div-img > img")
     for img in imgs:
-        img_src = img.get("src")
+        img_src: str | list[str] | None = img.get("src")
         if isinstance(img_src, str):
-            img_url = "https:" + img_src
+            img_url: str = "https:" + img_src
             imgs_url.append(img_url)
     return imgs_url
+
+
+async def get_max_manga_index() -> int:
+    """返回从bawiki能找到的最大漫画话数
+
+    Returns:
+        int: 能找到的最大漫画话数
+    """
+    text: str = await get_data_from_html(BA_WIKI_URL)
+    soup: BeautifulSoup = BeautifulSoup(text, "html.parser")
+    titles: ResultSet[Tag] = soup.css.select(
+        "#menu-51508 > div:nth-child(2) > div.model-tab-content > div:nth-child(1) > div > a:nth-child(1)"
+    )
+    if len(titles):
+        index_str: str | list[str] | None = titles[0].get("title")
+        if isinstance(index_str, str):
+            index_match: re.Match[str] | None = re.search(r"第(\d+)话", index_str)
+            if index_match:
+                index_s: str = index_match.group(1)
+                return int(index_s)
+    return 181

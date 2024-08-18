@@ -1,6 +1,6 @@
 from nonebot import require
 
-from ..utils.wiki import get_walkthrough_img, get_wiki_url_from_title
+from ..utils.wiki import get_img_from_url, get_wiki_url_from_title
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Image  # noqa: E402
@@ -17,7 +17,7 @@ async def _(index: Match[str]):
     if index.available:
         url: str | None = await get_wiki_url_from_title(index.result)
         if url:
-            imgs_url: list[str] = await get_walkthrough_img(url)
+            imgs_url: list[str] = await get_img_from_url(url)
             if len(imgs_url):
                 msg: UniMessage[Image] = UniMessage()
                 for img_url in imgs_url:
