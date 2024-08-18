@@ -1,10 +1,10 @@
 import json
 from pathlib import Path
 
-from arclet.alconna import Alconna, Subcommand
+from arclet.alconna import Alconna
 from nonebot import logger
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent
-from nonebot_plugin_alconna import Args, Arparma, Match, on_alconna
+from nonebot_plugin_alconna import Args, Match, on_alconna
 
 from ..config import DRIVER, plugin_config
 from ..utils.constants import BIRTHDAY_INFO_GROUP_LIST_FILE
