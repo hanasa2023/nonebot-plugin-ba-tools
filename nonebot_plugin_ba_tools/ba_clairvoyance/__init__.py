@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from nonebot import require
 
-from ..utils.common import get_data_from_html, get_wiki_url_from_title
+from ..utils.wiki import get_data_from_html, get_wiki_url_from_title
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Image  # noqa: E402

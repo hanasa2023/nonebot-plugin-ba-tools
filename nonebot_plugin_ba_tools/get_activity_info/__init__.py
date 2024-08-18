@@ -1,9 +1,6 @@
 from nonebot import require
 
-from nonebot_plugin_ba_tools.utils.common import (
-    create_activity_pic,
-    get_wiki_url_from_title,
-)
+from ..utils.wiki import create_activity_pic, get_wiki_url_from_title
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Image  # noqa: E402
