@@ -39,6 +39,8 @@ mypy = ">=1.11.1"
 nonebot2 = { version = ">=2.3.2", extras = ["fastapi", "uvicorn"] }
 nonebot-adapter-onebot = ">=2.1.0"
 basedpyright = ">=1.16.0"
+isort = ">=5.13.2"
+black = ">=24.8.0"
 
 [tool.basedpyright]
 typeCheckingMode = "standard"
