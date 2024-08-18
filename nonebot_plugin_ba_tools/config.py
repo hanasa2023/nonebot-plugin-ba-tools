@@ -16,6 +16,8 @@ class Config(BaseModel):
     assert_path: Path = get_plugin_cache_dir() / "asserts"
     # 设置文件路径
     setting_path: Path = get_plugin_data_dir() / "setting"
+    # 是否开启图片准备时的提醒
+    is_open_notice: bool = False
 
 
 plugin_config = get_plugin_config(Config)
