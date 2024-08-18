@@ -1308,13 +1308,13 @@ reference = "mirrors"
 
 [[package]]
 name = "nonebot2"
-version = "2.3.2"
+version = "2.3.3"
 description = "An asynchronous python bot framework."
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "nonebot2-2.3.2-py3-none-any.whl", hash = "sha256:c51aa3c1f23d8062ce6d13c8423dcb9a8bf0c44f21687916095f825da79a9a55"},
-    {file = "nonebot2-2.3.2.tar.gz", hash = "sha256:af52e27e03e7fe147f2b642151eec81f264d058efe53b974eb08b5d90177cd14"},
+    {file = "nonebot2-2.3.3-py3-none-any.whl", hash = "sha256:5bc8d073091347f29c4a1a2f927c24a8941e5d286c77139376259318b9bbfc68"},
+    {file = "nonebot2-2.3.3.tar.gz", hash = "sha256:4fa7707de5d708c27cc49493bc78a07fee2ba01f5516835a2ea5fbebb49b9dfa"},
 ]
 
 [package.dependencies]
@@ -2522,4 +2522,4 @@ reference = "mirrors"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9, <4.0"
-content-hash = "0c1a22b9f5c67ba4d5a1970f1d856ff226f4604ddc63f350f407198498c12f89"
+content-hash = "6abea982e3c90e11045fa42742cb833a7dafc3d27afad33261abd3147d47f536"
