@@ -5,9 +5,14 @@ from ..config import plugin_config
 from ..utils.wiki import get_img_from_url, get_wiki_url_from_title
 
 require("nonebot_plugin_alconna")
-from nonebot_plugin_alconna import Image  # noqa: E402
-from nonebot_plugin_alconna import Match  # noqa: E402
-from nonebot_plugin_alconna import Alconna, Args, UniMessage, on_alconna  # noqa: E402
+from nonebot_plugin_alconna import (  # noqa: E402
+    Alconna,
+    Args,
+    Image,  # noqa: E402
+    Match,  # noqa: E402
+    UniMessage,
+    on_alconna,
+)
 
 # TODO: 添加命令别名
 walkthrough = Alconna("ba关卡攻略", Args["index", str])
