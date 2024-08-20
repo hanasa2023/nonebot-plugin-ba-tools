@@ -7,6 +7,7 @@ from .ba_walkthrough import get_walkthrough  # noqa: F401
 from .config import Config
 from .get_activity_info import get_ba_activity_info  # noqa: F401
 from .send_birthday_info import birthday_info_switch, send_birthday_info  # noqa: F401
+from .get_student_birthday import get_student_birthday_list  # noqa: F401
 
 __version__ = "0.2.4"
 __plugin_meta__ = PluginMetadata(

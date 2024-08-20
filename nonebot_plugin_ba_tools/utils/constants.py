@@ -9,3 +9,21 @@ WIKI_BASE_URL = "https://www.gamekee.com"
 BA_WIKI_URL = WIKI_BASE_URL + "/ba"
 
 ACTIVITYT_HTML_PATH = "activity.html"
+
+DATA_STUDENTS_ICON_PATH = "images/student/icon"
+DATA_STUDENTS_BIRTHDAY_IMG_PATH = "images/student/birthday"
+
+MONTH_i18N = {
+    "1": "一",
+    "2": "二",
+    "3": "三",
+    "4": "四",
+    "5": "五",
+    "6": "六",
+    "7": "七",
+    "8": "八",
+    "9": "九",
+    "10": "十",
+    "11": "十一",
+    "12": "十二",
+}

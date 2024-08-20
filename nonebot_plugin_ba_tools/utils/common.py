@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 import httpx
@@ -53,6 +54,28 @@ async def get_student_by_id(student_id: int) -> Student:
                 f.write(json.dumps(student, ensure_ascii=False, indent=4))
             return student
     raise DataLoadError(f"ID为{student_id}的学生不存在！")
+
+
+async def get_students_by_birth_month(month: str) -> list[Student]:
+    """获取生日在某月的学生列表
+
+    Args:
+        month (int): 月份
+
+    Returns:
+        list[Student]: 在某月过生日的学生列表
+    """
+    students_in_month: list[Student] = []
+    students: list[Student] = await DataLoader(DATA_STUDENTS_JSON_FILE_PATH).load()
+    for student in students:
+        birthday_match: re.Match[str] | None = re.search(
+            r"(\d+)月(\d+)日", student.birthday
+        )
+        if birthday_match:
+            month_str: str = birthday_match.group(1)
+            if month_str == month:
+                students_in_month.append(student)
+    return students_in_month
 
 
 async def get_all_students() -> list[Student]:
