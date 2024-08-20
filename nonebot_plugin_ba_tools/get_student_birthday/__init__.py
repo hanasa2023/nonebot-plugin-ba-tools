@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 from nepattern.base import re
@@ -32,12 +34,14 @@ async def _(bot: Bot, month: Match[str]):
     if month.available:
         month_match: re.Match[str] | None = re.search(r"(\d+)月", month.result)
         if month_match or month.result == "当月":
+            pre_msg: dict[str, int] = {"message_id": -1}
             real_month: str = (
                 month_match.group(1) if month_match else str(datetime.now().month)
             )
             students: list[Student] = await get_students_by_birth_month(real_month)
             if len(students):
-                pre_msg: int = await get_student_birthday_list.send("图片正在准备喵~")
+                if plugin_config.loading_switch:
+                    pre_msg = await get_student_birthday_list.send("图片正在准备喵~")
                 await init_birthday_img(students, real_month)
                 msg: UniMessage[Image] = UniMessage(
                     Image(
@@ -46,7 +50,8 @@ async def _(bot: Bot, month: Match[str]):
                     )
                 )
                 await get_student_birthday_list.send(msg)
-                await bot.delete_msg(message_id=pre_msg)
+                if plugin_config.loading_switch:
+                    await bot.delete_msg(message_id=pre_msg["message_id"])
                 await get_student_birthday_list.finish()
             else:
                 await get_student_birthday_list.finish("是无效的月份呢")
