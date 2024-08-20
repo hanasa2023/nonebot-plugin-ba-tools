@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 from datetime import datetime
 
@@ -56,7 +58,7 @@ async def send_birthday_info():
                     ]
                 )
                 # 在订阅此消息的群聊中推送学生生日消息
-                for group_id in group_list:  # noqa: F405
+                for group_id in group_list:
                     logger.debug(f"group_id: {group_id}")  # noqa: F405
                     target: Target = Target(str(group_id))
                     await message.send(target=target)
