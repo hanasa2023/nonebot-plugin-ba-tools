@@ -40,7 +40,6 @@ async def _():
     with open(full_path, "r", encoding="utf-8") as f:
         GROUP_LIST = json.load(f)
         logger.debug(f"group list is: {GROUP_LIST}")
-    logger.info(f"图片加载提醒已{'开启' if plugin_config.is_open_notice else '关闭'}")
 
 
 # TODO: 添加命令别名

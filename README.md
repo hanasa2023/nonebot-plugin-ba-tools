@@ -51,23 +51,13 @@
 
 ## 🎉 使用
 
-### 💡 资源文件 & 插件配置
-
-#### 资源文件
+### 💡 资源文件
 
 ~~本项目在 [Schale DB](https://github.com/SchaleDB/SchaleDB) 的基础上新增了 l2d 文件夹，请在 release 中下载相应文件并解压至相应目录下~~ v0.1.6 已实现网络请求资源文件，无需再自行配置资源文件
 
 - 资源文件请求详见 [Ba Tools Api](https://api.hanasaki.tech)
 
 - ~~默认路径为项目缓存路径，使用[nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore)进行管理，你可以使用`nb localsotre`查看默认缓存路径~~
-
-#### 插件配置
-
-🔧 请在你的bot根目录下的`.env` `.env.*`中添加以下字段
-
-|      字段      | 默认值 |   可选值   |         描述         |
-| :------------: | :----: | :--------: | :------------------: |
-| IS_OPEN_NOTICE | false  | true/false | 是否开启图片加载通知 |
 
 ### ✨ 功能介绍
 

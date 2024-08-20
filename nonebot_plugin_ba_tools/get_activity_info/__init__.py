@@ -1,7 +1,5 @@
 from nonebot import require
-from nonebot.adapters.onebot.v11 import Bot
 
-from ..config import plugin_config
 from ..utils.wiki import create_activity_pic, get_wiki_url_from_title
 
 require("nonebot_plugin_alconna")
@@ -14,21 +12,15 @@ get_ba_activity_info = on_alconna(activity, use_cmd_start=True)
 
 
 @get_ba_activity_info.assign("server")
-async def _(bot: Bot, server: Match[str]):
+async def _(server: Match[str]):
     if server.available:
-        pre_msg: dict[str, int] = {"message_id": -1}
         if server.result == "国服":
             url = await get_wiki_url_from_title("国服活动一览")
             if url:
                 pic = await create_activity_pic(url, 2022)
                 if pic:
-                    if plugin_config.is_open_notice:
-                        pre_msg = await get_ba_activity_info.send("请稍等片刻哦~")
                     msg = UniMessage(Image(raw=pic))
-                    await get_ba_activity_info.send(msg)
-                    if plugin_config.is_open_notice:
-                        await bot.delete_msg(message_id=pre_msg["message_id"])
-                    await get_ba_activity_info.finish()
+                    await get_ba_activity_info.finish(msg)
                 else:
                     await get_ba_activity_info.finish("获取图片失败")
         elif server.result == "国际服":
@@ -36,13 +28,8 @@ async def _(bot: Bot, server: Match[str]):
             if url:
                 pic = await create_activity_pic(url, 2021 + 1)
                 if pic:
-                    if plugin_config.is_open_notice:
-                        pre_msg = await get_ba_activity_info.send("请稍等片刻哦~")
                     msg = UniMessage(Image(raw=pic))
-                    await get_ba_activity_info.send(msg)
-                    if plugin_config.is_open_notice:
-                        await bot.delete_msg(message_id=pre_msg["message_id"])
-                    await get_ba_activity_info.finish()
+                    await get_ba_activity_info.finish(msg)
                 else:
                     await get_ba_activity_info.finish("获取图片失败")
         elif server.result == "日服":
@@ -50,13 +37,8 @@ async def _(bot: Bot, server: Match[str]):
             if url:
                 pic = await create_activity_pic(url, 2021)
                 if pic:
-                    if plugin_config.is_open_notice:
-                        pre_msg = await get_ba_activity_info.send("请稍等片刻哦~")
                     msg = UniMessage(Image(raw=pic))
-                    await get_ba_activity_info.send(msg)
-                    if plugin_config.is_open_notice:
-                        await bot.delete_msg(message_id=pre_msg["message_id"])
-                    await get_ba_activity_info.finish()
+                    await get_ba_activity_info.finish(msg)
                 else:
                     await get_ba_activity_info.finish("获取图片失败")
         else:
