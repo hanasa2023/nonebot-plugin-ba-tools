@@ -43,7 +43,9 @@ async def get_student_by_id(student_id: int) -> Student:
     if not student_folder.exists():
         student_folder.mkdir(parents=True, exist_ok=True)
 
-    students: list[Student] = await StudentDataLoader(DATA_STUDENTS_JSON_FILE_PATH).load_students()
+    students: list[Student] = await StudentDataLoader(
+        DATA_STUDENTS_JSON_FILE_PATH
+    ).load_students()
     for student in students:
         this_student_json_path = student_folder / f"{student.id}.json"
         if not this_student_json_path.exists():
@@ -66,7 +68,9 @@ async def get_students_by_birth_month(month: str) -> list[Student]:
         list[Student]: 在某月过生日的学生列表
     """
     students_in_month: list[Student] = []
-    students: list[Student] = await StudentDataLoader(DATA_STUDENTS_JSON_FILE_PATH).load_students()
+    students: list[Student] = await StudentDataLoader(
+        DATA_STUDENTS_JSON_FILE_PATH
+    ).load_students()
     for student in students:
         birthday_match: re.Match[str] | None = re.search(
             r"(\d+)月(\d+)日", student.birthday
