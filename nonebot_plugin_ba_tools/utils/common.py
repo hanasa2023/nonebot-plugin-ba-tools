@@ -10,7 +10,7 @@ from .constants import (
     DATA_STUDENT_JSON_FOLDER_PATH,
     DATA_STUDENTS_JSON_FILE_PATH,
 )
-from .dataloader import DataLoader, DataLoadError
+from .dataloader import StudentDataLoader, DataLoadError
 from .types import Student
 
 # TODO: 构建一个student map，能够通过 生日/姓名/别名... 查询学生
@@ -43,7 +43,7 @@ async def get_student_by_id(student_id: int) -> Student:
     if not student_folder.exists():
         student_folder.mkdir(parents=True, exist_ok=True)
 
-    students: list[Student] = await DataLoader(DATA_STUDENTS_JSON_FILE_PATH).load()
+    students: list[Student] = await StudentDataLoader(DATA_STUDENTS_JSON_FILE_PATH).load_students()
     for student in students:
         this_student_json_path = student_folder / f"{student.id}.json"
         if not this_student_json_path.exists():
@@ -66,7 +66,7 @@ async def get_students_by_birth_month(month: str) -> list[Student]:
         list[Student]: 在某月过生日的学生列表
     """
     students_in_month: list[Student] = []
-    students: list[Student] = await DataLoader(DATA_STUDENTS_JSON_FILE_PATH).load()
+    students: list[Student] = await StudentDataLoader(DATA_STUDENTS_JSON_FILE_PATH).load_students()
     for student in students:
         birthday_match: re.Match[str] | None = re.search(
             r"(\d+)月(\d+)日", student.birthday
@@ -84,7 +84,7 @@ async def get_all_students() -> list[Student]:
     Returns:
         list[Student]: 所有学生信息的列表
     """
-    return await DataLoader(DATA_STUDENTS_JSON_FILE_PATH).load()
+    return await StudentDataLoader(DATA_STUDENTS_JSON_FILE_PATH).load_students()
 
 
 async def get_data_from_html(url: str) -> str:
