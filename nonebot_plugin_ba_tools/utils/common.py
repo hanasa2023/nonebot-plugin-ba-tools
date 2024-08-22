@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import re
 from pathlib import Path
@@ -10,7 +12,7 @@ from .constants import (
     DATA_STUDENT_JSON_FOLDER_PATH,
     DATA_STUDENTS_JSON_FILE_PATH,
 )
-from .dataloader import StudentDataLoader, DataLoadError
+from .dataloader import DataLoadError, StudentDataLoader
 from .types import Student
 
 # TODO: 构建一个student map，能够通过 生日/姓名/别名... 查询学生

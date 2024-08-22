@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from datetime import datetime
+from typing import cast
 
 import httpx
 from bs4 import BeautifulSoup, NavigableString, ResultSet, Tag
@@ -169,7 +170,8 @@ async def create_activity_pic(url: str, base_year: int) -> bytes | None:
                 f"file://{plugin_config.assert_path / ACTIVITYT_HTML_PATH}",
                 wait_until="networkidle",
             )
-            return await page.screenshot(full_page=True)
+            screenshot: bytes = cast(bytes, await page.screenshot(full_page=True))
+            return screenshot
     else:
         return None
 

@@ -1,4 +1,4 @@
-name: TypeCheck
+name: TypeCheck CI
 
 on:
     push:
@@ -19,6 +19,11 @@ jobs:
                   cache: 'poetry'
 
             - run: poetry install
+              shell: bash
+
+            - name: Install Types
+              run: |
+                poetry add types-beautifulsoup4
               shell: bash
 
             - name: Run Mypy
