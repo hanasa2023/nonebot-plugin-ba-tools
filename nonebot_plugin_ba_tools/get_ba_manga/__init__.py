@@ -1,4 +1,6 @@
-from apscheduler.triggers.base import random
+import random
+from typing import Any
+
 from nonebot import require
 from nonebot.adapters.onebot.v11 import Bot
 
@@ -8,6 +10,7 @@ from ..utils.wiki import get_img_from_url, get_max_manga_index, get_wiki_urls_fr
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (  # noqa: E402
     Alconna,
+    AlconnaMatcher,
     Args,
     Image,
     Match,
@@ -15,12 +18,12 @@ from nonebot_plugin_alconna import (  # noqa: E402
     on_alconna,
 )
 
-manga = Alconna("ba漫画", Args["index", str])
-get_manga = on_alconna(manga, use_cmd_start=True)
+manga: Alconna[Any] = Alconna("ba漫画", Args["index", str])
+get_manga: type[AlconnaMatcher] = on_alconna(manga, use_cmd_start=True)
 
 
 @get_manga.assign("index")
-async def _(bot: Bot, index: Match):
+async def _(bot: Bot, index: Match) -> None:
     if index.available:
         pre_msg: dict[str, int] = {"message_id": -1}
         max_index: int = (await get_max_manga_index()) - 1

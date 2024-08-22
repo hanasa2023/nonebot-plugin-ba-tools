@@ -1,10 +1,11 @@
 import json
 from pathlib import Path
+from typing import Any
 
 from arclet.alconna import Alconna
 from nonebot import logger
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent
-from nonebot_plugin_alconna import Args, Match, on_alconna
+from nonebot_plugin_alconna import AlconnaMatcher, Args, Match, on_alconna
 
 from ..config import DRIVER, plugin_config
 from ..utils.constants import BIRTHDAY_INFO_GROUP_LIST_FILE
@@ -18,7 +19,7 @@ from ..utils.user_info import (
 GROUP_LIST: list[int] = []
 
 
-def save_group_list():
+def save_group_list() -> None:
     full_path: Path = plugin_config.setting_path / BIRTHDAY_INFO_GROUP_LIST_FILE
     if not plugin_config.setting_path.exists():
         plugin_config.setting_path.mkdir(parents=True, exist_ok=True)
@@ -27,7 +28,7 @@ def save_group_list():
 
 
 @DRIVER.on_startup
-async def _():
+async def _() -> None:
     logger.debug("读取生日信息推送群列表")
     global GROUP_LIST
     full_path: Path = plugin_config.setting_path / BIRTHDAY_INFO_GROUP_LIST_FILE
@@ -43,12 +44,14 @@ async def _():
 
 
 # TODO: 添加命令别名
-birthday_info = Alconna("ba学生生日订阅", Args["status", str])
-birthday_info_switch = on_alconna(birthday_info, use_cmd_start=True)
+birthday_info: Alconna[Any] = Alconna("ba学生生日订阅", Args["status", str])
+birthday_info_switch: type[AlconnaMatcher] = on_alconna(
+    birthday_info, use_cmd_start=True
+)
 
 
 @birthday_info_switch.assign("status")
-async def _(bot: Bot, event: GroupMessageEvent, status: Match[str]):
+async def _(bot: Bot, event: GroupMessageEvent, status: Match[str]) -> None:
     global GROUP_LIST
     # 群主、管理员、SUPERUSER可以使用此命令
     user_info = await get_group_user_info(bot, event.user_id, event.group_id)

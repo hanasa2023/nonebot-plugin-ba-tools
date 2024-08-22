@@ -1,3 +1,5 @@
+from typing import Any
+
 from nonebot import require
 from nonebot.adapters.onebot.v11 import Bot
 
@@ -7,6 +9,7 @@ from ..utils.wiki import create_activity_pic, get_wiki_url_from_title
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (  # noqa: E402
     Alconna,
+    AlconnaMatcher,
     Args,
     Image,  # noqa: E402
     Match,  # noqa: E402
@@ -14,12 +17,12 @@ from nonebot_plugin_alconna import (  # noqa: E402
     on_alconna,
 )
 
-activity = Alconna("ba活动一览", Args["server", str])
-get_ba_activity_info = on_alconna(activity, use_cmd_start=True)
+activity: Alconna[Any] = Alconna("ba活动一览", Args["server", str])
+get_ba_activity_info: type[AlconnaMatcher] = on_alconna(activity, use_cmd_start=True)
 
 
 @get_ba_activity_info.assign("server")
-async def _(bot: Bot, server: Match[str]):
+async def _(bot: Bot, server: Match[str]) -> None:
     if server.available:
         pre_msg: dict[str, int] = {"message_id": -1}
         if server.result == "国服":

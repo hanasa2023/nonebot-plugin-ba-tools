@@ -19,7 +19,7 @@ from .command import *  # noqa: E402, F403
 
 
 @scheduler.scheduled_job("cron", hour=0, minute=0, id="send_birthday_info")
-async def send_birthday_info():
+async def send_birthday_info() -> None:
     # 解析student.json
     logger.debug("处理生日信息推送")  # noqa: F405
     students: list[Student] = await get_all_students()
@@ -48,14 +48,21 @@ async def send_birthday_info():
             ):
                 hash_map[student.personal_name] = True
 
-                message = UniMessage(
-                    [
-                        f"今天是{student.name}的生日哦，在学生值日的前提下，切换为非l2d的值日模式，可以听到特殊语音哦。让我们一起祝福{student.name}生日快乐吧!",
-                        Emoji(id="144"),
-                        Image(
-                            url=ASSERTS_URL + f"/images/student/l2d/{student.id}.webp"
-                        ),
-                    ]
+                # message = UniMessage(
+                #     [
+                #         f"今天是{student.name}的生日哦，在学生值日的前提下，切换为非l2d的值日模式，可以听到特殊语音哦。让我们一起祝福{student.name}生日快乐吧!",
+                #         Emoji(id="144"),
+                #         Image(
+                #             url=ASSERTS_URL + f"/images/student/l2d/{student.id}.webp"
+                #         ),
+                #     ]
+                # )
+                message = (
+                    UniMessage.text(
+                        "今天是{student.name}的生日哦，在学生值日的前提下，切换为非l2d的值日模式，可以听到特殊语音哦。让我们一起祝福{student.name}生日快乐吧!"
+                    )
+                    .emoji(id="144")
+                    .image(url=ASSERTS_URL + f"/images/student/l2d/{student.id}.webp")
                 )
                 # 在订阅此消息的群聊中推送学生生日消息
                 for group_id in group_list:

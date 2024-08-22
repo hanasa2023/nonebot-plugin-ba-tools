@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import re
 from datetime import datetime
+from typing import Any
 
-from nepattern.base import re
 from nonebot import require
 from nonebot.adapters.onebot.v11 import Bot
 
@@ -18,6 +19,7 @@ from ..utils.types import Student
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (  # noqa: E402
     Alconna,
+    AlconnaMatcher,
     Args,
     Image,
     Match,
@@ -25,12 +27,14 @@ from nonebot_plugin_alconna import (  # noqa: E402
     on_alconna,
 )
 
-birthday_list = Alconna("ba学生生日表", Args["month", str])
-get_student_birthday_list = on_alconna(birthday_list, use_cmd_start=True)
+birthday_list: Alconna[Any] = Alconna("ba学生生日表", Args["month", str])
+get_student_birthday_list: type[AlconnaMatcher] = on_alconna(
+    birthday_list, use_cmd_start=True
+)
 
 
 @get_student_birthday_list.assign("month")
-async def _(bot: Bot, month: Match[str]):
+async def _(bot: Bot, month: Match[str]) -> None:
     if month.available:
         month_match: re.Match[str] | None = re.search(r"(\d+)月", month.result)
         if month_match or month.result == "当月":

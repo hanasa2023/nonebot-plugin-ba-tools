@@ -185,7 +185,7 @@ async def get_img_from_url(url: str) -> list[str]:
     imgs_url: list[str] = []
     text: str = await get_data_from_html(url)
     soup: BeautifulSoup = BeautifulSoup(text, "html.parser")
-    imgs: ResultSet[Tag] = soup.css.select(".div-img > img")
+    imgs: ResultSet[Tag] = soup.select(".div-img > img")
     for img in imgs:
         img_src: str | list[str] | None = img.get("src")
         if isinstance(img_src, str):
@@ -202,7 +202,7 @@ async def get_max_manga_index() -> int:
     """
     text: str = await get_data_from_html(BA_WIKI_URL)
     soup: BeautifulSoup = BeautifulSoup(text, "html.parser")
-    titles: ResultSet[Tag] = soup.css.select(
+    titles: ResultSet[Tag] = soup.select(
         "#menu-51508 > div:nth-child(2) > div.model-tab-content > div:nth-child(1) > div > a:nth-child(1)"
     )
     if len(titles):

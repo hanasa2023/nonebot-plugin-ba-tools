@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from nonebot import require
 from nonebot.adapters.onebot.v11 import Bot
 
@@ -9,6 +11,7 @@ from ..utils.wiki import get_img_from_url, get_wiki_url_from_title
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (  # noqa: E402
     Alconna,
+    AlconnaMatcher,
     Args,
     Image,
     Match,
@@ -17,12 +20,12 @@ from nonebot_plugin_alconna import (  # noqa: E402
 )
 
 # TODO: 添加命令别名
-walkthrough = Alconna("ba关卡攻略", Args["index", str])
-get_walkthrough = on_alconna(walkthrough, use_cmd_start=True)
+walkthrough: Alconna[Any] = Alconna("ba关卡攻略", Args["index", str])
+get_walkthrough: type[AlconnaMatcher] = on_alconna(walkthrough, use_cmd_start=True)
 
 
 @get_walkthrough.assign("index")
-async def _(bot: Bot, index: Match[str]):
+async def _(bot: Bot, index: Match[str]) -> None:
     if index.available:
         pre_msg: dict[str, int] = {"message_id": -1}
         url: str | None = await get_wiki_url_from_title(index.result)
