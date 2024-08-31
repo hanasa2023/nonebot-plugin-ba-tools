@@ -6,6 +6,9 @@ from nonebot.adapters.onebot.v11 import Bot
 
 from ..config import plugin_config
 from ..utils.wiki import get_data_from_html, get_wiki_url_from_title
+from .utils.get_clairvoyance_img import (
+    create_clairvoyance_img,
+)
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (  # noqa: E402
@@ -32,11 +35,7 @@ async def _(bot: Bot, server: Match[str]) -> None:
             if url:
                 if plugin_config.loading_switch:
                     pre_msg = await get_ba_clairvoyance.send("拼命加载图片中……")
-                text = await get_data_from_html(url)
-                soup = BeautifulSoup(text, "html.parser")
-                imgs = soup.select(".div-img > img")
-                src = imgs[3].get("src")
-                msg = UniMessage([Image(url=f"https:{src}")])
+                msg = await create_clairvoyance_img(url)
                 await get_ba_clairvoyance.send(msg)
                 if plugin_config.loading_switch:
                     await bot.delete_msg(message_id=pre_msg["message_id"])

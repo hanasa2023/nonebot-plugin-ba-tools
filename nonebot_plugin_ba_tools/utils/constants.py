@@ -13,6 +13,8 @@ ACTIVITYT_HTML_PATH = "activity.html"
 DATA_STUDENTS_ICON_PATH = "images/student/icon"
 DATA_STUDENTS_BIRTHDAY_IMG_PATH = "images/student/birthday"
 
+ASSERTS_CLAIRVOYANCE_IMG_PATH = "images/clairvoyance"
+
 MONTH_i18N = {
     "1": "一",
     "2": "二",
