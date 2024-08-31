@@ -1,7 +1,11 @@
+import os
+
 import nonebot
 import pytest
 from nonebot.adapters.onebot.v11 import Adapter
 from nonebug import NONEBOT_INIT_KWARGS
+
+os.environ["ENVIRONMENT"] = "test"
 
 
 @pytest.fixture(scope="session", autouse=True)

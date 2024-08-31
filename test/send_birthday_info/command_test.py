@@ -30,7 +30,7 @@ async def test_switch(app: App):
 
     async with app.test_matcher(birthday_info_switch) as ctx:
         bot = ctx.create_bot()
-        event = make_event("/ba_birthday_info on")
+        event = make_event("/ba学生生日订阅 开启")
         ctx.receive_event(bot, event)
         ctx.should_call_send(event, "权限不足", bot=bot)
-        ctx.should_finished()
+        ctx.should_finished(birthday_info_switch)
