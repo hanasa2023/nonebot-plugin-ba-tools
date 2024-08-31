@@ -3,7 +3,6 @@ from pathlib import Path
 
 import httpx
 from bs4 import BeautifulSoup
-from loguru import logger
 from nonebot import require
 
 from nonebot_plugin_ba_tools.utils.constants import ASSERTS_CLAIRVOYANCE_IMG_PATH
