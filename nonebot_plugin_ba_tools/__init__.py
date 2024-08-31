@@ -9,11 +9,11 @@ from .get_ba_walkthrough import get_walkthrough  # noqa: F401
 from .get_student_birthday import get_student_birthday_list  # noqa: F401
 from .send_birthday_info import birthday_info_switch, send_birthday_info  # noqa: F401
 
-__version__ = "0.2.5"
+__version__ = "0.2.6"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",
-    usage="推送每日学生生日信息等",
+    usage="推送学生生日信息，获取千里眼……",
     type="application",
     homepage="https://github.com/hanasa2023/ba-tools#readme",
     config=Config,
