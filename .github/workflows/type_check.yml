@@ -21,11 +21,6 @@ jobs:
             - run: poetry install
               shell: bash
 
-            - name: Install Types
-              run: |
-                poetry add types-beautifulsoup4
-              shell: bash
-
             - name: Run Mypy
               shell: bash
               run: |
