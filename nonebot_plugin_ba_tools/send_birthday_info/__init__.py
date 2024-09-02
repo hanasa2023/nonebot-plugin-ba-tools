@@ -48,18 +48,9 @@ async def send_birthday_info() -> None:
             ):
                 hash_map[student.personal_name] = True
 
-                # message = UniMessage(
-                #     [
-                #         f"今天是{student.name}的生日哦，在学生值日的前提下，切换为非l2d的值日模式，可以听到特殊语音哦。让我们一起祝福{student.name}生日快乐吧!",
-                #         Emoji(id="144"),
-                #         Image(
-                #             url=ASSERTS_URL + f"/images/student/l2d/{student.id}.webp"
-                #         ),
-                #     ]
-                # )
                 message = (
                     UniMessage.text(
-                        "今天是{student.name}的生日哦，在学生值日的前提下，切换为非l2d的值日模式，可以听到特殊语音哦。让我们一起祝福{student.name}生日快乐吧!"
+                        f"今天是{student.name}的生日哦，在学生值日的前提下，切换为非l2d的值日模式，可以听到特殊语音哦。让我们一起祝福{student.name}生日快乐吧!"
                     )
                     .emoji(id="144")
                     .image(url=ASSERTS_URL + f"/images/student/l2d/{student.id}.webp")
