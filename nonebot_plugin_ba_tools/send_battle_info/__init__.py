@@ -1,3 +1,5 @@
+from typing import Any
+
 from nonebot import require
 
 from .command import battle_info_switch  # noqa: F401
@@ -20,7 +22,7 @@ async def send_battle_info() -> None:
     dynamic_list: DynamicListResponse = await service.get_user_dynamic("436037759")
 
     dynamic_infos: list[DynamicInfo] = await service.get_dynamic_info(dynamic_list)
-    msg = UniMessage()
+    msg: UniMessage[Any] = UniMessage()
     for info in dynamic_infos:
         if "总力战" in info.desc or "大决战" in info.desc:
             msg.text(info.desc)
