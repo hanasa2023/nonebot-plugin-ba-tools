@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, RootModel
+from pydantic import BaseModel, Field
 
 
 class Summon(BaseModel):
@@ -256,5 +256,5 @@ class Student(BaseModel):
     style_id: int | None = Field(None, alias="StyleId")
 
 
-class Students(RootModel[list[Student]]):
+class Students(BaseModel):
     root: list[Student]

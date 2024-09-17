@@ -6,14 +6,11 @@ from typing import cast
 
 import httpx
 from bs4 import BeautifulSoup, NavigableString, ResultSet, Tag
-from nonebot import require
 
 from ..config import plugin_config
+from ..utils.addition_for_htmlrender import get_new_page
 from .common import get_data_from_html
 from .constants import ACTIVITYT_HTML_PATH, BA_WIKI_URL, WIKI_BASE_URL
-
-require("nonebot_plugin_htmlrender")
-from nonebot_plugin_htmlrender import get_new_page  # noqa: E402
 
 
 async def get_wiki_url_from_title(title: str) -> str | None:
