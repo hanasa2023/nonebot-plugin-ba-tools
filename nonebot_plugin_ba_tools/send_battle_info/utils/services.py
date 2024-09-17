@@ -1,3 +1,4 @@
+import asyncio
 import time
 import urllib.parse
 from functools import reduce
@@ -94,16 +95,31 @@ class DynamicInfo(BaseModel):
 class BilibiliService:
     """Bilibili的api接口服务"""
 
+    _instance = None
+    _lock = asyncio.Lock()
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self) -> None:
-        self.img_key: str
-        self.sub_key: str
-        self.cookie: str
-        self.battle_config: BattleConfig
+        if not hasattr(self, "initialized"):
+            self.img_key: str = ""
+            self.sub_key: str = ""
+            self.cookie: str = ""
+            self.battle_config: BattleConfig = BattleConfig(
+                group_list=[], last_dynamic_id=""
+            )
+            self.initialized: bool = False
 
     async def initialize(self) -> None:
-        self.img_key, self.sub_key = await self.getWbiKeys()
-        self.cookie = await self.get_cookie()
-        self.battle_config = load_battle_config()
+        async with self._lock:
+            if not self.initialized:
+                self.img_key, self.sub_key = await self.getWbiKeys()
+                self.cookie = await self.get_cookie()
+                self.battle_config = await load_battle_config()
+                self.initialized = True
 
     def getMixinKey(self, orig: str) -> str:
         "对 imgKey 和 subKey 进行字符顺序打乱编码"
@@ -168,6 +184,7 @@ class BilibiliService:
         Returns:
             DynamicListResponse: 动态列表的响应
         """
+        logger.debug("Start to get user dynamic")
         async with httpx.AsyncClient() as ctx:
             params: dict[str, str] = {"host_mid": uid}
             signed_params: dict[str, str] = self.encWbi(
@@ -191,31 +208,36 @@ class BilibiliService:
             dynamic_list: DynamicListResponse = DynamicListResponse(**response.json())
             return dynamic_list
 
-    async def get_dynamic_info(
-        self, data: DynamicListResponse, keep_forward: bool = False
-    ) -> list[DynamicInfo]:
+    async def get_dynamic_info(self, data: DynamicListResponse) -> list[DynamicInfo]:
         """获取动态信息
 
         Args:
             data (DynamicListResponse): 动态列表数据
-            keep_forward (bool, optional): 是否保留置顶信息. Defaults to False.
 
         Returns:
             list[DynamicInfo]: 动态列表信息列表
         """
+        logger.debug("Start to get dynamic info")
+        # 如果首次运行插件，则手动添加最后一条动态的id
+        if self.battle_config.last_dynamic_id == "":
+            self.battle_config.last_dynamic_id = data.data.items[-1].id_str
+            logger.debug(f"init last_dynamic_id: {self.battle_config.last_dynamic_id}")
+        logger.debug(f"last_dynamic_id is {self.battle_config.last_dynamic_id}")
+
         dynamic_info: list[DynamicInfo] = []
-        current_dynamic_id: str = ""
+        # 过滤置顶信息
+        current_last_dynamic_id: str = data.data.items[1].id_str
+        logger.debug(f"items len is {len(data.data.items)}")
         for item in data.data.items:
-            # 过滤置顶信息
-            if not keep_forward and item.type == "DYNAMIC_TYPE_FORWARD":
-                continue
+            logger.debug(f"now at {item.id_str}")
             # 获取最后的动态id
             if self.battle_config.last_dynamic_id == item.id_str:
-                self.battle_config.last_dynamic_id = current_dynamic_id
-                save_battle_config(self.battle_config)
+                self.battle_config.last_dynamic_id = current_last_dynamic_id
+                await save_battle_config(self.battle_config)
+                logger.debug(
+                    f"In the last update dynamic: {self.battle_config.last_dynamic_id}"
+                )
                 break
-            else:
-                current_dynamic_id = item.id_str
             desc: str = item.modules.module_dynamic.desc.text
             draws_url: list[str] = []
             if (
