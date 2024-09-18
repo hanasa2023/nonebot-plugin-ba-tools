@@ -13,7 +13,7 @@ require("nonebot_plugin_apscheduler")
 from nonebot_plugin_apscheduler import scheduler  # noqa: E402
 
 
-@scheduler.scheduled_job("interval", seconds=10)
+@scheduler.scheduled_job("interval", minutes=1)
 async def send_battle_info() -> None:
     # TODO:进一步完善功能
     service: BilibiliService = BilibiliService()
