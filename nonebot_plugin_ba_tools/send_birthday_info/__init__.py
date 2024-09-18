@@ -25,7 +25,7 @@ async def send_birthday_info() -> None:
     students: list[Student] = await get_all_students()
 
     # 获取当前已订阅的群组列表
-    group_list: list[int] = load_group_list()
+    group_list: list[int] = await load_group_list()
 
     # 获取当前月份及日期
     current_datetime: datetime = datetime.now()
