@@ -54,7 +54,7 @@ class Major(BaseModel):
 
 
 class ModuleDynamic(BaseModel):
-    desc: Desc
+    desc: Desc | None = Field(None)
     major: Major | None = Field(None)
 
 

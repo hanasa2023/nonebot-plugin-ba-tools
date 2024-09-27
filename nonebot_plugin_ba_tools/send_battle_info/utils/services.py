@@ -238,7 +238,11 @@ class BilibiliService:
                     f"In the last update dynamic: {self.battle_config.last_dynamic_id}"
                 )
                 break
-            desc: str = item.modules.module_dynamic.desc.text
+            desc: str = (
+                item.modules.module_dynamic.desc.text
+                if item.modules.module_dynamic.desc
+                else ""
+            )
             draws_url: list[str] = []
             if (
                 item.modules.module_dynamic.major
