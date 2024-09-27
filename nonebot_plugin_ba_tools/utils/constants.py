@@ -30,3 +30,5 @@ MONTH_i18N = {
     "11": "十一",
     "12": "十二",
 }
+
+BA_PIC_BASE_URL = "https://cloudisk.hanasaki.tech"
