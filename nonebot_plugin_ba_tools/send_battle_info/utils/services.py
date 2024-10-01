@@ -231,7 +231,10 @@ class BilibiliService:
         for item in data.data.items:
             logger.debug(f"now at {item.id_str}")
             # 获取最后的动态id
-            if self.battle_config.last_dynamic_id == item.id_str:
+            if (
+                self.battle_config.last_dynamic_id == item.id_str
+                or item == data.data.items[-1]
+            ):
                 self.battle_config.last_dynamic_id = current_last_dynamic_id
                 await save_battle_config(self.battle_config)
                 logger.debug(
