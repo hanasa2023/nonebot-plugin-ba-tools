@@ -9,7 +9,7 @@ DATA_STUDENT_JSON_FOLDER_PATH = "data/zh/student"
 WIKI_BASE_URL = "https://www.gamekee.com"
 BA_WIKI_URL = WIKI_BASE_URL + "/ba"
 
-ACTIVITYT_HTML_PATH = "activity.html"
+ACTIVITY_HTML_PATH = "activity.html"
 
 DATA_STUDENTS_ICON_PATH = "images/student/icon"
 DATA_STUDENTS_BIRTHDAY_IMG_PATH = "images/student/birthday"

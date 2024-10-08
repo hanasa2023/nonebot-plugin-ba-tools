@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup, NavigableString, ResultSet, Tag
 from ..config import plugin_config
 from ..utils.addition_for_htmlrender import get_new_page
 from .common import get_data_from_html
-from .constants import ACTIVITYT_HTML_PATH, BA_WIKI_URL, WIKI_BASE_URL
+from .constants import ACTIVITY_HTML_PATH, BA_WIKI_URL, WIKI_BASE_URL
 
 
 async def get_wiki_url_from_title(title: str) -> str | None:
@@ -109,7 +109,7 @@ async def create_activity_html(tag: Tag):
             img["src"] = new_src
     html: str = soup.prettify()
     with open(
-        plugin_config.assert_path / ACTIVITYT_HTML_PATH, "w", encoding="utf-8"
+            plugin_config.assert_path / ACTIVITY_HTML_PATH, "w", encoding="utf-8"
     ) as f:
         f.write(html)
 
@@ -164,7 +164,7 @@ async def create_activity_pic(url: str, base_year: int) -> bytes | None:
         width, height = get_table_size(table)
         async with get_new_page(viewport={"width": width, "height": height}) as page:
             await page.goto(
-                f"file://{plugin_config.assert_path / ACTIVITYT_HTML_PATH}",
+                f"file://{plugin_config.assert_path / ACTIVITY_HTML_PATH}",
                 wait_until="networkidle",
             )
             screenshot: bytes = cast(bytes, await page.screenshot(full_page=True))
