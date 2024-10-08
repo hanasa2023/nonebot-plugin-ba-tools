@@ -52,16 +52,16 @@ async def get_student_by_id(student_id: int) -> Student:
         DATA_STUDENTS_JSON_FILE_PATH
     ).load_students()
     for student in students:
+        if student.id == student_id:
+            async with aiofiles.open(student_json_path, "w", encoding="utf-8") as f:
+                await f.write(json.dumps(student, ensure_ascii=False, indent=2))
+            return student
         this_student_json_path = student_folder / f"{student.id}.json"
         if not this_student_json_path.exists():
             async with aiofiles.open(
                 this_student_json_path, "w", encoding="utf-8"
             ) as f:
                 await f.write(json.dumps(student, ensure_ascii=False, indent=2))
-        if student.id == student_id:
-            async with aiofiles.open(student_json_path, "w", encoding="utf-8") as f:
-                await f.write(json.dumps(student, ensure_ascii=False, indent=2))
-            return student
     raise DataLoadError(f"ID为{student_id}的学生不存在！")
 
 
