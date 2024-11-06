@@ -48,3 +48,4 @@ async def get_img(server: str) -> UniMessage[Image] | None:
 
                 logger.debug(f"从{img_path}加载图片……")
                 return UniMessage.image(path=img_path)
+    return None
