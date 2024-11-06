@@ -1,4 +1,4 @@
-ASSERTS_URL = "https://api.hanasaki.tech/"
+ASSERTS_URL = "https://api.hanasaki.tech/asserts/"
 
 BIRTHDAY_INFO_GROUP_LIST_FILE = "birthday_info_group_list.json"
 BATTLE_INFO_CONFIG_FILE = "battle_info_config.json"

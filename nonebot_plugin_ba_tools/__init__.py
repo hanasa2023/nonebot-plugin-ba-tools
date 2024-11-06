@@ -11,7 +11,7 @@ from .get_student_birthday import get_student_birthday_list  # noqa: F401
 from .send_battle_info import battle_info_switch, send_battle_info  # noqa: F401
 from .send_birthday_info import birthday_info_switch, send_birthday_info  # noqa: F401
 
-__version__ = "0.3.2"
+__version__ = "0.3.3"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",
