@@ -14,7 +14,11 @@ ACTIVITYT_HTML_PATH = "activity.html"
 DATA_STUDENTS_ICON_PATH = "images/student/icon"
 DATA_STUDENTS_BIRTHDAY_IMG_PATH = "images/student/birthday"
 
-ASSERTS_CLAIRVOYANCE_IMG_PATH = "images/clairvoyance"
+IMG_PATH_MAP = {
+    "千里眼": "images/clairvoyance",
+    "活动": "images/activity",
+    "关卡攻略": "images/chapter_map",
+}
 
 MONTH_i18N = {
     "1": "一",

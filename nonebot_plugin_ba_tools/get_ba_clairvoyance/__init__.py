@@ -4,7 +4,7 @@ from nonebot import require
 from nonebot.adapters.onebot.v11 import Bot
 
 from ..config import plugin_config
-from .utils.get_clairvoyance_img import get_img
+from ..utils.get_img_from_name import get_img
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (  # noqa: E402
@@ -26,7 +26,9 @@ get_ba_clairvoyance: type[AlconnaMatcher] = on_alconna(clairvoyance, use_cmd_sta
 async def _(bot: Bot, server: Match[str]) -> None:
     if server.available:
         pre_msg: dict[str, int] = {"message_id": -1}
-        msg: UniMessage[Image] | None = await get_img(server.result)
+        msg: UniMessage[Image] | None = await get_img(
+            f"{server.result}未来视", "千里眼"
+        )
         if msg:
             if plugin_config.loading_switch:
                 pre_msg = await get_ba_clairvoyance.send("拼命加载图片中……")
