@@ -8,7 +8,6 @@ import httpx
 from bs4 import BeautifulSoup, NavigableString, ResultSet, Tag
 
 from ..config import plugin_config
-from ..utils.addition_for_htmlrender import get_new_page
 from .common import get_data_from_html
 from .constants import ACTIVITYT_HTML_PATH, BA_WIKI_URL, WIKI_BASE_URL
 
@@ -157,6 +156,8 @@ async def create_activity_pic(url: str, base_year: int) -> bytes | None:
     Returns:
         bytes | None: 图片数据
     """
+    from ..utils.addition_for_htmlrender import get_new_page
+
     current_year: int = datetime.now().year
     table: Tag | None = await get_activity_table(url, current_year - base_year)
     if table:

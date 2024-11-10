@@ -13,30 +13,27 @@ from nonebot_plugin_alconna import (  # noqa: E402
     Alconna,
     AlconnaMatcher,
     Args,
-    Image,
-    Match,
+    Image,  # noqa: E402
+    Match,  # noqa: E402
     UniMessage,
     on_alconna,
 )
 
-# TODO:命令别名
-clairvoyance: Alconna[Any] = Alconna("ba千里眼", Args["server", str])
-get_clairvoyance: type[AlconnaMatcher] = on_alconna(clairvoyance, use_cmd_start=True)
+activity: Alconna[Any] = Alconna("ba活动一览", Args["server", str])
+get_activity_info: type[AlconnaMatcher] = on_alconna(activity, use_cmd_start=True)
 
 
-@get_clairvoyance.assign("server")
+@get_activity_info.assign("server")
 async def _(bot: Bot, server: Match[str]) -> None:
     if server.available:
         pre_msg: dict[str, int] = {"message_id": -1}
-        msg: UniMessage[Image] | None = await get_img(
-            f"{server.result}未来视", "千里眼"
-        )
+        msg: UniMessage[Image] | None = await get_img(f"{server.result}活动", "活动")
         if msg:
             if plugin_config.loading_switch:
-                pre_msg = await get_clairvoyance.send("拼命加载图片中……")
-            await get_clairvoyance.send(msg)
+                pre_msg = await get_activity_info.send("正在加载图片……")
+            await get_activity_info.send(msg)
             if plugin_config.loading_switch:
                 await bot.delete_msg(message_id=pre_msg["message_id"])
-            await get_clairvoyance.finish()
+            await get_activity_info.finish()
         else:
-            await get_clairvoyance.finish("不支持的服务器哦～")
+            await get_activity_info.finish("不支持的服务器哦～")

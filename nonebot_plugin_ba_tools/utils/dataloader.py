@@ -41,12 +41,12 @@ class DataLoader:
             response = await client.get(self.file_url)
             response.raise_for_status()
             data = response.json()
-        return data
+            return data
 
     async def load(self) -> Any:
         # 如果文件存在，则从文件中读取数据
         if self.file_path.exists():
-            return self.read()
+            return await self.read()
         else:
             # 如果文件夹不存在，则创建文件夹
             folder = self.file_path.parent
@@ -69,10 +69,12 @@ class StudentDataLoader(DataLoader):
         data: Any | None = None
         try:
             data = await self.load()
+            logger.debug(type(data))
+            logger.debug(data)
         except Exception as e:
             logger.exception(e)
         finally:
-            if isinstance(data, dict):
-                return Students(**data).root
+            if isinstance(data, list):
+                return Students(root=[Student(**item) for item in data]).root
             else:
-                raise DataLoadError("Loaded data is not a dictionary")
+                raise DataLoadError("Loaded data is not a list")
