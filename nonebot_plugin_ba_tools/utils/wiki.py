@@ -157,6 +157,7 @@ async def create_activity_pic(url: str, base_year: int) -> bytes | None:
         bytes | None: 图片数据
     """
     from ..utils.addition_for_htmlrender import get_new_page
+
     current_year: int = datetime.now().year
     table: Tag | None = await get_activity_table(url, current_year - base_year)
     if table:
