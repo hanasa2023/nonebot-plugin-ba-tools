@@ -19,24 +19,25 @@ from nonebot_plugin_alconna import (  # noqa: E402
     on_alconna,
 )
 
-# TODO:命令别名
-clairvoyance: Alconna[Any] = Alconna("ba千里眼", Args["server", str])
-get_clairvoyance: type[AlconnaMatcher] = on_alconna(clairvoyance, use_cmd_start=True)
+_better_student: Alconna[Any] = Alconna("ba人权", Args["server", str])
+get_better_student: type[AlconnaMatcher] = on_alconna(
+    _better_student, use_cmd_start=True
+)
 
 
-@get_clairvoyance.assign("server")
-async def _(bot: Bot, server: Match[str]) -> None:
+@get_better_student.assign("server")
+async def _(bot: Bot, server: Match[str]):
     if server.available:
         pre_msg: dict[str, int] = {"message_id": -1}
         msg: UniMessage[Image] | None = await get_img(
-            f"{server.result}未来视", "千里眼"
+            f"{server.result}人权", f"{server.result}人权"
         )
         if msg:
             if plugin_config.loading_switch:
-                pre_msg = await get_clairvoyance.send("拼命加载图片中……")
-            await get_clairvoyance.send(msg)
+                pre_msg = await get_better_student.send("正在努力查询……")
+            await get_better_student.send(msg)
             if plugin_config.loading_switch:
                 await bot.delete_msg(message_id=pre_msg["message_id"])
-            await get_clairvoyance.finish()
+            await get_better_student.finish()
         else:
-            await get_clairvoyance.finish("不支持的服务器哦～")
+            await get_better_student.finish("该服务器不支持查询人权")

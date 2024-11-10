@@ -7,14 +7,13 @@ from typing import Any
 from nonebot import require
 from nonebot.adapters.onebot.v11 import Bot
 
-from nonebot_plugin_ba_tools.get_student_birthday.utils.draw_img import (
-    init_birthday_img,
-)
-
 from ..config import plugin_config
 from ..utils.common import get_students_by_birth_month
 from ..utils.constants import DATA_STUDENTS_BIRTHDAY_IMG_PATH
 from ..utils.types import Student
+from .utils.draw_img import (
+    init_birthday_img,
+)
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (  # noqa: E402

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 import httpx
@@ -11,13 +13,13 @@ from nonebot_plugin_alconna import Image, UniMessage  # noqa: E402
 
 
 async def get_img(name: str, type: str) -> UniMessage[Image] | None:
-    """创建千里眼图片，若本地不存在，则从wiki缓存到本地
+    """创建图片，若本地不存在，则从网站缓存到本地
 
     Args:
         name (str): search name
 
     Returns:
-        UniMessage[Image] | None: 若获取到千里眼信息，则返回image消息否则返回None
+        UniMessage[Image] | None: 若获取到信息，则返回image消息否则返回None
     """
     url: str = f"https://tutorial.arona.diyigemt.com/api/v2/image?name={name}"
     async with httpx.AsyncClient() as ctx:
