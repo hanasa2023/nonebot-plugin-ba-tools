@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import random
 from typing import Any, Literal
 
@@ -14,10 +16,11 @@ from nonebot_plugin_alconna import (  # noqa: E402
     AlconnaMatcher,
     Args,
     Arparma,
+    Image,
     Match,
     Option,
+    Text,
     UniMessage,
-    Image,
     on_alconna,
 )
 
@@ -69,7 +72,9 @@ async def _(result: Arparma):
                     [Illust(**illust) for illust in response.json()["data"]["illusts"]]
                 )
                 for illust in illust_list:
-                    pic: UniMessage[Image] = UniMessage.image(url=illust.image_url)
+                    pic: UniMessage[Image | Text] = UniMessage.image(
+                        url=illust.image_url
+                    )
                     if plugin_config.send_pic_info:
                         msg = pic + UniMessage.text(
                             f"🎨 pid: {illust.pid}\n🧐 uid: {illust.uid}"
