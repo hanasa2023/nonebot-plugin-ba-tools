@@ -27,8 +27,6 @@ get_walkthrough: type[AlconnaMatcher] = on_alconna(walkthrough, use_cmd_start=Tr
 @get_walkthrough.assign("option")
 async def _(bot: Bot, option: Match[str]) -> None:
     if option.available:
-        if option.available == "关卡":
-            await get_walkthrough.finish("请输入要查询的关卡号")
         pre_msg: dict[str, int] = {"message_id": -1}
         type = "关卡攻略" if option.result.startswith("关卡") else option.result
         msg: UniMessage[Image] | None = await get_img(
