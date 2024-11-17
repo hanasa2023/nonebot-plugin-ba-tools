@@ -58,9 +58,11 @@
 
 - 资源文件请求详见 [Ba Tools Api](https://api.hanasaki.tech)
 
-- ~~默认路径为项目缓存路径，使用[nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore)进行管理，你可以使用`nb localsotre`查看默认缓存路径~~
+- 默认路径为项目缓存路径，使用[nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore)进行管理，你可以使用`nb localsotre`查看默认缓存路径
 
 - [AronaBot](https://tutorial.arona.diyigemt.com/home)
+
+- 涩图功能使用[自建pixiv数据库](https://github.com/hanasa2023/ba-image-db)
 
 #### 插件配置
 
