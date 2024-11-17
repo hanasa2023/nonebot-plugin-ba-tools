@@ -26,6 +26,8 @@ class Config(BaseModel):
     pixiv_nginx: str = "https://i.pixiv.re"
     # 发送涩图时是否发送图片信息
     send_pic_info: bool = False
+    # r18开关，防爆按钮
+    r18_switch: bool = False
 
 
 plugin_config = get_plugin_config(Config)
