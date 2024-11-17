@@ -1,5 +1,5 @@
 import random
-from typing import Any
+from typing import Any, Literal
 
 import httpx
 from nonebot import logger, require
@@ -26,7 +26,7 @@ _pic: Alconna[Any] = Alconna(
     Option("num", Args["v", int]),
     Option("tags", Args["v", list[str]]),
     Option("isAI", Args["v", bool]),
-    Option("restrict", Args["v", str]),
+    Option("restrict", Args["v", Literal["safe", "r18"]]),
 )
 get_pic: type[AlconnaMatcher] = on_alconna(_pic, use_cmd_start=True)
 
@@ -43,6 +43,9 @@ async def _(result: Arparma):
     tags: list[str] = result.query("tags.v", [])
     is_ai: bool = result.query("isAI.v", False)
     restrict: str = result.query("restrict.v", "safe")
+    if restrict == "r18" and not plugin_config.r18_switch:
+        restrict = "safe"
+        await get_pic.send("r18涩图已关闭，请联系管理员开启")
     if pic_num > plugin_config.ba_max_pic_num:
         pic_num = plugin_config.ba_max_pic_num
     illust_list: list[Illust] = []
