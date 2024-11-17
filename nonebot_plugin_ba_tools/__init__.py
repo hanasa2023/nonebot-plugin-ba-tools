@@ -8,6 +8,8 @@ from .get_ba_clairvoyance import get_clairvoyance as get_clairvoyance
 from .get_ba_gear_line import get_rank1_charts as get_rank1_charts
 from .get_ba_manga import get_manga as get_manga
 from .get_ba_pics import get_pic as get_pic
+from .get_ba_pics import upload_pic as upload_pic
+from .get_ba_pics import get_meme as get_meme
 from .get_ba_simple_appraise import get_simple_appraise as get_simple_appraise
 from .get_ba_student_birthday import (
     get_student_birthday_list as get_student_birthday_list,

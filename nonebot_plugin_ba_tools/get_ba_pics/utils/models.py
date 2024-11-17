@@ -36,3 +36,14 @@ class Content(BaseModel):
 class FileInfo(BaseModel):
     name: str
     sign: str
+
+
+class Illust(BaseModel):
+    pid: int
+    uid: int
+    author: str
+    title: str
+    tags: list[str]
+    image_url: str = Field(..., alias="imageUrl")
+    ai_type: bool = Field(..., alias="aiType")
+    restrict: str
