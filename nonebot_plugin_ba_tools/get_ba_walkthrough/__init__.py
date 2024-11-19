@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Any
 
 from nonebot import require
-from nonebot.adapters.onebot.v11 import Bot
 
 from ..config import plugin_config
 from ..utils.get_img_from_name import get_img
@@ -18,6 +17,7 @@ from nonebot_plugin_alconna import (  # noqa: E402
     UniMessage,
     on_alconna,
 )
+from nonebot_plugin_alconna.uniseg import Receipt  # noqa: E402
 
 # TODO: 添加命令别名
 walkthrough: Alconna[Any] = Alconna("ba攻略", Args["option", str])
@@ -25,19 +25,19 @@ get_walkthrough: type[AlconnaMatcher] = on_alconna(walkthrough, use_cmd_start=Tr
 
 
 @get_walkthrough.assign("option")
-async def _(bot: Bot, option: Match[str]) -> None:
+async def _(option: Match[str]) -> None:
     if option.available:
-        pre_msg: dict[str, int] = {"message_id": -1}
+        pre_msg: Receipt | None = None
         type = "关卡攻略" if option.result.startswith("关卡") else option.result
         msg: UniMessage[Image] | None = await get_img(
             option.result.replace("关卡", ""), type
         )
         if msg:
             if plugin_config.loading_switch:
-                pre_msg = await get_walkthrough.send("攻略正在来的路上……")
+                pre_msg = await UniMessage.text("攻略正在来的路上……").send()
             await get_walkthrough.send(msg)
-            if plugin_config.loading_switch:
-                await bot.delete_msg(message_id=pre_msg["message_id"])
+            if plugin_config.loading_switch and pre_msg:
+                await pre_msg.recall()
             await get_walkthrough.finish()
         else:
             await get_walkthrough.finish(f"未找到对应{option.result}的攻略哦～")

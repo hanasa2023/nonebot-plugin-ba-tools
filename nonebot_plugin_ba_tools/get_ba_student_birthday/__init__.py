@@ -5,7 +5,6 @@ from datetime import datetime
 from typing import Any
 
 from nonebot import require
-from nonebot.adapters.onebot.v11 import Bot
 
 from ..config import plugin_config
 from ..utils.common import get_students_by_birth_month
@@ -25,6 +24,7 @@ from nonebot_plugin_alconna import (  # noqa: E402
     UniMessage,
     on_alconna,
 )
+from nonebot_plugin_alconna.uniseg import Receipt  # noqa: E402
 
 birthday_list: Alconna[Any] = Alconna("ba学生生日表", Args["month", str])
 get_student_birthday_list: type[AlconnaMatcher] = on_alconna(
@@ -33,18 +33,18 @@ get_student_birthday_list: type[AlconnaMatcher] = on_alconna(
 
 
 @get_student_birthday_list.assign("month")
-async def _(bot: Bot, month: Match[str]) -> None:
+async def _(month: Match[str]) -> None:
     if month.available:
         month_match: re.Match[str] | None = re.search(r"(\d+)月", month.result)
         if month_match or month.result == "当月":
-            pre_msg: dict[str, int] = {"message_id": -1}
+            pre_msg: Receipt | None = None
             real_month: str = (
                 month_match.group(1) if month_match else str(datetime.now().month)
             )
             students: list[Student] = await get_students_by_birth_month(real_month)
             if len(students):
                 if plugin_config.loading_switch:
-                    pre_msg = await get_student_birthday_list.send("图片正在准备喵~")
+                    pre_msg = await UniMessage.text("图片正在准备喵~").send()
                 await init_birthday_img(students, real_month)
                 msg: UniMessage[Image] = UniMessage(
                     Image(
@@ -53,8 +53,8 @@ async def _(bot: Bot, month: Match[str]) -> None:
                     )
                 )
                 await get_student_birthday_list.send(msg)
-                if plugin_config.loading_switch:
-                    await bot.delete_msg(message_id=pre_msg["message_id"])
+                if plugin_config.loading_switch and pre_msg:
+                    await pre_msg.recall()
                 await get_student_birthday_list.finish()
             else:
                 await get_student_birthday_list.finish("是无效的月份呢")

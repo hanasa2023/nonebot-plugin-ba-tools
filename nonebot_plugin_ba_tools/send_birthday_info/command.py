@@ -2,19 +2,24 @@ import json
 from pathlib import Path
 from typing import Any
 
-from arclet.alconna import Alconna
-from nonebot import logger
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent
-from nonebot_plugin_alconna import AlconnaMatcher, Args, Match, on_alconna
+# from arclet.alconna import Alconna
+from nonebot import logger, require
 
 from ..config import DRIVER, plugin_config
 from ..utils.constants import BIRTHDAY_INFO_GROUP_LIST_FILE
-from ..utils.user_info import (
-    get_group_user_info,
-    is_group_admin,
-    is_group_owner,
-    is_superuser,
+from ..utils.user_info import is_superuser
+
+require("nonebot_plugin_alconna")
+from nonebot_plugin_alconna import (  # noqa: E402
+    Alconna,
+    AlconnaMatcher,
+    Args,
+    Match,
+    on_alconna,
 )
+
+require("nonebot_plugin_uninfo")
+from nonebot_plugin_uninfo import SceneType, Uninfo  # noqa: E402
 
 GROUP_LIST: list[int] = []
 
@@ -51,31 +56,37 @@ birthday_info_switch: type[AlconnaMatcher] = on_alconna(
 
 
 @birthday_info_switch.assign("status")
-async def _(bot: Bot, event: GroupMessageEvent, status: Match[str]) -> None:
+async def _(status: Match[str], session: Uninfo) -> None:
     global GROUP_LIST
-    # 群主、管理员、SUPERUSER可以使用此命令
-    user_info = await get_group_user_info(bot, event.user_id, event.group_id)
-    if (
-        is_group_owner(user_info)
-        or is_group_admin(user_info)
-        or is_superuser(event.user_id)
-    ):
-        if status.available:
-            if status.result == "开启":
-                if event.group_id not in GROUP_LIST:
-                    GROUP_LIST.append(event.group_id)
-                    save_group_list()
-                    await birthday_info_switch.finish("已开启生日信息推送")
+    if session.scene.type == SceneType.GROUP:
+        logger.info(f"session: {session.scene.id}")
+        is_group_owner = (
+            session.member and session.member.role and session.member.role.id == "OWNER"
+        )
+        is_group_admin = (
+            session.member
+            and session.member.role
+            and session.member.role.id == "ADMINISTRATOR"
+        )
+        if is_group_owner or is_group_admin or is_superuser(session.user.id):
+            if status.available:
+                if status.result == "开启":
+                    if session.scene.id not in GROUP_LIST:
+                        GROUP_LIST.append(int(session.scene.id))
+                        save_group_list()
+                        await birthday_info_switch.finish("已开启生日信息推送")
+                    else:
+                        await birthday_info_switch.finish("已开启生日信息推送")
+                elif status.result == "关闭":
+                    if session.scene.id in GROUP_LIST:
+                        GROUP_LIST.remove(session.scene.id)
+                        save_group_list()
+                        await birthday_info_switch.finish("已关闭生日信息推送")
+                    else:
+                        await birthday_info_switch.finish("已关闭生日信息推送")
                 else:
-                    await birthday_info_switch.finish("已开启生日信息推送")
-            elif status.result == "关闭":
-                if event.group_id in GROUP_LIST:
-                    GROUP_LIST.remove(event.group_id)
-                    save_group_list()
-                    await birthday_info_switch.finish("已关闭生日信息推送")
-                else:
-                    await birthday_info_switch.finish("已关闭生日信息推送")
+                    await birthday_info_switch.finish("无效的指令")
             else:
                 await birthday_info_switch.finish("无效的指令")
-    else:
-        await birthday_info_switch.finish("权限不足")
+        else:
+            await birthday_info_switch.finish("无效的指令")
