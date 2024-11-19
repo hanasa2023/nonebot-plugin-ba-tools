@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Any
 
 from nonebot import require
-from nonebot.adapters.onebot.v11 import Bot
 
 from ..config import plugin_config
 from ..utils.get_img_from_name import get_img
@@ -18,6 +17,7 @@ from nonebot_plugin_alconna import (  # noqa: E402
     UniMessage,
     on_alconna,
 )
+from nonebot_plugin_alconna.uniseg import Receipt  # noqa: E402
 
 _simple_appraise: Alconna[Any] = Alconna("ba角色简评", Args["server", str])
 get_simple_appraise: type[AlconnaMatcher] = on_alconna(
@@ -26,18 +26,18 @@ get_simple_appraise: type[AlconnaMatcher] = on_alconna(
 
 
 @get_simple_appraise.assign("server")
-async def _(bot: Bot, server: Match[str]):
+async def _(server: Match[str]):
     if server.available:
-        pre_msg: dict[str, int] = {"message_id": -1}
+        pre_msg: Receipt | None = None
         msg: UniMessage[Image] | None = await get_img(
             f"{server.result}角色简评", f"{server.result}角色简评"
         )
         if msg:
             if plugin_config.loading_switch:
-                pre_msg = await get_simple_appraise.send("正在努力查询……")
+                pre_msg = await UniMessage.text("正在努力查询……").send()
             await get_simple_appraise.send(msg)
-            if plugin_config.loading_switch:
-                await bot.delete_msg(message_id=pre_msg["message_id"])
+            if plugin_config.loading_switch and pre_msg:
+                await pre_msg.recall()
             await get_simple_appraise.finish()
         else:
             await get_simple_appraise.finish("该服务器不支持查询角色简评")

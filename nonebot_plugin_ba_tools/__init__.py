@@ -1,5 +1,5 @@
 from nonebot import get_plugin_config
-from nonebot.plugin import PluginMetadata
+from nonebot.plugin import PluginMetadata, inherit_supported_adapters
 
 from .config import Config
 from .get_ba_activity_info import get_activity_info as get_activity_info
@@ -28,7 +28,7 @@ from .send_birthday_info import (
     send_birthday_info as send_birthday_info,
 )
 
-__version__ = "0.3.5"
+__version__ = "0.4.0-beta"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",
@@ -36,7 +36,7 @@ __plugin_meta__ = PluginMetadata(
     type="application",
     homepage="https://github.com/hanasa2023/ba-tools#readme",
     config=Config,
-    supported_adapters={"~onebot.v11"},
+    supported_adapters=inherit_supported_adapters("nonebot_plugin_alconna"),
     extra={
         "version": __version__,
         "authors": [
