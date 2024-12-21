@@ -11,7 +11,6 @@ require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (  # noqa: E402
     Alconna,
     AlconnaMatcher,
-    Args,
     Image,  # noqa: E402
     Match,  # noqa: E402
     UniMessage,
@@ -19,7 +18,7 @@ from nonebot_plugin_alconna import (  # noqa: E402
 )
 from nonebot_plugin_alconna.uniseg import Receipt  # noqa: E402
 
-activity: Alconna[Any] = Alconna("ba活动一览", Args["server", str])
+activity: Alconna[Any] = Alconna("ba活动一览")
 get_activity_info: type[AlconnaMatcher] = on_alconna(activity, use_cmd_start=True)
 
 
@@ -27,7 +26,7 @@ get_activity_info: type[AlconnaMatcher] = on_alconna(activity, use_cmd_start=Tru
 async def _(server: Match[str]) -> None:
     if server.available:
         pre_msg: Receipt | None = None
-        msg: UniMessage[Image] | None = await get_img(f"{server.result}活动", "活动")
+        msg: UniMessage[Image] | None = await get_img("BA活动", "活动")
         if msg:
             if plugin_config.loading_switch:
                 pre_msg = await UniMessage.text("正在加载图片……").send()

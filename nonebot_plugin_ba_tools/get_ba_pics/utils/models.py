@@ -37,6 +37,11 @@ class FileInfo(BaseModel):
     name: str
     sign: str
 
+class MemeInfo(BaseModel):
+    name: str
+    url: str
+    hash: str
+
 
 class Illust(BaseModel):
     pid: int
@@ -47,3 +52,5 @@ class Illust(BaseModel):
     image_url: str = Field(..., alias="imageUrl")
     ai_type: bool = Field(..., alias="aiType")
     restrict: str
+    love_members: int = Field(..., alias="loveMembers")
+    hate_memebers: int = Field(..., alias="hateMembers")

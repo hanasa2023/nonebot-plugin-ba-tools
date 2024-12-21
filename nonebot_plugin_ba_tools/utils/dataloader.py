@@ -10,7 +10,7 @@ from nonebot import get_plugin_config, logger
 
 from ..config import Config
 from ..utils.types import Student, Students
-from .constants import ASSERTS_URL
+from .constants import ARONA_CDN_URL
 
 plugin_config = get_plugin_config(Config)
 
@@ -24,7 +24,7 @@ class DataLoader:
 
     def __init__(self, _path: str):
         self.file_path: Path = plugin_config.assert_path / _path
-        self.file_url: str = ASSERTS_URL + _path
+        self.file_url: str = ARONA_CDN_URL + _path
 
     async def read(self) -> Any:
         logger.debug(f"尝试从文件中加载数据，文件路径：{self.file_path}")
@@ -37,6 +37,7 @@ class DataLoader:
             await f.write(json.dumps(data, ensure_ascii=False, indent=4))
 
     async def download(self) -> Any:
+        logger.debug(f"download url is {self.file_url}")
         async with AsyncClient() as client:
             response = await client.get(self.file_url)
             response.raise_for_status()

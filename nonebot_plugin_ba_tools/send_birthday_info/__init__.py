@@ -14,7 +14,7 @@ require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Target, UniMessage  # noqa: E402
 
 from ..utils.common import get_all_students, load_group_list  # noqa: E402
-from ..utils.constants import ASSERTS_URL  # noqa: E402
+from ..utils.constants import ARONA_CDN_URL  # noqa: E402
 from .command import *  # noqa: E402, F403
 
 
@@ -53,7 +53,7 @@ async def send_birthday_info() -> None:
                         f"今天是{student.name}的生日哦，在学生值日的前提下，切换为非l2d的值日模式，可以听到特殊语音哦。让我们一起祝福{student.name}生日快乐吧!"
                     )
                     .emoji(id="144")
-                    .image(url=ASSERTS_URL + f"/images/student/l2d/{student.id}.webp")
+                    .image(url=ARONA_CDN_URL + f"/images/student/l2d/{student.id}.webp")
                 )
                 # 在订阅此消息的群聊中推送学生生日消息
                 for group_id in group_list:

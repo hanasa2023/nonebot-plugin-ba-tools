@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from ...config import plugin_config
 from ...utils.constants import (
-    ASSERTS_URL,
+    ARONA_CDN_URL,
     DATA_STUDENTS_BIRTHDAY_IMG_PATH,
     DATA_STUDENTS_ICON_PATH,
     MONTH_i18N,
@@ -59,7 +59,7 @@ async def init_birthday_img(students: list[Student], month: str):
         )
         if not img_path.exists():
             await init_student_icon(
-                ASSERTS_URL + f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp", img_path
+                ARONA_CDN_URL + f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp", img_path
             )
     birthday_img_path: Path = (
         plugin_config.assert_path / f"{DATA_STUDENTS_BIRTHDAY_IMG_PATH}/{month}.png"

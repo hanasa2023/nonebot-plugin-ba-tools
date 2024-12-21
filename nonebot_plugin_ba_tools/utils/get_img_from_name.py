@@ -6,13 +6,13 @@ import httpx
 from nonebot import logger, require
 
 from ..config import plugin_config
-from ..utils.constants import IMG_PATH_MAP
+from ..utils.constants import ARONA_API_URL, IMG_PATH_MAP
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Image, UniMessage  # noqa: E402
 
 
-async def get_img(name: str, type: str) -> UniMessage[Image] | None:
+async def get_img(name: str, type: str, middle_route: str = "strategy") -> UniMessage[Image] | None:
     """创建图片，若本地不存在，则从网站缓存到本地
 
     Args:
@@ -21,13 +21,13 @@ async def get_img(name: str, type: str) -> UniMessage[Image] | None:
     Returns:
         UniMessage[Image] | None: 若获取到信息，则返回image消息否则返回None
     """
-    url: str = f"https://tutorial.arona.diyigemt.com/api/v2/image?name={name}"
+    url: str = f"{ARONA_API_URL}/api/{middle_route}/{name}"
+    logger.debug(f"url: {url}")
     async with httpx.AsyncClient() as ctx:
         response: httpx.Response = await ctx.get(url)
         if response.status_code == 200:
             res_json = response.json()
-            hash = res_json["data"][0]["hash"]
-            content = res_json["data"][0]["content"]
+            hash = res_json["data"]["hash"]
             if hash:
                 img_path: Path = (
                     plugin_config.assert_path / IMG_PATH_MAP[type] / f"{hash}.png"
@@ -41,12 +41,13 @@ async def get_img(name: str, type: str) -> UniMessage[Image] | None:
                     # 获取图片
                     async with httpx.AsyncClient() as ctx:
                         res: httpx.Response = await ctx.get(
-                            f"https://arona.cdn.diyigemt.com/image{content}?{hash}"
+                            res_json["data"]["imgUrl"]
                         )
                         if res.status_code == 200:
                             with open(file=img_path, mode="wb") as f:
                                 f.write(res.content)
 
                 logger.debug(f"从{img_path}加载图片……")
-                return UniMessage.image(path=img_path)
+                # return UniMessage.image(path=img_path)
+                return UniMessage.image(url=res_json["data"]["imgUrl"])
     return None

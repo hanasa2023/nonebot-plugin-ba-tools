@@ -21,7 +21,7 @@ async def send_battle_info() -> None:
     service: BilibiliService = BilibiliService()
     await service.initialize()
 
-    dynamic_list: DynamicListResponse = await service.get_user_dynamic("436037759")
+    dynamic_list: DynamicListResponse = await service.get_user_dynamic("425535005")
 
     dynamic_infos: list[DynamicInfo] = await service.get_dynamic_info(dynamic_list)
     msg: UniMessage[Any] = UniMessage()

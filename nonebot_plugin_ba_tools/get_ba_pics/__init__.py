@@ -7,8 +7,8 @@ import httpx
 from nonebot import logger, require
 
 from ..config import plugin_config
-from ..utils.constants import BA_PIC_BASE_URL, BA_PIX_PIC_BASE_URL
-from .utils.models import Content, FileInfo, Illust
+from ..utils.constants import ARONA_API_URL
+from .utils.models import Illust, MemeInfo
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (  # noqa: E402
@@ -36,7 +36,7 @@ get_pic: type[AlconnaMatcher] = on_alconna(_pic, use_cmd_start=True)
 _u_pic: Alconna[Any] = Alconna("ba涩图上传", Args["pid", int])
 upload_pic: type[AlconnaMatcher] = on_alconna(_u_pic, use_cmd_start=True)
 
-meme: Alconna[Any] = Alconna("bameme", Option("num", Args["v", int]))
+meme: Alconna[Any] = Alconna("bameme", Args["num?", int])
 get_meme: type[AlconnaMatcher] = on_alconna(meme, use_cmd_start=True)
 
 
@@ -56,7 +56,7 @@ async def _(result: Arparma):
         try:
             await get_pic.send("正在获取中，请稍等喵~")
             response: httpx.Response = await ctx.post(
-                url=f"{BA_PIX_PIC_BASE_URL}/api/illust/get_illust",
+                url=f"{ARONA_API_URL}/api/illusts/getIllusts",
                 json={
                     "num": pic_num,
                     "tags": tags,
@@ -77,7 +77,7 @@ async def _(result: Arparma):
                     )
                     if plugin_config.send_pic_info:
                         msg = pic + UniMessage.text(
-                            f"🎨 pid: {illust.pid}\n🧐 uid: {illust.uid}"
+                            f"🎨 pid: {illust.pid}\n🧐 uid: {illust.uid}\n🥰 like:{illust.love_members}\n😨 dislike: {illust.hate_memebers}"
                         )
                     else:
                         msg = pic
@@ -97,7 +97,7 @@ async def _(pid: Match[int]):
             try:
                 await upload_pic.send("正在上传中，请稍等喵~")
                 response: httpx.Response = await ctx.post(
-                    url=f"{BA_PIX_PIC_BASE_URL}/api/illust/set_illust",
+                    url=f"{ARONA_API_URL}/api/illusts/setIllusts",
                     json={
                         "pid": pid.result,
                     },
@@ -116,32 +116,22 @@ async def _(pid: Match[int]):
 
 @get_meme.handle()
 async def _(result: Arparma):
-    meme_num: int = result.query("num.v", 1)
+    meme_num: int = result.query("num", 1)
     if meme_num > plugin_config.ba_max_pic_num:
         meme_num = plugin_config.ba_max_pic_num
-    meme_list: list[FileInfo] = []
     async with httpx.AsyncClient() as ctx:
         try:
-            headers: httpx.Headers = httpx.Headers({"Host": "cloudisk.hanasaki.tech"})
-            r: httpx.Response = await ctx.post(
-                f"{BA_PIC_BASE_URL}/api/fs/list",
-                json={"path": "/aliyun-oss/BAArts/emoji&meme", "password": ""},
-                headers=headers,
-            )
+            r: httpx.Response = await ctx.get(f"{ARONA_API_URL}/api/meme")
             if r.status_code == 200:
-                for c in r.json()["data"]["content"]:
-                    con: Content = Content(**c)
-                    meme_list.append(FileInfo(name=con.name, sign=con.sign))
-            if len(meme_list) == 0:
+                data: list[MemeInfo] = r.json()["data"]
+                random.shuffle(data)
+                await get_pic.send("正在获取中，请稍等喵~")
+                _max_send = len(data) if len(data) < meme_num else meme_num
+                for i in range(_max_send):
+                    _meme = UniMessage.image(url=f"{data[i].url}")
+                    await get_meme.send(_meme)
+            else:
                 await get_pic.finish("网络出问题了，请稍后再试……")
-            random.shuffle(meme_list)
-            await get_pic.send("正在获取中，请稍等喵~")
-            _max_send = len(meme_list) if len(meme_list) < meme_num else meme_num
-            for i in range(_max_send):
-                _meme_url = UniMessage.image(
-                    url=f"{BA_PIC_BASE_URL}/d/aliyun-oss/BAArts/emoji&meme/{meme_list[i].name}?sign={meme_list[i].sign}"
-                )
-                await get_meme.send(_meme_url)
         except Exception as e:
             logger.error(e)
         finally:

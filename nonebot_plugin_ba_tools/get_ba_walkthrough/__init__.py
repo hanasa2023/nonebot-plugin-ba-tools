@@ -28,9 +28,10 @@ get_walkthrough: type[AlconnaMatcher] = on_alconna(walkthrough, use_cmd_start=Tr
 async def _(option: Match[str]) -> None:
     if option.available:
         pre_msg: Receipt | None = None
-        type = "关卡攻略" if option.result.startswith("关卡") else option.result
+        type: str = "关卡攻略" if option.result.startswith("关卡") else option.result
+        middle_route: str = "chapter-map" if option.result.startswith("关卡") else "strategy"
         msg: UniMessage[Image] | None = await get_img(
-            option.result.replace("关卡", ""), type
+            option.result.replace("关卡", ""), type, middle_route
         )
         if msg:
             if plugin_config.loading_switch:
