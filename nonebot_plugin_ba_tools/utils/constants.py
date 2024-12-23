@@ -14,7 +14,7 @@ DATA_STUDENTS_BIRTHDAY_IMG_PATH = "images/student/birthday"
 
 IMG_PATH_MAP = {
     "千里眼": "images/clairvoyance",
-    # "活动": "images/activity",
+    "活动": "images/activity",
     "关卡攻略": "images/chapter_map",
     "日服总力战": "images/battle1",
     "国际服总力战": "images/battle1",
@@ -26,9 +26,9 @@ IMG_PATH_MAP = {
     "人权": "images/top_picks",
     "升星一图流": "images/update_star",
     "角色简评": "images/simple_appraise",
-    # "日服总力战档线": "images/rank1_charts",
-    # "国服官服总力战档线": "images/rank1_charts",
-    # "国服B服总力战档线": "images/rank1_charts",
+    "日服总力战档线": "images/rank1_charts",
+    "国服官服总力战档线": "images/rank1_charts",
+    "国服B服总力战档线": "images/rank1_charts",
 }
 
 MONTH_i18N = {
@@ -46,6 +46,7 @@ MONTH_i18N = {
     "12": "十二",
 }
 
+# TODO: 更新STUDENT_TRANSLATE
 STUDENT_TRANSLATE = {
     "阿露": 10089,
     "艾米": 20032,
@@ -161,7 +162,40 @@ STUDENT_TRANSLATE = {
     "伊吹": 16014,
     "真琴": 20033,
     "海香": 10090,
-    "绮罗罗": 10093
+    "绮罗罗": 10093,
+}
+
+BOSS_TRANSLATE = {
+    "比纳": 1,
+    "Binah": 1,
+    "大蛇": 1,
+    "切赛德": 2,
+    "Chesed": 2,
+    "眼球": 2,
+    "白黑": 3,
+    "Shirokuro": 3,
+    "黑白": 3,
+    "希罗尼穆斯": 4,
+    "Hieronymus": 4,
+    "主教": 4,
+    "回转FXMK.0": 5,
+    "KaitenFxMk0": 5,
+    "寿司": 5,
+    "佩洛洛斯拉": 6,
+    "Perorozilla": 6,
+    "鸡斯拉": 6,
+    "霍德": 7,
+    "HOD": 7,
+    "高兹": 8,
+    "GOZ": 8,
+    "格里高利": 9,
+    "EN0005": 9,
+    "葛利果": 9,
+    "若藻气垫船": 10,
+    "RaidHoverCraft": 10,
+    "气垫船": 10,
+    "猫鬼魅影": 11,
+    "EN0006": 11,
 }
 
 BA_PIC_BASE_URL = "https://cloudisk.hanasaki.tech"
