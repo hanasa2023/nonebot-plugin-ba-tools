@@ -17,6 +17,8 @@ async def get_img(name: str, type: str, middle_route: str = "strategy") -> UniMe
 
     Args:
         name (str): search name
+        type (str): img type
+        middle_route (str): middle route
 
     Returns:
         UniMessage[Image] | None: 若获取到信息，则返回image消息否则返回None
@@ -48,6 +50,6 @@ async def get_img(name: str, type: str, middle_route: str = "strategy") -> UniMe
                                 f.write(res.content)
 
                 logger.debug(f"从{img_path}加载图片……")
-                # return UniMessage.image(path=img_path)
-                return UniMessage.image(url=res_json["data"]["imgUrl"])
+                return UniMessage.image(path=img_path)
+                # return UniMessage.image(url=res_json["data"]["imgUrl"])
     return None
