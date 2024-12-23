@@ -12,7 +12,6 @@ from nonebot_plugin_alconna import (  # noqa: E402
     Alconna,
     AlconnaMatcher,
     Image,  # noqa: E402
-    Match,  # noqa: E402
     UniMessage,
     on_alconna,
 )
@@ -22,17 +21,16 @@ activity: Alconna[Any] = Alconna("ba活动一览")
 get_activity_info: type[AlconnaMatcher] = on_alconna(activity, use_cmd_start=True)
 
 
-@get_activity_info.assign("server")
-async def _(server: Match[str]) -> None:
-    if server.available:
-        pre_msg: Receipt | None = None
-        msg: UniMessage[Image] | None = await get_img("BA活动", "活动")
-        if msg:
-            if plugin_config.loading_switch:
-                pre_msg = await UniMessage.text("正在加载图片……").send()
-            await get_activity_info.send(msg)
-            if plugin_config.loading_switch and pre_msg:
-                await pre_msg.recall()
-            await get_activity_info.finish()
-        else:
-            await get_activity_info.finish("不支持的服务器哦～")
+@get_activity_info.handle()
+async def _() -> None:
+    pre_msg: Receipt | None = None
+    msg: UniMessage[Image] | None = await get_img("BA活动", "活动")
+    if msg:
+        if plugin_config.loading_switch:
+            pre_msg = await UniMessage.text("正在加载图片……").send()
+        await get_activity_info.send(msg)
+        if plugin_config.loading_switch and pre_msg:
+            await pre_msg.recall()
+        await get_activity_info.finish()
+    else:
+        await get_activity_info.finish("不支持的服务器哦～")
