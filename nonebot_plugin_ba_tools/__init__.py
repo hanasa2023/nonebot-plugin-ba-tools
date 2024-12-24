@@ -37,7 +37,7 @@ from .send_birthday_info import (
     send_birthday_info as send_birthday_info,
 )
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",

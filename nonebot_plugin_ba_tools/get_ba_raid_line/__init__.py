@@ -168,7 +168,8 @@ async def _(results: Arparma) -> None:
             f"{ARONA_API_URL}/api/raid/calculate/score/{server_id}/{BOSS_TRANSLATE[boss_name]}/{time}/{hard}"
         )
         if response.status_code == 200:
-            msg = UniMessage.text(f"对应的分数为: {response.json()["data"]["score"]}")
+            data = response.json()
+            msg = UniMessage.text(f"对应的分数为: {data['data']['score']}")
     if msg:
         if plugin_config.loading_switch:
             pre_msg = await UniMessage.text("正在努力查询……").send()
@@ -201,7 +202,8 @@ async def _(results: Arparma) -> None:
             f"{ARONA_API_URL}/api/raid/calculate/point/{server_id}/{BOSS_TRANSLATE[boss_name]}/{point}"
         )
         if response.status_code == 200:
-            msg = UniMessage.text(f"对应的时间为: {response.json()["data"]["time"]}")
+            data = response.json()
+            msg = UniMessage.text(f"对应的时间为: {data['data']['time']}")
     if msg:
         if plugin_config.loading_switch:
             pre_msg = await UniMessage.text("正在努力查询……").send()
