@@ -1,10 +1,10 @@
 [tool.poetry]
 name = "nonebot-plugin-ba-tools"
-version = "0.4.1"
+version = "0.4.2"
 description = "一个BlueArchive的工具箱"
 authors = [
-    "hanasaki <hanasakayui2022@gmail.com>",
-    "kawaiior <kawaiiorv@gmail.com>",
+  "hanasaki <hanasakayui2022@gmail.com>",
+  "kawaiior <kawaiiorv@gmail.com>",
 ]
 license = "MIT"
 readme = "README.md"
@@ -14,7 +14,7 @@ repository = "https://github.com/hanasa2023/nonebot-plugin-ba-tools"
 
 [tool.poetry.dependencies]
 python = ">=3.9, <4.0"
-httpx = ">=0.27.0"
+httpx = ">=0.27.0, <0.28.0"
 nonebot2 = ">=2.3.2"
 pydantic = ">=1.0, <3.0.0"
 beautifulsoup4 = ">=4.12.3"
@@ -57,7 +57,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.nonebot]
 adapters = [
-    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" },
+  { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" },
 ]
 plugins = []
 plugin_dirs = [""]

@@ -1,9 +1,9 @@
 from typing import Any
 
 import httpx
-from nonebot import require
+from nonebot import logger, require
 
-from ..utils.constants import STUDENT_TRANSLATE
+from ..utils.constants import ARONA_API_URL, STUDENT_TRANSLATE
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (  # noqa: E402
@@ -11,6 +11,9 @@ from nonebot_plugin_alconna import (  # noqa: E402
     AlconnaMatcher,
     Args,
     Arparma,
+    CustomNode,
+    MsgTarget,
+    Reference,
     UniMessage,
     on_alconna,
 )
@@ -23,18 +26,26 @@ _get_student_info: type[AlconnaMatcher] = on_alconna(_student_info, use_cmd_star
 _skill_info: Alconna[Any] = Alconna("ba学生技能", Args["name", str])
 _get_skill_info: type[AlconnaMatcher] = on_alconna(_skill_info, use_cmd_start=True)
 
+_student_list: Alconna[Any] = Alconna("ba学生列表")
+_get_student_list: type[AlconnaMatcher] = on_alconna(_student_list, use_cmd_start=True)
+
 
 @_get_student_info.handle()
 async def _(result: Arparma) -> None:
     student_name: str = result.query("name", "")
-    level: int = result.query("level", 1)
+    level: int = result.query("level", -1)
     if student_name == "":
         await _get_student_info.finish("请输入要查询的学生姓名")
 
     if not STUDENT_TRANSLATE.get(student_name):
         await _get_student_info.finish(f"学生'{student_name}'不存在，或别名不存在。")
 
-    url: str = f"https://arona.hanasaki.tech/api/student/info/{STUDENT_TRANSLATE[student_name]}/{level}"
+    url: str = (
+        f"{ARONA_API_URL}/api/student/info/{STUDENT_TRANSLATE[student_name]}/{level}"
+        if level != -1
+        else f"{ARONA_API_URL}/api/student/info/{STUDENT_TRANSLATE[student_name]}"
+    )
+    logger.debug(f"Get student info card, url is {url}")
 
     try:
         async with httpx.AsyncClient() as ctx:
@@ -65,7 +76,7 @@ async def _(result: Arparma) -> None:
     if not STUDENT_TRANSLATE.get(student_name):
         await _get_skill_info.finish(f"学生'{student_name}'不存在，或别名不存在。")
 
-    url: str = f"https://arona.hanasaki.tech/api/student/skills/{STUDENT_TRANSLATE[student_name]}"
+    url: str = f"{ARONA_API_URL}/api/student/skills/{STUDENT_TRANSLATE[student_name]}"
 
     try:
         async with httpx.AsyncClient() as ctx:
@@ -84,3 +95,14 @@ async def _(result: Arparma) -> None:
 
     finally:
         await _get_skill_info.finish()
+
+
+@_get_student_list.handle()
+async def _(target: MsgTarget) -> None:
+    m = "可用的学生列表有：\n"
+    for k in STUDENT_TRANSLATE.keys():
+        m += f"{k}\n"
+    nodes = []
+    nodes.append(CustomNode(uid=str(target.self_id), name="", content=m))
+    msg = Reference(nodes=nodes)
+    await _get_student_list.finish(msg)

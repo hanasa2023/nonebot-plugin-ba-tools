@@ -23,6 +23,7 @@ from .get_ba_student_birthday import (
 )
 from .get_ba_student_info import _get_skill_info as _get_skill_info
 from .get_ba_student_info import _get_student_info as _get_student_info
+from .get_ba_student_info import _get_student_list as _get_student_list
 from .get_ba_walkthrough import get_walkthrough as get_walkthrough
 from .send_battle_info import (
     battle_info_switch as battle_info_switch,
@@ -37,7 +38,7 @@ from .send_birthday_info import (
     send_birthday_info as send_birthday_info,
 )
 
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",
