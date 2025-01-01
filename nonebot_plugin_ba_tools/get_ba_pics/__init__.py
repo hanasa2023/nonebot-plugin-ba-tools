@@ -16,9 +16,12 @@ from nonebot_plugin_alconna import (  # noqa: E402
     AlconnaMatcher,
     Args,
     Arparma,
+    CustomNode,
     Image,
     Match,
+    MsgTarget,
     Option,
+    Reference,
     Text,
     UniMessage,
     on_alconna,
@@ -41,7 +44,7 @@ get_meme: type[AlconnaMatcher] = on_alconna(meme, use_cmd_start=True)
 
 
 @get_pic.handle()
-async def _(result: Arparma):
+async def _(result: Arparma, target: MsgTarget):
     pic_num: int = result.query("num.v", 1)
     tags: list[str] = result.query("tags.v", [])
     is_ai: bool = result.query("isAI.v", False)
@@ -76,11 +79,18 @@ async def _(result: Arparma):
                         url=illust.image_url
                     )
                     if plugin_config.send_pic_info:
-                        msg = pic + UniMessage.text(
+                        m = pic + UniMessage.text(
                             f"🎨 pid: {illust.pid}\n🧐 uid: {illust.uid}\n🥰 like:{illust.love_members}\n😨 dislike: {illust.hate_memebers}"
                         )
                     else:
-                        msg = pic
+                        m = pic
+                    if plugin_config.ba_max_pic_num >= 10:
+                        nodes = [
+                            CustomNode(uid=str(target.self_id), name="", content=m)
+                        ]
+                        msg: Reference | UniMessage[Any] = Reference(nodes=nodes)
+                    else:
+                        msg = m
                     await get_pic.send(msg)
             else:
                 await get_pic.finish("网络出问题了，请稍后再试……")
