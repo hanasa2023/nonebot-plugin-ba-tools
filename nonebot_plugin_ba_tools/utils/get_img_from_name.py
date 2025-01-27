@@ -12,7 +12,9 @@ require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Image, UniMessage  # noqa: E402
 
 
-async def get_img(name: str, type: str, middle_route: str = "strategy") -> UniMessage[Image] | None:
+async def get_img(
+    name: str, type: str, middle_route: str = "strategy"
+) -> UniMessage[Image] | None:
     """创建图片，若本地不存在，则从网站缓存到本地
 
     Args:
@@ -42,9 +44,7 @@ async def get_img(name: str, type: str, middle_route: str = "strategy") -> UniMe
                         folder.mkdir(parents=True, exist_ok=True)
                     # 获取图片
                     async with httpx.AsyncClient() as ctx:
-                        res: httpx.Response = await ctx.get(
-                            res_json["data"]["imgUrl"]
-                        )
+                        res: httpx.Response = await ctx.get(res_json["data"]["imgUrl"])
                         if res.status_code == 200:
                             with open(file=img_path, mode="wb") as f:
                                 f.write(res.content)

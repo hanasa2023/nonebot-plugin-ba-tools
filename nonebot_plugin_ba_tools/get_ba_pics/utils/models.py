@@ -37,6 +37,7 @@ class FileInfo(BaseModel):
     name: str
     sign: str
 
+
 class MemeInfo(BaseModel):
     name: str
     url: str
