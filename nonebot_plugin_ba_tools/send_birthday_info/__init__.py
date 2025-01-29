@@ -5,17 +5,17 @@ from datetime import datetime
 
 from nonebot import require
 
-from nonebot_plugin_ba_tools.utils.types import Student
+from ..utils.types import Student
 
 require("nonebot_plugin_apscheduler")
-from nonebot_plugin_apscheduler import scheduler  # noqa: E402
+from nonebot_plugin_apscheduler import scheduler  
 
 require("nonebot_plugin_alconna")
-from nonebot_plugin_alconna import Target, UniMessage  # noqa: E402
+from nonebot_plugin_alconna import Target, UniMessage  
 
-from ..utils.common import get_all_students, load_group_list  # noqa: E402
-from ..utils.constants import ARONA_CDN_URL  # noqa: E402
-from .command import *  # noqa: E402, F403
+from ..utils.common import get_all_students, load_group_list  
+from ..utils.constants import ARONA_CDN_URL  
+from .command import *  , F403
 
 
 @scheduler.scheduled_job("cron", hour=0, minute=0, id="send_birthday_info")

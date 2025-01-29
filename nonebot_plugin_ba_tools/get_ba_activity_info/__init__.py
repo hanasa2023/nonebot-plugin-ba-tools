@@ -8,14 +8,14 @@ from ..config import plugin_config
 from ..utils.get_img_from_name import get_img
 
 require("nonebot_plugin_alconna")
-from nonebot_plugin_alconna import (  # noqa: E402
+from nonebot_plugin_alconna import (
     Alconna,
     AlconnaMatcher,
-    Image,  # noqa: E402
+    Image,
     UniMessage,
     on_alconna,
 )
-from nonebot_plugin_alconna.uniseg import Receipt  # noqa: E402
+from nonebot_plugin_alconna.uniseg import Receipt
 
 activity: Alconna[Any] = Alconna("ba活动一览")
 get_activity_info: type[AlconnaMatcher] = on_alconna(activity, use_cmd_start=True)

@@ -9,7 +9,7 @@ from ..config import plugin_config
 from ..utils.constants import ARONA_API_URL, IMG_PATH_MAP
 
 require("nonebot_plugin_alconna")
-from nonebot_plugin_alconna import Image, UniMessage  # noqa: E402
+from nonebot_plugin_alconna import Image, UniMessage
 
 
 async def get_img(name: str, type: str, middle_route: str = "strategy") -> UniMessage[Image] | None:
@@ -31,9 +31,7 @@ async def get_img(name: str, type: str, middle_route: str = "strategy") -> UniMe
             res_json = response.json()
             hash = res_json["data"]["hash"]
             if hash:
-                img_path: Path = (
-                    plugin_config.assert_path / IMG_PATH_MAP[type] / f"{hash}.png"
-                )
+                img_path: Path = plugin_config.assert_path / IMG_PATH_MAP[type] / f"{hash}.png"
                 if not img_path.exists():
                     logger.debug(f"{type}图片不存在，正在从网络下载至{img_path}……")
                     # 若父文件夹不存在则创建文件夹
@@ -42,9 +40,7 @@ async def get_img(name: str, type: str, middle_route: str = "strategy") -> UniMe
                         folder.mkdir(parents=True, exist_ok=True)
                     # 获取图片
                     async with httpx.AsyncClient() as ctx:
-                        res: httpx.Response = await ctx.get(
-                            res_json["data"]["imgUrl"]
-                        )
+                        res: httpx.Response = await ctx.get(res_json["data"]["imgUrl"])
                         if res.status_code == 200:
                             with open(file=img_path, mode="wb") as f:
                                 f.write(res.content)

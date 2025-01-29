@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-ba-tools"
-version = "0.4.2"
+version = "0.4.3"
 description = "一个BlueArchive的工具箱"
 authors = [
   "hanasaki <hanasakayui2022@gmail.com>",
@@ -26,6 +26,8 @@ nonebot-plugin-htmlrender = ">=0.3.3"
 pillow = ">=10.4.0"
 nonebot-plugin-uninfo = "^0.5.0"
 tortoise = "^0.1.1"
+openai = "^1.60.2"
+pyyaml = "^6.0.2"
 
 [[tool.poetry.source]]
 name = "mirrors"
@@ -47,6 +49,13 @@ types-beautifulsoup4 = ">=4.12.0.20240511"
 datamodel-code-generator = ">=0.26.0"
 types-aiofiles = "^24.1.0.20240626"
 pre-commit = "^3.8.0"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "UP", "C", "T", "PYI", "PT", "Q"]
+ignore = ["E402", "C901"]
 
 [tool.basedpyright]
 typeCheckingMode = "standard"

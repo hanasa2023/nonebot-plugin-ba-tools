@@ -9,7 +9,7 @@ from ..config import plugin_config
 from ..utils.wiki import get_img_from_url, get_max_manga_index, get_wiki_urls_from_title
 
 require("nonebot_plugin_alconna")
-from nonebot_plugin_alconna import (  # noqa: E402
+from nonebot_plugin_alconna import (
     Alconna,
     AlconnaMatcher,
     Args,
@@ -18,7 +18,7 @@ from nonebot_plugin_alconna import (  # noqa: E402
     UniMessage,
     on_alconna,
 )
-from nonebot_plugin_alconna.uniseg import Receipt  # noqa: E402
+from nonebot_plugin_alconna.uniseg import Receipt
 
 manga: Alconna[Any] = Alconna("ba漫画", Args["index", str])
 get_manga: type[AlconnaMatcher] = on_alconna(manga, use_cmd_start=True)

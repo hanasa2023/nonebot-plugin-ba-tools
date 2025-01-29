@@ -11,7 +11,7 @@ from ..utils.constants import ARONA_API_URL
 from .utils.models import Illust, MemeInfo
 
 require("nonebot_plugin_alconna")
-from nonebot_plugin_alconna import (  # noqa: E402
+from nonebot_plugin_alconna import (
     Alconna,
     AlconnaMatcher,
     Args,
@@ -71,13 +71,9 @@ async def _(result: Arparma, target: MsgTarget):
                 logger.debug(response.json())
                 if response.json()["message"] != "success":
                     await get_pic.finish(response.json()["message"])
-                illust_list.extend(
-                    [Illust(**illust) for illust in response.json()["data"]["illusts"]]
-                )
+                illust_list.extend([Illust(**illust) for illust in response.json()["data"]["illusts"]])
                 for illust in illust_list:
-                    pic: UniMessage[Image | Text] = UniMessage.image(
-                        url=illust.image_url
-                    )
+                    pic: UniMessage[Image | Text] = UniMessage.image(url=illust.image_url)
                     if plugin_config.send_pic_info:
                         m = pic + UniMessage.text(
                             f"🎨 pid: {illust.pid}\n🧐 uid: {illust.uid}\n🥰 like:{illust.love_members}\n😨 dislike: {illust.hate_memebers}"
@@ -85,9 +81,7 @@ async def _(result: Arparma, target: MsgTarget):
                     else:
                         m = pic
                     if plugin_config.ba_max_pic_num >= 10:
-                        nodes = [
-                            CustomNode(uid=str(target.self_id), name="", content=m)
-                        ]
+                        nodes = [CustomNode(uid=str(target.self_id), name="", content=m)]
                         msg: Reference | UniMessage[Any] = Reference(nodes=nodes)
                     else:
                         msg = m

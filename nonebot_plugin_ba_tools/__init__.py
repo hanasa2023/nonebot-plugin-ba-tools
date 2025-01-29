@@ -21,6 +21,9 @@ from .get_ba_student_birthday import get_birthday_map as get_birthday_map
 from .get_ba_student_birthday import (
     get_student_birthday_list as get_student_birthday_list,
 )
+
+from .llm import chat as chat
+from .llm import chat_commands as chat_commands
 from .get_ba_student_info import _get_skill_info as _get_skill_info
 from .get_ba_student_info import _get_student_info as _get_student_info
 from .get_ba_student_info import _get_student_list as _get_student_list
@@ -38,7 +41,7 @@ from .send_birthday_info import (
     send_birthday_info as send_birthday_info,
 )
 
-__version__ = "0.4.2"
+__version__ = "0.4.3"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",

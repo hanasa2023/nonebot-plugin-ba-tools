@@ -9,10 +9,10 @@ from .utils.reponse.dynamic_list import DynamicListResponse
 from .utils.services import BilibiliService, DynamicInfo
 
 require("nonebot_plugin_alconna")
-from nonebot_plugin_alconna import Target, UniMessage  # noqa: E402
+from nonebot_plugin_alconna import Target, UniMessage
 
 require("nonebot_plugin_apscheduler")
-from nonebot_plugin_apscheduler import scheduler  # noqa: E402
+from nonebot_plugin_apscheduler import scheduler
 
 
 @scheduler.scheduled_job("interval", minutes=1)

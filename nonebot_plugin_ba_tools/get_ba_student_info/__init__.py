@@ -6,7 +6,7 @@ from nonebot import logger, require
 from ..utils.constants import ARONA_API_URL, STUDENT_TRANSLATE
 
 require("nonebot_plugin_alconna")
-from nonebot_plugin_alconna import (  # noqa: E402
+from nonebot_plugin_alconna import (
     Alconna,
     AlconnaMatcher,
     Args,
@@ -18,9 +18,7 @@ from nonebot_plugin_alconna import (  # noqa: E402
     on_alconna,
 )
 
-_student_info: Alconna[Any] = Alconna(
-    "ba学生信息", Args["name", str], Args["level?", int]
-)
+_student_info: Alconna[Any] = Alconna("ba学生信息", Args["name", str], Args["level?", int])
 _get_student_info: type[AlconnaMatcher] = on_alconna(_student_info, use_cmd_start=True)
 
 _skill_info: Alconna[Any] = Alconna("ba学生技能", Args["name", str])
@@ -58,9 +56,7 @@ async def _(result: Arparma) -> None:
             else:
                 await _get_student_info.send(response.json()["message"])
     except httpx.ReadTimeout:
-        await _get_student_info.send(
-            "获取超时（请求的信息很可能是第一次生成），请稍后重试……"
-        )
+        await _get_student_info.send("获取超时（请求的信息很可能是第一次生成），请稍后重试……")
 
     finally:
         await _get_student_info.finish()
@@ -89,9 +85,7 @@ async def _(result: Arparma) -> None:
             else:
                 await _get_skill_info.send(response.json()["message"])
     except httpx.ReadTimeout:
-        await _get_skill_info.send(
-            "获取超时（请求的信息很可能是第一次生成），请稍后重试……"
-        )
+        await _get_skill_info.send("获取超时（请求的信息很可能是第一次生成），请稍后重试……")
 
     finally:
         await _get_skill_info.finish()

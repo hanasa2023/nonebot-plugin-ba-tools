@@ -6,7 +6,7 @@ import jinja2
 from nonebot import logger, require
 
 require("nonebot_plugin_htmlrender")
-from nonebot_plugin_htmlrender import (  # noqa: E402, F401
+from nonebot_plugin_htmlrender import (  , F401
     capture_element,
     get_new_page,
     md_to_pic,
