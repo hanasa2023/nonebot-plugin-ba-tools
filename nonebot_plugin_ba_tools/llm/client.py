@@ -42,13 +42,16 @@ class Chat:
 
     def __load_preset(self) -> None:
         """加载预设"""
+        # 若llm文件夹不存在，则创建
+        self.preset_path.parent.mkdir(parents=True, exist_ok=True)
+
         # 若未找到预设文件，则从模板创建
         if not self.preset_path.exists():
             prompts: Path = Path(__file__).parent / "prompts.yaml"
             data: str = ""
             with open(prompts) as f:
                 data += f.read()
-            with open(self.preset_path, "w+") as f:
+            with open(self.preset_path, "w") as f:
                 f.write(data)
             logger.info("未找到内置预设，已自动生成")
 
@@ -86,8 +89,7 @@ class Chat:
         try:
             session_data: Path = plugin_config.llm_path / f"sessions/{session_id}.json"
             # 如果没有则创建对话记录文件夹
-            if not session_data.parent.exists():
-                session_data.parent.mkdir(parents=True)
+            session_data.parent.mkdir(parents=True, exist_ok=True)
 
             messages: list[ChatCompletionMessageParam] = []
             # 获取对话记录
