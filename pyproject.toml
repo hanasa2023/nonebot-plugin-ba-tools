@@ -49,6 +49,7 @@ types-beautifulsoup4 = ">=4.12.0.20240511"
 datamodel-code-generator = ">=0.26.0"
 types-aiofiles = "^24.1.0.20240626"
 pre-commit = "^3.8.0"
+types-pyyaml = "^6.0.12.20241230"
 
 [tool.ruff]
 line-length = 120

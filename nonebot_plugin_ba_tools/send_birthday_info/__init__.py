@@ -8,14 +8,14 @@ from nonebot import require
 from ..utils.types import Student
 
 require("nonebot_plugin_apscheduler")
-from nonebot_plugin_apscheduler import scheduler  
+from nonebot_plugin_apscheduler import scheduler
 
 require("nonebot_plugin_alconna")
-from nonebot_plugin_alconna import Target, UniMessage  
+from nonebot_plugin_alconna import Target, UniMessage
 
-from ..utils.common import get_all_students, load_group_list  
-from ..utils.constants import ARONA_CDN_URL  
-from .command import *  , F403
+from ..utils.common import get_all_students, load_group_list
+from ..utils.constants import ARONA_CDN_URL
+from .command import *  # noqa: F403
 
 
 @scheduler.scheduled_job("cron", hour=0, minute=0, id="send_birthday_info")
@@ -41,11 +41,7 @@ async def send_birthday_info() -> None:
             month: str = match.group(1)
             day: str = match.group(2)
             # 若该学生今日生日，则推送群消息
-            if (
-                int(month) == current_month
-                and int(day) == current_day
-                and hash_map.get(student.personal_name) is None
-            ):
+            if int(month) == current_month and int(day) == current_day and hash_map.get(student.personal_name) is None:
                 hash_map[student.personal_name] = True
 
                 message = (

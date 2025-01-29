@@ -6,10 +6,10 @@ import jinja2
 from nonebot import logger, require
 
 require("nonebot_plugin_htmlrender")
-from nonebot_plugin_htmlrender import (  , F401
-    capture_element,
+from nonebot_plugin_htmlrender import (
+    capture_element,  # noqa: F401
     get_new_page,
-    md_to_pic,
+    md_to_pic,  # noqa: F401
 )
 
 
@@ -61,7 +61,5 @@ async def template_element_to_pic(
         await page.goto(f"file://{template_path}")
         await page.set_content(html, wait_until="networkidle")
         await page.wait_for_timeout(wait)
-        img: bytes = await page.locator(element).screenshot(
-            type=type, quality=quality, omit_background=omit_background
-        )
+        img: bytes = await page.locator(element).screenshot(type=type, quality=quality, omit_background=omit_background)
         return img

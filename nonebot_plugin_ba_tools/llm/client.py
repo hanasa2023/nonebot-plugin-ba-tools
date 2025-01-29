@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import yaml
 from pathlib import Path
@@ -33,7 +35,7 @@ class Chat:
             base_url=base_url,
         )
         self.model = model
-        self.presets = []
+        self.presets: list[str] = []
         self.preset_path = preset_path
         self.prompt_content = ""
         self.__load_preset()
