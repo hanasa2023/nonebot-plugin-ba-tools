@@ -18,6 +18,8 @@ class Config(BaseModel):
     assert_path: Path = get_plugin_cache_dir() / "asserts"
     # 设置文件路径
     setting_path: Path = get_plugin_data_dir() / "setting"
+    # llm 会话/配置文件
+    llm_path: Path = get_plugin_data_dir() / "llm"
     # 图片加载通知开关
     loading_switch: bool = False
     # 单次最大获取的图片数量
@@ -28,6 +30,14 @@ class Config(BaseModel):
     send_pic_info: bool = False
     # r18开关，防爆按钮
     r18_switch: bool = False
+    # lmm chat开关
+    chat_switch: bool = False
+    # openai api key
+    openai_api_key: str = ""
+    # openai base url
+    openai_base_url: str = ""
+    # llm model
+    llm_model: str = ""
 
 
 plugin_config = get_plugin_config(Config)
