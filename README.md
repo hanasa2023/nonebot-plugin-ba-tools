@@ -68,13 +68,16 @@
 
 请在你的 bot 根目录下的`.env` `.env.*`中添加以下字段
 
-|      字段      | 类型 |         默认值         |   可选值   |            描述            |
-| :------------: | :--: | :--------------------: | :--------: | :------------------------: |
-| LOADING_SWITCH | bool |         false          | true/false |    是否开启图片加载通知    |
-| BA_MAX_PIC_NUM | int  |           10           |     -      |   单次最多发送的图片数量   |
-|  PIXIV_NGINX   | str  | "<https://i.pixiv.re>" |     -      |       pixiv 图床反代       |
-| SEND_PIC_INFO  | bool |         false          | true/false | 发送涩图是是否发送图片信息 |
-|   R18_SWITCH   | bool |         false          | true/false |     r18 开关，防爆按钮     |
+|      字段       | 类型 |         默认值         |   可选值   |            描述            |
+| :-------------: | :--: | :--------------------: | :--------: | :------------------------: |
+| LOADING_SWITCH  | bool |         false          | true/false |    是否开启图片加载通知    |
+| BA_MAX_PIC_NUM  | int  |           10           |     -      |   单次最多发送的图片数量   |
+|   PIXIV_NGINX   | str  | "<https://i.pixiv.re>" |     -      |       pixiv 图床反代       |
+|  SEND_PIC_INFO  | bool |         false          | true/false | 发送涩图是是否发送图片信息 |
+|   R18_SWITCH    | bool |         false          | true/false |     r18 开关，防爆按钮     |
+|   CHAT_SWITCH   | bool |         false          | true/false |      是否开启聊天功能      |
+| OPENAI_API_KEY  | str  |           ""           |     -      |       openai API key       |
+| OPENAI_BASE_URL | str  |           ""           |     -      |       openai 接入点        |
 
 ### ✨ 功能介绍
 
@@ -92,6 +95,7 @@
 - [x] 获取 ba meme（基于自建的图库，质量尽可能高了）
 - [x] 获取 ba 人权
 - [x] 获取 ba 总力战信息
+- [x] 使用llm进行角色扮演对话
 
 ### 🤖 指令表
 
@@ -121,12 +125,15 @@
 |      `ba总力战分数计算 <服务器名>`      |            无             |  无   |                 计算相应的分数                  |     `/ba总力战分数计算`      |
 |              `ba可用boss`               |            无             |  无   |               获取可用的 boss 名                |        `/ba可用boss`         |
 |            `ba学生生日分布`             |            无             |  无   |               获取学生生日分布图                |      `/ba学生生日分布`       |
+|       `chat <subcommand> [args]`        |            无             |  无   |                   调整llm设置                   |          `/chat -h`          |
 
 - 各指令(不支持所有服的指令)参数可用列表如下
 
 ```
+
 ba攻略：关卡<关卡号>/国际服总力战/日服总力战/国际服大决战/日服大决战/国际服火力演习/日服火力演习/竞技场/三一礼物/互动家具/升星一图流/...
 ba总力档线：日服/官服/b服/B服
+
 ```
 
 - ba 涩图的具体使用方法
@@ -141,11 +148,13 @@ ba总力档线：日服/官服/b服/B服
 例：
 
 ```
+
 /ba涩图
 /ba涩图 num 2 tags [BlueArchive] isAI true restrict safe
 /ba涩图 num 2
 /ba涩图 tags [小鸟游星野, BlueArchive]
 /ba涩图 isAI true restrict r18
+
 ```
 
 ## 👥 参与共建
@@ -155,3 +164,7 @@ ba总力档线：日服/官服/b服/B服
 ## 🚩 TODO
 
 - [ ] 使用 nonebot-plugin-orm 重构插件数据
+
+```
+
+```
