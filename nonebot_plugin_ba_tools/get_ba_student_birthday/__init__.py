@@ -7,7 +7,7 @@ from typing import Any
 import httpx
 from nonebot import require
 
-from ..config import plugin_config
+from ..config import ASSERT_DIR, ConfigManager
 from ..utils.common import get_students_by_birth_month
 from ..utils.constants import ARONA_API_URL, DATA_STUDENTS_BIRTHDAY_IMG_PATH
 from ..utils.types import Student
@@ -44,14 +44,14 @@ async def _(month: Match[str]) -> None:
             real_month: str = month_match.group(1) if month_match else str(datetime.now().month)
             students: list[Student] = await get_students_by_birth_month(real_month)
             if len(students):
-                if plugin_config.loading_switch:
+                if ConfigManager.get().pic.loading_switch:
                     pre_msg = await UniMessage.text("图片正在准备喵~").send()
                 await init_birthday_img(students, real_month)
                 msg: UniMessage[Image] = UniMessage(
-                    Image(path=plugin_config.assert_path / f"{DATA_STUDENTS_BIRTHDAY_IMG_PATH}/{real_month}.png")
+                    Image(path=ASSERT_DIR / f"{DATA_STUDENTS_BIRTHDAY_IMG_PATH}/{real_month}.png")
                 )
                 await get_student_birthday_list.send(msg)
-                if plugin_config.loading_switch and pre_msg:
+                if ConfigManager.get().pic.loading_switch and pre_msg:
                     await pre_msg.recall()
                 await get_student_birthday_list.finish()
             else:

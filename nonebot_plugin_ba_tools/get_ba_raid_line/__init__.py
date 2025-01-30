@@ -5,9 +5,8 @@ from typing import Any
 import httpx
 from nonebot import logger, require
 
+from ..config import ConfigManager
 from ..utils.constants import ARONA_API_URL, ARONA_CDN_URL, BOSS_TRANSLATE
-
-from ..config import plugin_config
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (
@@ -68,10 +67,10 @@ async def _(server: Match[str]) -> None:
             if response.status_code == 200:
                 msg = UniMessage.image(url=response.json()["data"]["imgUrl"])
         if msg:
-            if plugin_config.loading_switch:
+            if ConfigManager.get().pic.loading_switch:
                 pre_msg = await UniMessage.text("正在努力查询……").send()
             await get_rank1_charts.send(msg)
-            if plugin_config.loading_switch and pre_msg:
+            if ConfigManager.get().pic.loading_switch and pre_msg:
                 await pre_msg.recall()
             await get_rank1_charts.finish()
         else:
@@ -98,10 +97,10 @@ async def _(server: Match[str]) -> None:
             if response.status_code == 200:
                 msg = UniMessage.image(url=response.json()["data"]["imgUrl"])
         if msg:
-            if plugin_config.loading_switch:
+            if ConfigManager.get().pic.loading_switch:
                 pre_msg = await UniMessage.text("正在努力查询……").send()
             await get_score_charts.send(msg)
-            if plugin_config.loading_switch and pre_msg:
+            if ConfigManager.get().pic.loading_switch and pre_msg:
                 await pre_msg.recall()
             await get_score_charts.finish()
         else:
@@ -128,10 +127,10 @@ async def _(server: Match[str]) -> None:
             if response.status_code == 200:
                 msg = UniMessage.image(url=response.json()["data"]["imgUrl"])
         if msg:
-            if plugin_config.loading_switch:
+            if ConfigManager.get().pic.loading_switch:
                 pre_msg = await UniMessage.text("正在努力查询……").send()
             await get_member_charts.send(msg)
-            if plugin_config.loading_switch and pre_msg:
+            if ConfigManager.get().pic.loading_switch and pre_msg:
                 await pre_msg.recall()
             await get_member_charts.finish()
         else:
@@ -163,10 +162,10 @@ async def _(results: Arparma) -> None:
             data = response.json()
             msg = UniMessage.text(f"对应的分数为: {data['data']['score']}")
     if msg:
-        if plugin_config.loading_switch:
+        if ConfigManager.get().pic.loading_switch:
             pre_msg = await UniMessage.text("正在努力查询……").send()
         await get_member_charts.send(msg)
-        if plugin_config.loading_switch and pre_msg:
+        if ConfigManager.get().pic.loading_switch and pre_msg:
             await pre_msg.recall()
         await get_member_charts.finish()
     else:
@@ -197,10 +196,10 @@ async def _(results: Arparma) -> None:
             data = response.json()
             msg = UniMessage.text(f"对应的时间为: {data['data']['time']}")
     if msg:
-        if plugin_config.loading_switch:
+        if ConfigManager.get().pic.loading_switch:
             pre_msg = await UniMessage.text("正在努力查询……").send()
         await get_member_charts.send(msg)
-        if plugin_config.loading_switch and pre_msg:
+        if ConfigManager.get().pic.loading_switch and pre_msg:
             await pre_msg.recall()
         await get_member_charts.finish()
     else:

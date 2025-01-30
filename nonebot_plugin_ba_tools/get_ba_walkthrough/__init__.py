@@ -1,13 +1,12 @@
 from __future__ import annotations
-import httpx
 
 from typing import Any
 
+import httpx
 from nonebot import require
 
+from ..config import ConfigManager
 from ..utils.constants import ARONA_CDN_URL
-
-from ..config import plugin_config
 from ..utils.get_img_from_name import get_img
 
 require("nonebot_plugin_alconna")
@@ -37,10 +36,10 @@ async def _(option: Match[str]) -> None:
         middle_route: str = "chapter-map" if option.result.startswith("关卡") else "strategy"
         msg: UniMessage[Image] | None = await get_img(option.result.replace("关卡", ""), type, middle_route)
         if msg:
-            if plugin_config.loading_switch:
+            if ConfigManager.get().pic.loading_switch:
                 pre_msg = await UniMessage.text("攻略正在来的路上……").send()
             await get_walkthrough.send(msg)
-            if plugin_config.loading_switch and pre_msg:
+            if ConfigManager.get().pic.loading_switch and pre_msg:
                 await pre_msg.recall()
             await get_walkthrough.finish()
         else:

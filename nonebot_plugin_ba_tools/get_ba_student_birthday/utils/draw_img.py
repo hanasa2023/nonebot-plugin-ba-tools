@@ -7,7 +7,7 @@ import httpx
 from nonebot import logger
 from PIL import Image, ImageDraw, ImageFont
 
-from ...config import plugin_config
+from ...config import ASSERT_DIR, ConfigManager
 from ...utils.constants import (
     ARONA_CDN_URL,
     DATA_STUDENTS_BIRTHDAY_IMG_PATH,
@@ -28,9 +28,7 @@ def handle_student_list(
     Returns:
         list[Student]: 处理后的学生列表
     """
-    students_sorted: list[Student] = sorted(
-        students, key=lambda student: student.birthday
-    )
+    students_sorted: list[Student] = sorted(students, key=lambda student: student.birthday)
     students_handled: list[Student] = []
     counter: dict[str, int] = {}
     hash_map: dict[str, bool] = {}
@@ -54,16 +52,10 @@ async def init_birthday_img(students: list[Student], month: str):
     """
     students_handled, _ = handle_student_list(students)
     for student in students_handled:
-        img_path: Path = Path(
-            plugin_config.assert_path / f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp"
-        )
+        img_path: Path = Path(ASSERT_DIR / f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp")
         if not img_path.exists():
-            await init_student_icon(
-                ARONA_CDN_URL + f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp", img_path
-            )
-    birthday_img_path: Path = (
-        plugin_config.assert_path / f"{DATA_STUDENTS_BIRTHDAY_IMG_PATH}/{month}.png"
-    )
+            await init_student_icon(ARONA_CDN_URL + f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp", img_path)
+    birthday_img_path: Path = ASSERT_DIR / f"{DATA_STUDENTS_BIRTHDAY_IMG_PATH}/{month}.png"
     if not birthday_img_path.exists():
         logger.info("检测到生日表不存在，正在开始创建……")
         await asyncio.to_thread(draw_birthday_img, month, birthday_img_path, students)
@@ -109,9 +101,7 @@ def draw_birthday_img(month: str, save_path: Path, students: list[Student]):
         (inline_img_size[1] - inline_img_p2) // 2,
     )
     img: Image.Image = Image.new("RGBA", (img_w, img_h), (0, 0, 0, 0))
-    zh_font: ImageFont.FreeTypeFont = ImageFont.truetype(
-        Path(__file__).parents[1] / "fonts/miaozi-meiweiti-2.ttf", 24
-    )
+    zh_font: ImageFont.FreeTypeFont = ImageFont.truetype(Path(__file__).parents[1] / "fonts/miaozi-meiweiti-2.ttf", 24)
     en_font: ImageFont.FreeTypeFont = ImageFont.truetype(
         Path(__file__).parents[1] / "fonts/ComicShannsMonoNerdFont-Regular.otf", 16
     )
@@ -127,9 +117,7 @@ def draw_birthday_img(month: str, save_path: Path, students: list[Student]):
     )
     # 绘制分割线
     for i in range(1, 7):
-        draw.line(
-            xy=[(i * table_w, caption_h), (i * table_w, img_h)], fill="#ffffff", width=1
-        )
+        draw.line(xy=[(i * table_w, caption_h), (i * table_w, img_h)], fill="#ffffff", width=1)
     for i in range(1, 5):
         draw.line(
             xy=[(0, i * table_h + caption_h), (img_w, i * table_h + caption_h)],
@@ -162,10 +150,7 @@ def draw_birthday_img(month: str, save_path: Path, students: list[Student]):
         for index, student in enumerate(students_handled):
             if student.birthday == f"{month}月{i}日":
                 if counter[student.birthday] == 1:
-                    with Image.open(
-                        plugin_config.assert_path
-                        / f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp"
-                    ) as im:
+                    with Image.open(ASSERT_DIR / f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp") as im:
                         img.paste(
                             im=im.resize(inline_img_size),
                             box=(
@@ -175,19 +160,12 @@ def draw_birthday_img(month: str, save_path: Path, students: list[Student]):
                         )
                 # 偷个懒，目前最多2名学生同一天生日
                 elif counter[student.birthday] == 2:
-                    if index == find_first_birth_index(
-                        students_handled, student.birthday
-                    ):
-                        with Image.open(
-                            plugin_config.assert_path
-                            / f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp"
-                        ) as im:
+                    if index == find_first_birth_index(students_handled, student.birthday):
+                        with Image.open(ASSERT_DIR / f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp") as im:
                             img.paste(
                                 im=im.resize(inline_img_size2),
                                 box=(
-                                    (col + 1) * table_w
-                                    - inline_img_p
-                                    - inline_img_size[0],
+                                    (col + 1) * table_w - inline_img_p - inline_img_size[0],
                                     row * table_h
                                     + inline_img_p
                                     + caption_h
@@ -195,16 +173,11 @@ def draw_birthday_img(month: str, save_path: Path, students: list[Student]):
                                 ),
                             )
                     else:
-                        with Image.open(
-                            plugin_config.assert_path
-                            / f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp"
-                        ) as im:
+                        with Image.open(ASSERT_DIR / f"{DATA_STUDENTS_ICON_PATH}/{student.id}.webp") as im:
                             img.paste(
                                 im=im.resize(inline_img_size2),
                                 box=(
-                                    (col + 1) * table_w
-                                    - inline_img_p
-                                    - inline_img_size2[0],
+                                    (col + 1) * table_w - inline_img_p - inline_img_size2[0],
                                     row * table_h
                                     + inline_img_p
                                     + caption_h

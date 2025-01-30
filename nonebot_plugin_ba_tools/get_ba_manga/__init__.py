@@ -5,7 +5,7 @@ from typing import Any
 
 from nonebot import require
 
-from ..config import plugin_config
+from ..config import ConfigManager
 from ..utils.wiki import get_img_from_url, get_max_manga_index, get_wiki_urls_from_title
 
 require("nonebot_plugin_alconna")
@@ -36,13 +36,13 @@ async def _(index: Match) -> None:
             url: str = urls[0]
             imgs_url: list[str] = await get_img_from_url(url)
             if len(imgs_url):
-                if plugin_config.loading_switch:
+                if ConfigManager.get().pic.loading_switch:
                     pre_msg = await UniMessage.text("请稍等喵~").send()
                 msg: UniMessage[Image] = UniMessage()
                 for img_url in imgs_url:
                     msg.append(Image(url=img_url))
                 await get_manga.send(msg)
-                if plugin_config.loading_switch and pre_msg:
+                if ConfigManager.get().pic.loading_switch and pre_msg:
                     await pre_msg.recall()
                 await get_manga.finish()
             else:

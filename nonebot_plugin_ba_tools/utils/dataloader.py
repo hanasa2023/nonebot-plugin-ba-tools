@@ -6,13 +6,11 @@ from typing import Any
 
 import aiofiles
 from httpx import AsyncClient
-from nonebot import get_plugin_config, logger
+from nonebot import logger
 
-from ..config import Config
+from ..config import ASSERT_DIR, Config
 from ..utils.types import Student, Students
 from .constants import ARONA_CDN_URL
-
-plugin_config = get_plugin_config(Config)
 
 
 class DataLoadError(Exception):
@@ -23,12 +21,12 @@ class DataLoader:
     """数据加载器，如果指定路径的文件不存在，则通过网络下载"""
 
     def __init__(self, _path: str):
-        self.file_path: Path = plugin_config.assert_path / _path
+        self.file_path: Path = ASSERT_DIR / _path
         self.file_url: str = ARONA_CDN_URL + _path
 
     async def read(self) -> Any:
         logger.debug(f"尝试从文件中加载数据，文件路径：{self.file_path}")
-        async with aiofiles.open(self.file_path, mode="r", encoding="utf-8") as f:
+        async with aiofiles.open(self.file_path, encoding="utf-8") as f:
             data = json.loads(await f.read())
         return data
 
@@ -54,9 +52,7 @@ class DataLoader:
             if not folder.exists():
                 folder.mkdir(parents=True, exist_ok=True)
             # 从网络下载文件
-            logger.debug(
-                f"数据文件不存在，尝试通过网络下载，文件路径：{self.file_path}"
-            )
+            logger.debug(f"数据文件不存在，尝试通过网络下载，文件路径：{self.file_path}")
             data = await self.download()
             await self.write(data)
             return data

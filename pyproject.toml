@@ -28,10 +28,11 @@ nonebot-plugin-uninfo = "^0.5.0"
 tortoise = "^0.1.1"
 openai = "^1.60.2"
 pyyaml = "^6.0.2"
+deepdiff = "^8.1.1"
 
 [[tool.poetry.source]]
 name = "mirrors"
-url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+url = "https://mirrors.ustc.edu.cn/pypi/simple/"
 priority = "primary"
 
 
@@ -56,7 +57,7 @@ line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "W", "F", "UP", "C", "T", "PYI", "PT", "Q"]
-ignore = ["E402", "C901"]
+ignore = ["E402", "C901", "F401"]
 
 [tool.basedpyright]
 typeCheckingMode = "standard"

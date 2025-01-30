@@ -6,9 +6,9 @@ from typing import Any, Literal
 import httpx
 from nonebot import logger, require
 
-from ..config import plugin_config
+from ..config import ConfigManager
 from ..utils.constants import ARONA_API_URL
-from .utils.models import Illust, MemeInfo
+from .models import Illust, MemeInfo
 
 require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import (
@@ -49,11 +49,11 @@ async def _(result: Arparma, target: MsgTarget):
     tags: list[str] = result.query("tags.v", [])
     is_ai: bool = result.query("isAI.v", False)
     restrict: str = result.query("restrict.v", "safe")
-    if restrict == "r18" and not plugin_config.r18_switch:
+    if restrict == "r18" and not ConfigManager.get().pic.r18_switch:
         restrict = "safe"
         await get_pic.send("r18涩图已关闭，请联系管理员开启")
-    if pic_num > plugin_config.ba_max_pic_num:
-        pic_num = plugin_config.ba_max_pic_num
+    if pic_num > ConfigManager.get().pic.max_pic_num:
+        pic_num = ConfigManager.get().pic.max_pic_num
     illust_list: list[Illust] = []
     async with httpx.AsyncClient() as ctx:
         try:
@@ -74,13 +74,18 @@ async def _(result: Arparma, target: MsgTarget):
                 illust_list.extend([Illust(**illust) for illust in response.json()["data"]["illusts"]])
                 for illust in illust_list:
                     pic: UniMessage[Image | Text] = UniMessage.image(url=illust.image_url)
-                    if plugin_config.send_pic_info:
+                    if ConfigManager.get().pic.send_pic_info:
                         m = pic + UniMessage.text(
-                            f"🎨 pid: {illust.pid}\n🧐 uid: {illust.uid}\n🥰 like:{illust.love_members}\n😨 dislike: {illust.hate_memebers}"
+                            f"""
+                            🎨 pid: {illust.pid}
+                            🧐 uid: {illust.uid}
+                            🥰 like:{illust.love_members}
+                            😨 dislike: {illust.hate_memebers}
+                            """
                         )
                     else:
                         m = pic
-                    if plugin_config.ba_max_pic_num >= 10:
+                    if ConfigManager.get().pic.max_pic_num >= 10:
                         nodes = [CustomNode(uid=str(target.self_id), name="", content=m)]
                         msg: Reference | UniMessage[Any] = Reference(nodes=nodes)
                     else:
@@ -121,8 +126,8 @@ async def _(pid: Match[int]):
 @get_meme.handle()
 async def _(result: Arparma):
     meme_num: int = result.query("num", 1)
-    if meme_num > plugin_config.ba_max_pic_num:
-        meme_num = plugin_config.ba_max_pic_num
+    if meme_num > ConfigManager.get().pic.max_pic_num:
+        meme_num = ConfigManager.get().pic.max_pic_num
     async with httpx.AsyncClient() as ctx:
         try:
             r: httpx.Response = await ctx.get(f"{ARONA_API_URL}/api/meme")

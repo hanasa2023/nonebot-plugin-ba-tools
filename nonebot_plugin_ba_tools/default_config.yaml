@@ -1,0 +1,22 @@
+pic:
+  loading_switch: true
+  max_pic_num: 5
+  pixiv_nginx: "https://i.pixiv.re"
+  send_pic_info: true
+  r18_switch: false
+
+chat:
+  enable: false
+  current_model: '<model_name>'
+  models:
+  - name: '<model_name>'
+    base_url: '<model_endpoint>'
+    api_key: '<your_api_key>'
+  reply_mode: text
+
+webui:
+  enable: true
+  path: "/batools"
+  api_access_token: ""
+  username: "admin"
+  password: "admin"

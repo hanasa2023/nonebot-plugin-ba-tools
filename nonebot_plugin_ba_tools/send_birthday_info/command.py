@@ -3,9 +3,9 @@ from pathlib import Path
 from typing import Any
 
 # from arclet.alconna import Alconna
-from nonebot import logger, require
+from nonebot import get_driver, logger, require
 
-from ..config import DRIVER, plugin_config
+from ..config import SETTING_DIR, ConfigManager
 from ..utils.constants import BIRTHDAY_INFO_GROUP_LIST_FILE
 from ..utils.user_info import is_superuser
 
@@ -25,25 +25,25 @@ GROUP_LIST: list[int] = []
 
 
 def save_group_list() -> None:
-    full_path: Path = plugin_config.setting_path / BIRTHDAY_INFO_GROUP_LIST_FILE
-    if not plugin_config.setting_path.exists():
-        plugin_config.setting_path.mkdir(parents=True, exist_ok=True)
+    full_path: Path = SETTING_DIR / BIRTHDAY_INFO_GROUP_LIST_FILE
+    if not SETTING_DIR.exists():
+        SETTING_DIR.mkdir(parents=True, exist_ok=True)
     with open(full_path, "w", encoding="utf-8") as f:
         json.dump(GROUP_LIST, f, ensure_ascii=False, indent=4)
 
 
-@DRIVER.on_startup
+@get_driver().on_startup
 async def _() -> None:
     logger.debug("读取生日信息推送群列表")
     global GROUP_LIST
-    full_path: Path = plugin_config.setting_path / BIRTHDAY_INFO_GROUP_LIST_FILE
+    full_path: Path = SETTING_DIR / BIRTHDAY_INFO_GROUP_LIST_FILE
     if not full_path.exists():
-        if not plugin_config.setting_path.exists():
-            plugin_config.setting_path.mkdir(parents=True, exist_ok=True)
+        if not SETTING_DIR.exists():
+            SETTING_DIR.mkdir(parents=True, exist_ok=True)
         with open(full_path, "w", encoding="utf-8") as f:
             f.write("[]")
         return
-    with open(full_path, "r", encoding="utf-8") as f:
+    with open(full_path, encoding="utf-8") as f:
         GROUP_LIST = json.load(f)
         logger.debug(f"group list is: {GROUP_LIST}")
 

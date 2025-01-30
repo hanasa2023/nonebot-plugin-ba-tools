@@ -4,7 +4,7 @@ from typing import Any
 
 from nonebot import require
 
-from ..config import plugin_config
+from ..config import ConfigManager
 from ..utils.get_img_from_name import get_img
 
 require("nonebot_plugin_alconna")
@@ -26,10 +26,10 @@ async def _() -> None:
     pre_msg: Receipt | None = None
     msg: UniMessage[Image] | None = await get_img("BA活动", "活动")
     if msg:
-        if plugin_config.loading_switch:
+        if ConfigManager.get().pic.loading_switch:
             pre_msg = await UniMessage.text("正在加载图片……").send()
         await get_activity_info.send(msg)
-        if plugin_config.loading_switch and pre_msg:
+        if ConfigManager.get().pic.loading_switch and pre_msg:
             await pre_msg.recall()
         await get_activity_info.finish()
     else:

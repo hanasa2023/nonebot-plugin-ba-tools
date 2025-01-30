@@ -1,3 +1,5 @@
+from aiofiles import base
+from loguru import logger
 from nonebot import on_regex, require
 from nonebot.matcher import Matcher
 
@@ -5,38 +7,43 @@ require("nonebot_plugin_alconna")
 from nonebot.adapters import Event
 from nonebot.rule import to_me
 from nonebot_plugin_alconna import (
+    Alconna,
+    AlconnaMatcher,
     Args,
     Field,
     Match,
     Option,
-    AlconnaMatcher,
-    on_alconna,
-    Alconna,
     Subcommand,
+    on_alconna,
 )
 
 require("nonebot_plugin_uninfo")
 from nonebot_plugin_uninfo import Uninfo
 
-from ..config import plugin_config, config
+from ..config import LLM_DIR, ConfigManager, config
 from .client import Chat
 
 
 def is_enable() -> bool:
-    return plugin_config.chat_switch
+    return ConfigManager.get().chat.enable
 
 
 if is_enable():
-    c = Chat(
-        api_key=plugin_config.openai_api_key,
-        base_url=plugin_config.openai_base_url,
-        preset_path=plugin_config.llm_path / "prompts.yaml",
-        model=plugin_config.llm_model,
-    )
+    try:
+        models = ConfigManager.get().chat.models
+        model = next(model for model in models if model.name == ConfigManager.get().chat.current_model)
+        c = Chat(
+            api_key=model.api_key,
+            base_url=model.base_url,
+            model=model.name,
+            preset_path=LLM_DIR / "prompts.yaml",
+        )
+    except StopIteration:
+        logger.error("未找到指定的模型")
 
 
 chat: type[Matcher] = on_regex(
-    rf"^[^{config.command_start}]([\s\S]+)",
+    rf"^[^{"".join(config.command_start)}]([\s\S]+)",
     rule=to_me() & is_enable,
     priority=999,
 )

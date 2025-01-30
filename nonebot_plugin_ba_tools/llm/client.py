@@ -1,23 +1,21 @@
 from __future__ import annotations
 
 import json
-import yaml
 from pathlib import Path
 
 import aiofiles
+import yaml
 from nonebot import logger
-from openai import APIStatusError, OpenAI
+from openai import APIStatusError, AsyncOpenAI
 from openai.types.chat import (
     ChatCompletion,
     ChatCompletionMessage,
     ChatCompletionMessageParam,
 )
 
-from .utils import str_presenter
-
-
-from ..config import plugin_config
+from ..config import LLM_DIR
 from .models import Presets, Prompt
+from .utils import str_presenter
 
 
 class Chat:
@@ -30,7 +28,7 @@ class Chat:
             promot_path (Path): 预设存储路径
             model (str): 接入的模型
         """
-        self.client = OpenAI(
+        self.client = AsyncOpenAI(
             api_key=api_key,
             base_url=base_url,
         )
@@ -87,7 +85,7 @@ class Chat:
             str | None: llm返回的内容
         """
         try:
-            session_data: Path = plugin_config.llm_path / f"sessions/{session_id}.json"
+            session_data: Path = LLM_DIR / f"sessions/{session_id}.json"
             # 如果没有则创建对话记录文件夹
             session_data.parent.mkdir(parents=True, exist_ok=True)
 
@@ -103,7 +101,7 @@ class Chat:
             messages.insert(0, {"role": "system", "content": self.prompt_content})
             logger.debug(f"messages: {messages}")
 
-            response: ChatCompletion = self.client.chat.completions.create(
+            response: ChatCompletion = await self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
                 temperature=1.3,
@@ -119,7 +117,7 @@ class Chat:
             return ccm.content
         except APIStatusError as e:
             # 处理 API 错误
-            logger.debug(f"APIStatusError: {e}")
+            logger.info(f"APIStatusError: {e}")
             if e.status_code == 400:
                 return "请求体格式错误"
             elif e.status_code == 401:
@@ -205,7 +203,7 @@ class Chat:
         Returns:
             str: 清除状态
         """
-        session_data: Path = plugin_config.llm_path / f"sessions/{session_id}.json"
+        session_data: Path = LLM_DIR / f"sessions/{session_id}.json"
         if session_data.exists():
             session_data.unlink()
             return "对话记录已清除"

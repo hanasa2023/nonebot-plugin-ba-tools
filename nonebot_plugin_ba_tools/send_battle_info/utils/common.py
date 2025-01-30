@@ -5,7 +5,7 @@ from typing import Any
 import aiofiles
 from pydantic import BaseModel
 
-from ...config import plugin_config
+from ...config import SETTING_DIR, ConfigManager
 from ...utils.constants import BATTLE_INFO_CONFIG_FILE
 
 
@@ -20,17 +20,17 @@ async def load_battle_config() -> BattleConfig:
     Returns:
         BattleConfig: 配置文件提取出来的模型
     """
-    full_path: Path = plugin_config.setting_path / BATTLE_INFO_CONFIG_FILE
+    full_path: Path = SETTING_DIR / BATTLE_INFO_CONFIG_FILE
     if not full_path.exists():
-        if not plugin_config.setting_path.exists():
-            plugin_config.setting_path.mkdir(parents=True, exist_ok=True)
+        if not SETTING_DIR.exists():
+            SETTING_DIR.mkdir(parents=True, exist_ok=True)
         async with aiofiles.open(full_path, "w", encoding="utf-8") as f:
             config: BattleConfig = BattleConfig(group_list=[], last_dynamic_id="")
             config_dict: dict[str, Any] = config.dict()
             config_json: str = json.dumps(config_dict, ensure_ascii=False, indent=2)
             await f.write(config_json)
             return config
-    async with aiofiles.open(full_path, "r", encoding="utf-8") as f:
+    async with aiofiles.open(full_path, encoding="utf-8") as f:
         content = await f.read()
         return BattleConfig(**json.loads(content))
 
@@ -41,9 +41,9 @@ async def save_battle_config(battle_config: BattleConfig) -> None:
     Args:
         battle_config (BattleConfig): 需要保存的模型
     """
-    full_path: Path = plugin_config.setting_path / BATTLE_INFO_CONFIG_FILE
-    if not plugin_config.setting_path.exists():
-        plugin_config.setting_path.mkdir(parents=True, exist_ok=True)
+    full_path: Path = SETTING_DIR / BATTLE_INFO_CONFIG_FILE
+    if not SETTING_DIR.exists():
+        SETTING_DIR.mkdir(parents=True, exist_ok=True)
     async with aiofiles.open(full_path, "w", encoding="utf-8") as f:
         config_dict: dict[str, Any] = battle_config.dict()
         config_json: str = json.dumps(config_dict, ensure_ascii=False, indent=2)

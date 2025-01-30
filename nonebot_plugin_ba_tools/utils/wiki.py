@@ -7,7 +7,7 @@ from typing import cast
 import httpx
 from bs4 import BeautifulSoup, NavigableString, ResultSet, Tag
 
-from ..config import plugin_config
+from ..config import ASSERT_DIR, ConfigManager
 from .common import get_data_from_html
 from .constants import ACTIVITYT_HTML_PATH, BA_WIKI_URL, WIKI_BASE_URL
 
@@ -107,9 +107,7 @@ async def create_activity_html(tag: Tag):
             new_src: str = "https:" + src
             img["src"] = new_src
     html: str = soup.prettify()
-    with open(
-        plugin_config.assert_path / ACTIVITYT_HTML_PATH, "w", encoding="utf-8"
-    ) as f:
+    with open(ASSERT_DIR / ACTIVITYT_HTML_PATH, "w", encoding="utf-8") as f:
         f.write(html)
 
 
@@ -126,9 +124,7 @@ def get_table_size(table: Tag) -> tuple[int, int]:
     height: float = 0.0
     style_width: str | list[str] | None = table.get("style")
     if isinstance(style_width, str):
-        match_width: re.Match[str] | None = re.search(
-            r"width\s*:\s*(\d+(\.\d+)?)px", style_width
-        )
+        match_width: re.Match[str] | None = re.search(r"width\s*:\s*(\d+(\.\d+)?)px", style_width)
         if match_width:
             _w: str = match_width.group(1)
             width += float(_w)
@@ -136,9 +132,7 @@ def get_table_size(table: Tag) -> tuple[int, int]:
     for tr in trs:
         style_height: str | list[str] | None = tr.get("style")
         if isinstance(style_height, str):
-            match_height: re.Match[str] | None = re.search(
-                r"height\s*:\s*(\d+(\.\d+)?)px", style_height
-            )
+            match_height: re.Match[str] | None = re.search(r"height\s*:\s*(\d+(\.\d+)?)px", style_height)
             if match_height:
                 _h: str = match_height.group(1)
                 height += float(_h)
@@ -165,7 +159,7 @@ async def create_activity_pic(url: str, base_year: int) -> bytes | None:
         width, height = get_table_size(table)
         async with get_new_page(viewport={"width": width, "height": height}) as page:
             await page.goto(
-                f"file://{plugin_config.assert_path / ACTIVITYT_HTML_PATH}",
+                f"file://{ASSERT_DIR / ACTIVITYT_HTML_PATH}",
                 wait_until="networkidle",
             )
             screenshot: bytes = cast(bytes, await page.screenshot(full_page=True))

@@ -5,7 +5,7 @@ from pathlib import Path
 import httpx
 from nonebot import logger, require
 
-from ..config import plugin_config
+from ..config import ASSERT_DIR, ConfigManager
 from ..utils.constants import ARONA_API_URL, IMG_PATH_MAP
 
 require("nonebot_plugin_alconna")
@@ -31,7 +31,7 @@ async def get_img(name: str, type: str, middle_route: str = "strategy") -> UniMe
             res_json = response.json()
             hash = res_json["data"]["hash"]
             if hash:
-                img_path: Path = plugin_config.assert_path / IMG_PATH_MAP[type] / f"{hash}.png"
+                img_path: Path = ASSERT_DIR / IMG_PATH_MAP[type] / f"{hash}.png"
                 if not img_path.exists():
                     logger.debug(f"{type}图片不存在，正在从网络下载至{img_path}……")
                     # 若父文件夹不存在则创建文件夹

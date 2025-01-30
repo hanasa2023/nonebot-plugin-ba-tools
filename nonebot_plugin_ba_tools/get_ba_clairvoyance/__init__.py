@@ -4,7 +4,7 @@ from typing import Any
 
 from nonebot import require
 
-from ..config import plugin_config
+from ..config import ConfigManager
 from ..utils.get_img_from_name import get_img
 
 require("nonebot_plugin_alconna")
@@ -29,10 +29,10 @@ async def _(server: Match[str]) -> None:
         pre_msg: Receipt | None = None
         msg: UniMessage[Image] | None = await get_img(f"{server.result}未来视", "千里眼")
         if msg:
-            if plugin_config.loading_switch:
+            if ConfigManager.get().pic.loading_switch:
                 pre_msg = await UniMessage.text("拼命加载图片中……").send()
             await get_clairvoyance.send(msg)
-            if plugin_config.loading_switch and pre_msg:
+            if ConfigManager.get().pic.loading_switch and pre_msg:
                 await pre_msg.recall()
             await get_clairvoyance.finish()
         else:
