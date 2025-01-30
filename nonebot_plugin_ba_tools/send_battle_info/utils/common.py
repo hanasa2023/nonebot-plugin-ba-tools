@@ -5,7 +5,7 @@ from typing import Any
 import aiofiles
 from pydantic import BaseModel
 
-from ...config import SETTING_DIR, ConfigManager
+from ...config import SETTING_DIR
 from ...utils.constants import BATTLE_INFO_CONFIG_FILE
 
 

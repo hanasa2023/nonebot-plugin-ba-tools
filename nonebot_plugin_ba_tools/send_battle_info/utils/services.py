@@ -108,9 +108,7 @@ class BilibiliService:
             self.img_key: str = ""
             self.sub_key: str = ""
             self.cookie: str = ""
-            self.battle_config: BattleConfig = BattleConfig(
-                group_list=[], last_dynamic_id=""
-            )
+            self.battle_config: BattleConfig = BattleConfig(group_list=[], last_dynamic_id="")
             self.initialized: bool = False
 
     async def initialize(self) -> None:
@@ -132,10 +130,7 @@ class BilibiliService:
         params["wts"] = curr_time  # 添加 wts 字段
         params = dict(sorted(params.items()))  # 按照 key 重排参数
         # 过滤 value 中的 "!'()*" 字符
-        params = {
-            k: "".join(filter(lambda chr: chr not in "!'()*", str(v)))
-            for k, v in params.items()
-        }
+        params = {k: "".join(filter(lambda chr: chr not in "!'()*", str(v))) for k, v in params.items()}
         query = urllib.parse.urlencode(params)  # 序列化参数
         wbi_sign = md5((query + mixin_key).encode()).hexdigest()  # 计算 w_rid
         params["w_rid"] = wbi_sign
@@ -144,13 +139,15 @@ class BilibiliService:
     async def getWbiKeys(self) -> tuple[str, str]:
         "获取最新的 img_key 和 sub_key"
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/58.0.3029.110 Safari/537.3"
+            ),
             "Referer": "https://www.bilibili.com/",
         }
         async with httpx.AsyncClient() as ctx:
-            resp: httpx.Response = await ctx.get(
-                url="https://api.bilibili.com/x/web-interface/nav", headers=headers
-            )
+            resp: httpx.Response = await ctx.get(url="https://api.bilibili.com/x/web-interface/nav", headers=headers)
             resp.raise_for_status()
             json_content = resp.json()
             img_url: str = json_content["data"]["wbi_img"]["img_url"]
@@ -169,7 +166,11 @@ class BilibiliService:
             response: httpx.Response = await ctx.get(
                 url="https://www.bilibili.com/",
                 headers={
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+                    "User-Agent": (
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/128.0.0.0 Safari/537.36"
+                    )
                 },
             )
             headers: httpx.Headers = response.headers
@@ -187,14 +188,16 @@ class BilibiliService:
         logger.debug("Start to get user dynamic")
         async with httpx.AsyncClient() as ctx:
             params: dict[str, str] = {"host_mid": uid}
-            signed_params: dict[str, str] = self.encWbi(
-                params, self.img_key, self.sub_key
-            )
+            signed_params: dict[str, str] = self.encWbi(params, self.img_key, self.sub_key)
             response: httpx.Response = await ctx.get(
                 url=f"{BASE_URL}/x/polymer/web-dynamic/v1/feed/space",
                 params=signed_params,
                 headers={
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+                    "User-Agent": (
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/128.0.0.0 Safari/537.36"
+                    ),
                     "cookie": self.cookie,
                     "Referer": "https://www.bilibili.com/",
                 },
@@ -231,26 +234,14 @@ class BilibiliService:
         for item in data.data.items:
             logger.debug(f"now at {item.id_str}")
             # 获取最后的动态id
-            if (
-                self.battle_config.last_dynamic_id == item.id_str
-                or item == data.data.items[-1]
-            ):
+            if self.battle_config.last_dynamic_id == item.id_str or item == data.data.items[-1]:
                 self.battle_config.last_dynamic_id = current_last_dynamic_id
                 await save_battle_config(self.battle_config)
-                logger.debug(
-                    f"In the last update dynamic: {self.battle_config.last_dynamic_id}"
-                )
+                logger.debug(f"In the last update dynamic: {self.battle_config.last_dynamic_id}")
                 break
-            desc: str = (
-                item.modules.module_dynamic.desc.text
-                if item.modules.module_dynamic.desc
-                else ""
-            )
+            desc: str = item.modules.module_dynamic.desc.text if item.modules.module_dynamic.desc else ""
             draws_url: list[str] = []
-            if (
-                item.modules.module_dynamic.major
-                and item.modules.module_dynamic.major.draw
-            ):
+            if item.modules.module_dynamic.major and item.modules.module_dynamic.major.draw:
                 for item1 in item.modules.module_dynamic.major.draw.items:
                     draws_url.append(item1.src)
 
