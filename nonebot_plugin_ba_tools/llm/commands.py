@@ -1,6 +1,4 @@
-from aiofiles import base
-from loguru import logger
-from nonebot import on_regex, require
+from nonebot import on_regex, require, logger
 from nonebot.matcher import Matcher
 
 require("nonebot_plugin_alconna")
@@ -18,10 +16,11 @@ from nonebot_plugin_alconna import (
 )
 
 require("nonebot_plugin_uninfo")
-from nonebot_plugin_uninfo import Uninfo
+from nonebot_plugin_uninfo import Uninfo, SceneType
 
 from ..config import LLM_DIR, ConfigManager, config
 from .client import Chat
+from ..utils.user_info import is_superuser
 
 
 def is_enable() -> bool:
@@ -49,7 +48,7 @@ chat: type[Matcher] = on_regex(
 )
 chat_commands: type[AlconnaMatcher] = on_alconna(
     Alconna(
-        "chat",
+        "bachat",
         Subcommand(
             "session",
             Option(
@@ -108,15 +107,43 @@ async def _(preset: Match[list[str]]) -> None:
 
 
 @chat_commands.assign("preset.change")
-async def _(preset: Match[str]) -> None:
-    msg = c.change_preset(preset.result)
-    await chat_commands.finish(msg)
+async def _(preset: Match[str], session: Uninfo) -> None:
+    if session.scene.type == SceneType.GROUP:
+        logger.info(f"session: {session.scene.id}")
+        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
+        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        if is_group_owner or is_group_admin or is_superuser(session.user.id):
+            msg = c.change_preset(preset.result)
+            await chat_commands.finish(msg)
+
+        else:
+            await chat_commands.finish("只有群主和(超级)管理员可以更改预设")
+    elif session.scene.type == SceneType.PRIVATE:
+        if is_superuser(session.user.id):
+            msg = c.change_preset(preset.result)
+            await chat_commands.finish(msg)
+        else:
+            await chat_commands.finish("只有超级用户可以更改预设")
 
 
 @chat_commands.assign("preset.reset")
-async def _() -> None:
-    msg = c.reset_preset()
-    await chat_commands.finish(msg)
+async def _(session: Uninfo) -> None:
+    if session.scene.type == SceneType.GROUP:
+        logger.info(f"session: {session.scene.id}")
+        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
+        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        if is_group_owner or is_group_admin or is_superuser(session.user.id):
+            msg = c.reset_preset()
+            await chat_commands.finish(msg)
+
+        else:
+            await chat_commands.finish("只有群主和(超级)管理员可以重置预设")
+    elif session.scene.type == SceneType.PRIVATE:
+        if is_superuser(session.user.id):
+            msg = c.reset_preset()
+            await chat_commands.finish(msg)
+        else:
+            await chat_commands.finish("只有超级用户可以更改预设")
 
 
 @chat_commands.assign("preset.list")
