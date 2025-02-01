@@ -56,8 +56,6 @@
 
 ~~本项目在 [Schale DB](https://github.com/SchaleDB/SchaleDB) 的基础上新增了 l2d 文件夹，请在 release 中下载相应文件并解压至相应目录下~~ v0.1.6 已实现网络请求资源文件，无需再自行配置资源文件
 
-- 资源文件请求详见 [Ba Tools Api](https://api.hanasaki.tech)
-
 - 默认路径为项目缓存路径，使用[nonebot_plugin_localstore](https://github.com/nonebot/plugin-localstore)进行管理，你可以使用`nb localsotre`查看默认缓存路径
 
 - [A.R.O.N.A API](https://aronadoc.hanasaki.tech)
@@ -66,18 +64,80 @@
 
 ### 🔧 插件配置
 
-请在你的 bot 根目录下的`.env` `.env.*`中添加以下字段
+💥 注意，在v0.5.0-beta版本中，插件配置方式发生了变动，如配置了旧版本的配置文件，需要手动迁移配置
 
-|      字段       | 类型 |         默认值         |   可选值   |            描述            |
-| :-------------: | :--: | :--------------------: | :--------: | :------------------------: |
-| LOADING_SWITCH  | bool |         false          | true/false |    是否开启图片加载通知    |
-| BA_MAX_PIC_NUM  | int  |           10           |     -      |   单次最多发送的图片数量   |
-|   PIXIV_NGINX   | str  | "<https://i.pixiv.re>" |     -      |       pixiv 图床反代       |
-|  SEND_PIC_INFO  | bool |         false          | true/false | 发送涩图是是否发送图片信息 |
-|   R18_SWITCH    | bool |         false          | true/false |     r18 开关，防爆按钮     |
-|   CHAT_SWITCH   | bool |         false          | true/false |      是否开启聊天功能      |
-| OPENAI_API_KEY  | str  |           ""           |     -      |       openai API key       |
-| OPENAI_BASE_URL | str  |           ""           |     -      |       openai 接入点        |
+配置默认路径为：
+
+- macOS: same as user_data_dir
+- Unix: `~/.config/nonebot2/nonebot_plugin_ba_tools/`
+- WinXP (roaming): `C:\Documents and Settings\<username>\Local Settings\Application Data\nonebot2\nonebot_plugin_ba_tools\`
+- Win 7 (roaming): `C:\Users\<username>\AppData\Roaming\nonebot2\nonebot_plugin_ba_tools\`
+
+**! Tips**: `如果你想自定义配置文件路径，可以向nonebot配置文件中添加BA_TOOLS_CONFIG_PATH项，值为你想要的路径`
+
+默认插件配置项如下：
+
+```yaml
+pic:
+  loading_switch: true
+  max_pic_num: 5
+  pixiv_nginx: "https://i.pixiv.re"
+  send_pic_info: true
+  r18_switch: false
+
+chat:
+  enable: false
+  current_model: "<model_name>"
+  models:
+    - name: "<model_name>"
+      base_url: "<model_endpoint>"
+      api_key: "<your_api_key>"
+  reply_mode: text
+
+webui:
+  enable: true
+  path: "/batools"
+  api_access_token: ""
+  username: "admin"
+  password: "admin"
+```
+
+#### 图片配置 (PicConfig)
+
+| 配置项         | 默认值                 | 描述                       |
+| -------------- | ---------------------- | -------------------------- |
+| loading_switch | `true`                 | 是否开启图片加载通知       |
+| max_pic_num    | `5`                    | 单次最大获取的图片数量     |
+| pixiv_nginx    | `"https://i.pixiv.re"` | pixiv图床反代              |
+| send_pic_info  | `true`                 | 发送涩图时是否发送图片信息 |
+| r18_switch     | `false`                | 是否开启R18                |
+
+#### 聊天配置 (ChatConfig)
+
+| 配置项        | 默认值   | 描述                 |
+| ------------- | -------- | -------------------- |
+| enable        | `false`  | 是否开启LLM Chat     |
+| current_model | `""`     | 当前模型             |
+| models        | `[]`     | Chat Model列表       |
+| reply_mode    | `"text"` | 回复模式(text/image) |
+
+#### WebUI配置 (WebUIConfig)
+
+| 配置项           | 默认值      | 描述                    |
+| ---------------- | ----------- | ----------------------- |
+| enable           | `true`      | 是否启用 BA Tools WebUI |
+| path             | `"batools"` | WebUI 路径              |
+| api_access_token | `""`        | WebUI 访问令牌          |
+| username         | `"admin"`   | WebUI 用户名            |
+| password         | `"admin"`   | WebUI 密码              |
+
+#### 聊天模型配置 (ChatModel)
+
+| 配置项   | 类型     | 描述         |
+| -------- | -------- | ------------ |
+| name     | `string` | 模型名称     |
+| base_url | `string` | 模型接口地址 |
+| api_key  | `string` | API密钥      |
 
 ### ✨ 功能介绍
 
@@ -96,6 +156,7 @@
 - [x] 获取 ba 人权
 - [x] 获取 ba 总力战信息
 - [x] 使用llm进行角色扮演对话
+- [x] WebUI 管理界面
 
 ### 🤖 指令表
 
@@ -125,7 +186,7 @@
 |      `ba总力战分数计算 <服务器名>`      |            无             |  无   |                 计算相应的分数                  |     `/ba总力战分数计算`      |
 |              `ba可用boss`               |            无             |  无   |               获取可用的 boss 名                |        `/ba可用boss`         |
 |            `ba学生生日分布`             |            无             |  无   |               获取学生生日分布图                |      `/ba学生生日分布`       |
-|       `chat <subcommand> [args]`        |            无             |  无   |                   调整llm设置                   |          `/chat -h`          |
+|      `bachat <subcommand> [args]`       |            无             |  无   |                   调整llm设置                   |         `/bachat -h`         |
 
 - 各指令(不支持所有服的指令)参数可用列表如下
 
