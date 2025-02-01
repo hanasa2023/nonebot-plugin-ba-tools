@@ -7,7 +7,7 @@ from typing import Literal
 import yaml
 from deepdiff.diff import DeepDiff
 from nonebot import get_driver, logger, require
-from nonebot.compat import model_dump
+from nonebot.compat import model_dump, type_validate_python
 from pydantic import BaseModel, Field
 
 require("nonebot_plugin_localstore")
@@ -187,12 +187,24 @@ class ConfigManager:
                 )
             )
 
+    @classmethod
+    def reset(cls):
+        cls.set(
+            type_validate_python(
+                Config,
+                yaml.safe_load(
+                    (Path(__file__).parent / "default_config.yaml").read_text(encoding="utf-8"),
+                ),
+            )
+        )
+
     @staticmethod
     def _load_config_file() -> Config:
-        return Config.model_validate(
+        return type_validate_python(
+            Config,
             yaml.safe_load(
                 config_path.read_text(encoding="utf-8"),
-            )
+            ),
         )
 
 

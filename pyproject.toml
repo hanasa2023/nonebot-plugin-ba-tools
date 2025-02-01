@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-ba-tools"
-version = "0.4.4"
+version = "0.5.0-beta"
 description = "一个BlueArchive的工具箱"
 authors = [
   "hanasaki <hanasakayui2022@gmail.com>",
@@ -29,10 +29,12 @@ tortoise = "^0.1.1"
 openai = "^1.60.2"
 pyyaml = "^6.0.2"
 deepdiff = "^8.1.1"
+pyjwt = "^2.10.1"
+psutil = "^6.1.1"
 
 [[tool.poetry.source]]
 name = "mirrors"
-url = "https://mirrors.ustc.edu.cn/pypi/simple/"
+url = "https://mirrors.aliyun.com/pypi/simple/"
 priority = "primary"
 
 
@@ -51,6 +53,7 @@ datamodel-code-generator = ">=0.26.0"
 types-aiofiles = "^24.1.0.20240626"
 pre-commit = "^3.8.0"
 types-pyyaml = "^6.0.12.20241230"
+types-psutil = "^6.1.0.20241221"
 
 [tool.ruff]
 line-length = 120
