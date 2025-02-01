@@ -42,7 +42,7 @@ if is_enable():
 
 
 chat: type[Matcher] = on_regex(
-    rf"^[^{"".join(config.command_start)}]([\s\S]+)",
+    rf"^[^{''.join(config.command_start)}]([\s\S]+)",
     rule=to_me() & is_enable,
     priority=999,
 )
