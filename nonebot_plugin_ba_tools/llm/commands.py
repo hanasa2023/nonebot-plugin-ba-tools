@@ -1,4 +1,6 @@
-from nonebot import on_regex, require, logger
+from __future__ import annotations
+
+from nonebot import logger, on_regex, require
 from nonebot.matcher import Matcher
 
 require("nonebot_plugin_alconna")
@@ -16,22 +18,24 @@ from nonebot_plugin_alconna import (
 )
 
 require("nonebot_plugin_uninfo")
-from nonebot_plugin_uninfo import Uninfo, SceneType
+from nonebot_plugin_uninfo import SceneType, Uninfo
 
 from ..config import LLM_DIR, ConfigManager, config
-from .client import Chat
 from ..utils.user_info import is_superuser
+from .client import Chat
 
 
 def is_enable() -> bool:
     return ConfigManager.get().chat.enable
 
 
-if is_enable():
+def init_chat() -> Chat | None:
+    if not ConfigManager.get().chat.enable:
+        return None
     try:
         models = ConfigManager.get().chat.models
         model = next(model for model in models if model.name == ConfigManager.get().chat.current_model)
-        c = Chat(
+        return Chat(
             api_key=model.api_key,
             base_url=model.base_url,
             model=model.name,
@@ -39,6 +43,7 @@ if is_enable():
         )
     except StopIteration:
         logger.error("未找到指定的模型")
+        return None
 
 
 chat: type[Matcher] = on_regex(
@@ -54,6 +59,7 @@ chat_commands: type[AlconnaMatcher] = on_alconna(
             Option(
                 "-c|--clear",
                 dest="clear",
+                help_text="清除当前会话",
             ),
         ),
         Subcommand(
@@ -70,17 +76,44 @@ chat_commands: type[AlconnaMatcher] = on_alconna(
                     ),
                 ],
                 dest="new",
+                help_text="新建预设",
             ),
             Option(
                 "-c|--change",
                 Args["preset", str, Field(completion=lambda: "请输入要更换的预设名称")],
                 dest="change",
+                help_text="更换预设",
             ),
             Option(
                 "-r|--reset",
                 dest="reset",
+                help_text="重置预设",
             ),
-            Option("-l|--list", dest="list"),
+            Option(
+                "-l|--list",
+                dest="list",
+                help_text="列出所有预设",
+            ),
+        ),
+        # Option(
+        #     "-b|--balance",
+        #     dest="balance",
+        #     help_text="查看余额",
+        # ),
+        Option(
+            "-e|--enable",
+            dest="enable",
+            help_text="启用聊天功能",
+        ),
+        Option(
+            "-d|--disable",
+            dest="disable",
+            help_text="禁用聊天功能",
+        ),
+        Option(
+            "-t|--toggle",
+            dest="toggle",
+            help_text="切换聊天功能状态",
         ),
     ),
     use_cmd_start=True,
@@ -90,24 +123,36 @@ chat_commands: type[AlconnaMatcher] = on_alconna(
 
 @chat.handle()
 async def _(event: Event, session: Uninfo) -> None:
+    c: Chat | None = init_chat()
+    if not c:
+        await chat.finish("未启用聊天功能")
     resp = await c.chat(session.id, event.get_plaintext())
     await chat.finish(resp)
 
 
 @chat_commands.assign("session.clear")
 async def _(session: Uninfo) -> None:
+    c: Chat | None = init_chat()
+    if not c:
+        await chat.finish("未启用聊天功能")
     msg = c.clear_session(session.id)
     await chat_commands.finish(msg)
 
 
 @chat_commands.assign("preset.new")
 async def _(preset: Match[list[str]]) -> None:
+    c: Chat | None = init_chat()
+    if not c:
+        await chat.finish("未启用聊天功能")
     msg = await c.create_new_prompt(preset.result[0], preset.result[1])
     await chat_commands.finish(msg)
 
 
 @chat_commands.assign("preset.change")
 async def _(preset: Match[str], session: Uninfo) -> None:
+    c: Chat | None = init_chat()
+    if not c:
+        await chat.finish("未启用聊天功能")
     if session.scene.type == SceneType.GROUP:
         logger.info(f"session: {session.scene.id}")
         is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
@@ -128,6 +173,9 @@ async def _(preset: Match[str], session: Uninfo) -> None:
 
 @chat_commands.assign("preset.reset")
 async def _(session: Uninfo) -> None:
+    c: Chat | None = init_chat()
+    if not c:
+        await chat.finish("未启用聊天功能")
     if session.scene.type == SceneType.GROUP:
         logger.info(f"session: {session.scene.id}")
         is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
@@ -148,8 +196,78 @@ async def _(session: Uninfo) -> None:
 
 @chat_commands.assign("preset.list")
 async def _() -> None:
+    c: Chat | None = init_chat()
+    if not c:
+        await chat.finish("未启用聊天功能")
     presets: list[str] = c.presets
     msg: str = "可用的预设有：\n"
     for preset in presets:
         msg += f"- {preset}\n"
     await chat_commands.finish(msg)
+
+
+@chat_commands.assign("enable")
+async def _(session: Uninfo) -> None:
+    if session.scene.type == SceneType.PRIVATE:
+        if is_superuser(session.user.id):
+            cfg = ConfigManager.get()
+            cfg.chat.enable = True
+            ConfigManager.set(cfg)
+            await chat_commands.finish("已启用聊天功能")
+        else:
+            await chat_commands.finish("只有超级用户可以启用聊天功能")
+    elif session.scene.type == SceneType.GROUP:
+        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
+        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        if is_group_owner or is_group_admin or is_superuser(session.user.id):
+            cfg = ConfigManager.get()
+            cfg.chat.enable = True
+            ConfigManager.set(cfg)
+            await chat_commands.finish("已启用聊天功能")
+        else:
+            await chat_commands.finish("只有群主和(超级)管理员可以启用聊天功能")
+
+
+@chat_commands.assign("disable")
+async def _(session: Uninfo) -> None:
+    if session.scene.type == SceneType.PRIVATE:
+        if is_superuser(session.user.id):
+            cfg = ConfigManager.get()
+            cfg.chat.enable = False
+            ConfigManager.set(cfg)
+            await chat_commands.finish("已禁用聊天功能")
+        else:
+            await chat_commands.finish("只有超级用户可以禁用聊天功能")
+    elif session.scene.type == SceneType.GROUP:
+        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
+        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        if is_group_owner or is_group_admin or is_superuser(session.user.id):
+            cfg = ConfigManager.get()
+            cfg.chat.enable = False
+            ConfigManager.set(cfg)
+            await chat_commands.finish("已禁用聊天功能")
+        else:
+            await chat_commands.finish("只有群主和(超级)管理员可以禁用聊天功能")
+
+
+@chat_commands.assign("toggle")
+async def _(session: Uninfo) -> None:
+    if session.scene.type == SceneType.PRIVATE:
+        if is_superuser(session.user.id):
+            cfg = ConfigManager.get()
+            cfg.chat.enable = not cfg.chat.enable
+            ConfigManager.set(cfg)
+            await chat_commands.finish(f"已{'启用' if ConfigManager.get().chat.enable else '禁用'}聊天功能")
+        else:
+            await chat_commands.finish("只有超级用户可以切换聊天功能状态")
+
+    elif session.scene.type == SceneType.GROUP:
+        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
+        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        if is_group_owner or is_group_admin or is_superuser(session.user.id):
+            cfg = ConfigManager.get()
+            cfg.chat.enable = not cfg.chat.enable
+            ConfigManager.set(cfg)
+            await chat_commands.finish(f"已{'启用' if ConfigManager.get().chat.enable else '禁用'}聊天功能")
+        else:
+            await chat_commands.finish("只有群主和(超级)管理员可以切换聊天功能状态")

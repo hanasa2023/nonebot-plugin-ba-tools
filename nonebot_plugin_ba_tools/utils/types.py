@@ -235,18 +235,14 @@ class Student(BaseModel):
     favor_alts: list[int] = Field(..., alias="FavorAlts")
     memory_lobby: list[int] = Field(..., alias="MemoryLobby")
     memory_lobby_bgm: str = Field(..., alias="MemoryLobbyBGM")
-    furniture_interaction: list[list[list[int]]] = Field(
-        ..., alias="FurnitureInteraction"
-    )
+    furniture_interaction: list[list[list[int]]] = Field(..., alias="FurnitureInteraction")
     favor_item_tags: list[str] = Field(..., alias="FavorItemTags")
     favor_item_unique_tags: list[str] = Field(..., alias="FavorItemUniqueTags")
     is_limited: int = Field(..., alias="IsLimited")
     weapon: Weapon = Field(..., alias="Weapon")
     gear: Gear = Field(..., alias="Gear")
     skill_ex_material: list[list[int]] = Field(..., alias="SkillExMaterial")
-    skill_ex_material_amount: list[list[int]] = Field(
-        ..., alias="SkillExMaterialAmount"
-    )
+    skill_ex_material_amount: list[list[int]] = Field(..., alias="SkillExMaterialAmount")
     skill_material: list[list[int]] = Field(..., alias="SkillMaterial")
     skill_material_amount: list[list[int]] = Field(..., alias="SkillMaterialAmount")
     tsa_id: int | None = Field(None, alias="TSAId")
