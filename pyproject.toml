@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-ba-tools"
-version = "0.5.0"
+version = "0.5.1"
 description = "一个BlueArchive的工具箱"
 authors = [
   "hanasaki <hanasakayui2022@gmail.com>",
@@ -31,6 +31,7 @@ deepdiff = "^8.1.1"
 pyjwt = "^2.10.1"
 psutil = "^6.1.1"
 nonebot-plugin-htmlrender = "^0.5.1"
+fastapi = "^0.115.8"
 
 [[tool.poetry.source]]
 name = "mirrors"
