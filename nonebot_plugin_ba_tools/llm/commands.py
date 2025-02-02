@@ -14,6 +14,7 @@ from nonebot_plugin_alconna import (
     Match,
     Option,
     Subcommand,
+    UniMessage,
     on_alconna,
 )
 
@@ -100,6 +101,14 @@ chat_commands: type[AlconnaMatcher] = on_alconna(
         #     dest="balance",
         #     help_text="查看余额",
         # ),
+        Subcommand(
+            "mode",
+            Option(
+                "-t|--toggle",
+                dest="toggle",
+                help_text="切换回复模式为文本/图片",
+            ),
+        ),
         Option(
             "-e|--enable",
             dest="enable",
@@ -127,7 +136,15 @@ async def _(event: Event, session: Uninfo) -> None:
     if not c:
         await chat.finish("未启用聊天功能")
     resp = await c.chat(session.id, event.get_plaintext())
-    await chat.finish(resp)
+    if ConfigManager.get().chat.reply_mode == "text":
+        await chat.finish(resp)
+    else:
+        from ..utils.addition_for_htmlrender import md_to_pic
+
+        pic: bytes = await md_to_pic(resp if resp else "未收到回复")
+        msg = UniMessage.image(raw=pic)
+        await msg.send()
+        await chat.finish()
 
 
 @chat_commands.assign("session.clear")
@@ -204,6 +221,28 @@ async def _() -> None:
     for preset in presets:
         msg += f"- {preset}\n"
     await chat_commands.finish(msg)
+
+
+@chat_commands.assign("mode.toggle")
+async def _(session: Uninfo) -> None:
+    if session.scene.type == SceneType.GROUP:
+        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
+        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        if is_group_owner or is_group_admin or is_superuser(session.user.id):
+            cfg = ConfigManager.get()
+            cfg.chat.reply_mode = "text" if cfg.chat.reply_mode == "image" else "image"
+            ConfigManager.set(cfg)
+            await chat_commands.finish(f"已切换回复模式为{cfg.chat.reply_mode}")
+        else:
+            await chat_commands.finish("只有群主和(超级)管理员可以切换回复模式")
+    elif session.scene.type == SceneType.PRIVATE:
+        if is_superuser(session.user.id):
+            cfg = ConfigManager.get()
+            cfg.chat.reply_mode = "text" if cfg.chat.reply_mode == "image" else "image"
+            ConfigManager.set(cfg)
+            await chat_commands.finish(f"已切换回复模式为{cfg.chat.reply_mode}")
+        else:
+            await chat_commands.finish("只有超级用户可以切换回复模式")
 
 
 @chat_commands.assign("enable")
