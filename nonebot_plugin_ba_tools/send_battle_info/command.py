@@ -1,6 +1,7 @@
 from typing import Any
 
 from nonebot import require
+from nonebot_plugin_uninfo import SceneType, Uninfo
 
 from ..utils.user_info import is_superuser
 from .utils.common import save_battle_config
@@ -14,9 +15,6 @@ from nonebot_plugin_alconna import (
     Match,
     on_alconna,
 )
-
-require("nonebot_plugin_uninfo")
-from nonebot_plugin_uninfo import SceneType, Uninfo
 
 battle_info: Alconna[Any] = Alconna("ba总力战订阅", Args["status", str])
 battle_info_switch: type[AlconnaMatcher] = on_alconna(battle_info, use_cmd_start=True)

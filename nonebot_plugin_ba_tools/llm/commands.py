@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from nonebot import logger, on_regex, require
+from nonebot.adapters import Event
 from nonebot.matcher import Matcher
+from nonebot.rule import to_me
 
 require("nonebot_plugin_alconna")
-from nonebot.adapters import Event
-from nonebot.rule import to_me
 from nonebot_plugin_alconna import (
     Alconna,
     AlconnaMatcher,
@@ -17,8 +17,6 @@ from nonebot_plugin_alconna import (
     UniMessage,
     on_alconna,
 )
-
-require("nonebot_plugin_uninfo")
 from nonebot_plugin_uninfo import SceneType, Uninfo
 
 from ..config import LLM_DIR, ConfigManager, config

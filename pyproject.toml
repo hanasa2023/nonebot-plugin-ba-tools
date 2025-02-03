@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-ba-tools"
-version = "0.5.4"
+version = "0.5.5"
 description = "一个BlueArchive的工具箱"
 authors = [
   "hanasaki <hanasakayui2022@gmail.com>",
