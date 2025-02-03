@@ -96,7 +96,7 @@ def get_system_info() -> dict[str, str]:
 def get_nonebot_info() -> dict[str, Any]:
     """获取NoneBot信息"""
     plugin_count = len(nonebot.get_loaded_plugins())
-    nonebot_version = f"nonebot {nonebot.__version__} x ba-tools 0.5.3"
+    nonebot_version = f"nonebot {nonebot.__version__} x ba-tools 0.5.4"
     nickname = nonebot.get_driver().config.nickname
 
     return {
