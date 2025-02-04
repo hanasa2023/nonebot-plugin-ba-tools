@@ -41,7 +41,7 @@ from .send_birthday_info import (
 )
 from .webui import app as app
 
-__version__ = "0.5.5"
+__version__ = "0.5.6"
 __plugin_meta__ = PluginMetadata(
     name="ba-tools",
     description="BlueArchive的工具箱",
