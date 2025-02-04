@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-ba-tools"
-version = "0.5.7"
+version = "0.5.8"
 description = "一个BlueArchive工具箱"
 authors = [
   "hanasaki <hanasakayui2022@gmail.com>",
@@ -15,7 +15,7 @@ repository = "https://github.com/hanasa2023/nonebot-plugin-ba-tools"
 [tool.poetry.dependencies]
 python = ">=3.9, <4.0"
 httpx = ">=0.27.0, <0.29.0"
-nonebot2 = {extras = ["fastapi"], version = "^2"}
+nonebot2 = { extras = ["fastapi"], version = "^2" }
 pydantic = ">=1.0, <3.0.0"
 beautifulsoup4 = "^4.12.3"
 nonebot-plugin-localstore = "^0.7.1"
