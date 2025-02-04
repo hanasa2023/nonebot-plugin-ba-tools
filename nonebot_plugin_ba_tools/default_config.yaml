@@ -15,7 +15,7 @@ chat:
   reply_mode: text
 
 webui:
-  enable: true
+  enable: false
   path: "/batools"
   api_access_token: ""
   username: "admin"
