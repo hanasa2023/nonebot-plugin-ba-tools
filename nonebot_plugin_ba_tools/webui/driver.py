@@ -1,13 +1,11 @@
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from nonebot import get_driver
-from nonebot.drivers import ReverseDriver
 from nonebot.drivers.fastapi import Driver as FastAPIDriver
 
 
-driver: FastAPIDriver = get_driver()  # type: ignore
+driver = get_driver()
 
-if not isinstance(driver, ReverseDriver) or not isinstance(driver, FastAPI):
+if not isinstance(driver, FastAPIDriver):
     raise NotImplementedError("This feature only support FastAPI driver.")
 
 app = driver.server_app
