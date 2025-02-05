@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import Any
 
 from nonebot import get_driver, logger, require
-from nonebot_plugin_uninfo import SceneType, Uninfo
 
 from ..config import SETTING_DIR, ConfigManager
 from ..utils.constants import BIRTHDAY_INFO_GROUP_LIST_FILE
@@ -17,6 +16,9 @@ from nonebot_plugin_alconna import (
     Match,
     on_alconna,
 )
+
+require("nonebot_plugin_uninfo")
+from nonebot_plugin_uninfo import SceneType, Uninfo
 
 GROUP_LIST: list[int] = []
 
