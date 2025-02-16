@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from nonebot import logger, on_regex, require
+from nonebot import logger, on_message, require
 from nonebot.adapters import Event
 from nonebot.matcher import Matcher
 from nonebot.rule import to_me
 
-from ..config import LLM_DIR, ConfigManager, config
+from ..config import LLM_DIR, ConfigManager
 from ..utils.user_info import is_superuser
 from .client import Chat
 
@@ -47,8 +47,7 @@ def init_chat() -> Chat | None:
         return None
 
 
-chat: type[Matcher] = on_regex(
-    rf"^[^{''.join(config.command_start)}]([\s\S]+)",
+chat: type[Matcher] = on_message(
     rule=to_me() & is_enable,
     priority=999,
 )
@@ -107,6 +106,25 @@ chat_commands: type[AlconnaMatcher] = on_alconna(
                 "-t|--toggle",
                 dest="toggle",
                 help_text="切换回复模式为文本/图片",
+            ),
+        ),
+        Subcommand(
+            "model",
+            Option(
+                "-l|--list",
+                dest="list",
+                help_text="列出所有模型",
+            ),
+            Option(
+                "-c|--change",
+                Args["model_name", str, Field(completion=lambda: "请输入要更换的模型名称")],
+                dest="change",
+                help_text="更换模型",
+            ),
+            Option(
+                "-cur|--current",
+                dest="current",
+                help_text="查看当前模型",
             ),
         ),
         Option(
@@ -310,3 +328,50 @@ async def _(session: Uninfo) -> None:
             await chat_commands.finish(f"已{'启用' if ConfigManager.get().chat.enable else '禁用'}聊天功能")
         else:
             await chat_commands.finish("只有群主和(超级)管理员可以切换聊天功能状态")
+
+
+@chat_commands.assign("model.list")
+async def _() -> None:
+    models = ConfigManager.get().chat.models
+    msg = "可用的模型有：\n"
+    for model in models:
+        msg += f"- {model.name}\n"
+    await chat_commands.finish(msg)
+
+
+@chat_commands.assign("model.change")
+async def _(model_name: Match[str], session: Uninfo) -> None:
+    if session.scene.type == SceneType.GROUP:
+        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
+        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        if is_group_owner or is_group_admin or is_superuser(session.user.id):
+            cfg = ConfigManager.get()
+            models = cfg.chat.models
+            try:
+                model = next(model for model in models if model.name == model_name.result)
+                cfg.chat.current_model = model.name
+                ConfigManager.set(cfg)
+                await chat_commands.finish(f"已更换模型为{model.name}")
+            except StopIteration:
+                await chat_commands.finish("未找到指定的模型")
+        else:
+            await chat_commands.finish("只有群主和(超级)管理员可以更换模型")
+    elif session.scene.type == SceneType.PRIVATE:
+        if is_superuser(session.user.id):
+            cfg = ConfigManager.get()
+            models = cfg.chat.models
+            try:
+                model = next(model for model in models if model.name == model_name.result)
+                cfg.chat.current_model = model.name
+                ConfigManager.set(cfg)
+                await chat_commands.finish(f"已更换模型为{model.name}")
+            except StopIteration:
+                await chat_commands.finish("未找到指定的模型")
+        else:
+            await chat_commands.finish("只有超级用户可以更换模型")
+
+
+@chat_commands.assign("model.current")
+async def _() -> None:
+    cfg = ConfigManager.get()
+    await chat_commands.finish(f"当前模型为{cfg.chat.current_model}")
