@@ -1,27 +1,29 @@
 name: TypeCheck CI
 
 on:
-    push:
+  push:
+    branches:
+      - main
 
 jobs:
-    Mypy:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
+  Mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Install poetry
-              run: pipx install poetry
-              shell: bash
+      - name: Install poetry
+        run: pipx install poetry
+        shell: bash
 
-            - uses: actions/setup-python@v5
-              with:
-                  python-version: '3.9'
-                  cache: 'poetry'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "uv"
 
-            - run: poetry install
-              shell: bash
+      - run: uv sync
+        shell: bash
 
-            - name: Run Mypy
-              shell: bash
-              run: |
-                  poetry run mypy ./nonebot_plugin_ba_tools
+      - name: Run Mypy
+        shell: bash
+        run: |
+          uv run mypy ./nonebot_plugin_ba_tools

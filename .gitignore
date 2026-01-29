@@ -151,3 +151,7 @@ dmypy.json
 
 .idea
 .vscode
+
+cache
+data
+config
