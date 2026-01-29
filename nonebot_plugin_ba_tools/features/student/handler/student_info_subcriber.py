@@ -2,6 +2,7 @@ from nonebot import logger
 from nonebot.params import Depends
 from nonebot_plugin_alconna import Target, UniMessage
 from nonebot_plugin_apscheduler import scheduler
+from nonebot_plugin_orm import get_session
 
 from nonebot_plugin_ba_tools.features.student.application import (
     StudentInformationUseCase,
@@ -18,6 +19,7 @@ from nonebot_plugin_ba_tools.shared.domain.repository.subscribe_repository impor
 )
 
 
+# TODO: fix: 计划任务中拿不到依赖注入实例
 @scheduler.scheduled_job("cron", hour=0, minute=0, id="send_birthday_info")
 async def send_birthday_info(
     student_info_use_case: StudentInformationUseCase = Depends(
