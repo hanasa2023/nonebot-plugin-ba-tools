@@ -1,4 +1,4 @@
-from nonebot import get_driver, logger, require
+from nonebot import get_driver, logger
 from nonebot_plugin_orm import get_session
 
 from .application import StudentDataSynchronizer
