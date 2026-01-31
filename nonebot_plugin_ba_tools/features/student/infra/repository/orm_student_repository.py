@@ -83,17 +83,14 @@ class OrmStudentRepository(StudentRepository):
 
         return [self._to_domain(student) for student in students_orm]
 
+    async def get_students_by_month(self, month: int) -> list[Student]:
+        stmt = select(Students).where(Students.birthday_month == month)
+        result = await self.session.execute(stmt)
+        students_orm = result.scalars().all()
+
+        return [self._to_domain(student) for student in students_orm]
+
     async def update_students(self, students: list[Student]) -> None:
-        """批量插入或更新学生信息
-
-        使用分批处理的方式来优化性能，避免单次事务过大导致的锁定问题。
-
-        Args:
-            students: 学生信息列表
-
-        Raises:
-            Exception: 数据库操作异常
-        """
         if not students:
             return
 

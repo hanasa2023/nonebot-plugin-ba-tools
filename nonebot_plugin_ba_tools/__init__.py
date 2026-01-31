@@ -9,6 +9,7 @@ from .config import Config
 from .config import ConfigManager as ConfigManager
 from .features.student import (
     Students,
+    birthday_matcher,
     birthday_subscriber,
     send_birthday_info,
     update_student_info_matcher,
@@ -18,6 +19,7 @@ from .shared import Subscriptions, get_subscribe_repository
 __all__ = [
     "Students",
     "Subscriptions",
+    "birthday_matcher",
     "birthday_subscriber",
     "get_subscribe_repository",
     "send_birthday_info",

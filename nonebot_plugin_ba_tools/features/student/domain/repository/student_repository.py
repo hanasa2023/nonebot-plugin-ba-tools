@@ -44,6 +44,19 @@ class StudentRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    async def get_students_by_month(self, month: int) -> list[Student]:
+        """获取指定月份过生日的学生
+
+        Args:
+            month (int): 指定月份
+
+        Returns:
+            list[Student]: 过生日的学生列表
+        """
+
+        raise NotImplementedError
+
+    @abstractmethod
     async def update_students(self, students: list[Student]) -> None:
         """更新学生信息
 

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <title>BA学生生日日历</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: sans-serif;
+                background: #fff0f3;
+                padding: 20px;
+            }
+
+            .calendar-container {
+                background: white;
+                border-radius: 20px;
+                border: 2px solid #fcd5df;
+                box-shadow: 0 8px 30px rgba(234, 132, 160, 0.15);
+                padding: 30px;
+                width: 960px;
+            }
+
+            .calendar-header {
+                text-align: center;
+                margin-bottom: 24px;
+                padding-bottom: 16px;
+                border-bottom: 2px solid #fcd5df;
+            }
+
+            .calendar-title {
+                font-family: "Misans", sans-serif;
+                font-size: 28px;
+                font-weight: bold;
+                color: #d4637a;
+            }
+
+            table.calendar-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 6px;
+                table-layout: fixed;
+            }
+
+            table.calendar-table th {
+                font-family: "喵字美味体", sans-serif;
+                background: #fce4ec;
+                padding: 10px 4px;
+                text-align: center;
+                font-weight: bold;
+                color: #c06078;
+                border-radius: 8px;
+                font-size: 14px;
+                width: 14.28%;
+            }
+
+            table.calendar-table td {
+                border: 1.5px solid #f3d5dc;
+                border-radius: 10px;
+                padding: 6px 2px;
+                text-align: center;
+                vertical-align: top;
+                background: #fffbfc;
+                height: 110px;
+                overflow: hidden;
+            }
+
+            table.calendar-table td.other-month {
+                background: #fafafa;
+                border-color: #f0e8ea;
+                color: #ccc;
+            }
+
+            table.calendar-table td.today {
+                background: #e8567d;
+                color: white;
+                border-color: #e8567d;
+                font-weight: bold;
+            }
+
+            .day-number {
+                font-family: "喵字美味体", sans-serif;
+                font-size: 14px;
+                font-weight: 600;
+                margin-bottom: 4px;
+                color: #555;
+            }
+
+            td.today .day-number {
+                color: white;
+            }
+
+            .student-avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                border: 2px solid #f8c0d0;
+                overflow: hidden;
+                background: #fce4ec;
+                margin: 0 auto;
+            }
+
+            td.today .student-avatar {
+                border-color: rgba(255, 255, 255, 0.6);
+            }
+
+            .student-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .student-name {
+                font-family: "喵字美味体", sans-serif;
+                font-size: 11px;
+                font-weight: 600;
+                text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 1.2;
+                margin-top: 2px;
+                color: #666;
+            }
+
+            td.today .student-name {
+                color: rgba(255, 255, 255, 0.95);
+            }
+
+            .birthday-badge {
+                display: inline-block;
+                background: #f06292;
+                color: white;
+                padding: 1px 6px;
+                border-radius: 4px;
+                font-family: "喵字美味体", sans-serif;
+                font-size: 10px;
+                font-weight: bold;
+                margin-top: 2px;
+            }
+
+            td.today .birthday-badge {
+                background: rgba(255, 255, 255, 0.3);
+                color: white;
+            }
+
+            .student-avatar-small {
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                overflow: hidden;
+                background: #fce4ec;
+                border: 1px solid #f8c0d0;
+                display: inline-block;
+                margin: 1px;
+            }
+
+            .student-avatar-small img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            td.today .student-avatar-small {
+                border-color: rgba(255, 255, 255, 0.5);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h1 class="calendar-title">{{ title }}</h1>
+            </div>
+
+            <table class="calendar-table">
+                <thead>
+                    <tr>
+                        <th>周一</th>
+                        <th>周二</th>
+                        <th>周三</th>
+                        <th>周四</th>
+                        <th>周五</th>
+                        <th>周六</th>
+                        <th>周日</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in days %} {% if loop.index0 % 7 == 0 %}
+                    <tr>
+                        {% endif %}
+                        <td
+                            class="{% if day.is_today %}today{% elif day.is_other_month %}other-month{% endif %}"
+                        >
+                            {% if not day.is_other_month %}
+                            <div class="day-number">{{ day.day_number }}</div>
+
+                            {% if day.students %} {% if day.students|length == 1
+                            %} {% set student = day.students[0] %}
+                            <div class="student-avatar">
+                                {% if student.avatar %}
+                                <img
+                                    src="{{ student.avatar }}"
+                                    alt="{{ student.name }}"
+                                />
+                                {% endif %}
+                            </div>
+                            <div class="student-name">{{ student.name }}</div>
+                            <div class="birthday-badge">🎂生日</div>
+                            {% else %}
+                            <div>
+                                {% for student in day.students %}
+                                <div class="student-avatar-small">
+                                    {% if student.avatar %}
+                                    <img
+                                        src="{{ student.avatar }}"
+                                        alt="{{ student.name }}"
+                                    />
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="birthday-badge">
+                                {{ day.students|length }}人生日
+                            </div>
+                            {% endif %} {% endif %} {% endif %}
+                        </td>
+                        {% if loop.index0 % 7 == 6 %}
+                    </tr>
+                    {% endif %} {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <title>BA学生生日热力图</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: sans-serif;
+                background: #fff0f3;
+                padding: 20px;
+            }
+
+            .container {
+                background: white;
+                border-radius: 20px;
+                border: 2px solid #fcd5df;
+                box-shadow: 0 8px 30px rgba(234, 132, 160, 0.15);
+                padding: 28px;
+                width: 960px;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 20px;
+                padding-bottom: 14px;
+                border-bottom: 2px solid #fcd5df;
+            }
+
+            .title {
+                font-family: "喵字美味体", sans-serif;
+                font-size: 24px;
+                font-weight: bold;
+                color: #d4637a;
+            }
+
+            .months-grid {
+                width: 100%;
+            }
+
+            .months-grid td {
+                vertical-align: top;
+                padding: 4px 6px;
+                width: 25%;
+            }
+
+            .month-title {
+                font-family: "喵字美味体", sans-serif;
+                font-size: 14px;
+                font-weight: bold;
+                color: #c06078;
+                text-align: center;
+                margin-bottom: 6px;
+            }
+
+            table.mini-cal {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 2px;
+                table-layout: fixed;
+            }
+
+            table.mini-cal th {
+                font-size: 9px;
+                color: #c06078;
+                text-align: center;
+                padding: 2px 0;
+            }
+
+            table.mini-cal td {
+                height: 24px;
+                border-radius: 4px;
+                text-align: center;
+                vertical-align: middle;
+                font-size: 10px;
+                font-weight: 600;
+                overflow: hidden;
+            }
+
+            table.mini-cal td.empty {
+                background: transparent;
+            }
+
+            table.mini-cal td.level-0 {
+                background: #fff5f7;
+                color: #bbb;
+            }
+
+            table.mini-cal td.level-1 {
+                background: #fcc;
+                color: #c0392b;
+            }
+
+            table.mini-cal td.level-2 {
+                background: #f48fb1;
+                color: white;
+            }
+
+            table.mini-cal td.level-3 {
+                background: #d4325e;
+                color: white;
+            }
+
+            table.mini-cal td.today {
+                outline: 2px solid #e8567d;
+                outline-offset: -1px;
+            }
+
+            .legend {
+                margin-top: 16px;
+                text-align: center;
+            }
+
+            .legend-label {
+                font-family: "喵字美味体", sans-serif;
+                font-size: 12px;
+                color: #999;
+                display: inline;
+                vertical-align: middle;
+            }
+
+            .legend-box {
+                display: inline-block;
+                width: 18px;
+                height: 18px;
+                border-radius: 4px;
+                margin: 0 3px;
+                vertical-align: middle;
+            }
+
+            .legend-box.l0 { background: #fff5f7; border: 1px solid #f3d5dc; }
+            .legend-box.l1 { background: #fcc; }
+            .legend-box.l2 { background: #f48fb1; }
+            .legend-box.l3 { background: #d4325e; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1 class="title">{{ title }}</h1>
+            </div>
+
+            <table class="months-grid">
+                {% for month in months %}
+                {% if loop.index0 % 4 == 0 %}<tr>{% endif %}
+                <td>
+                    <div class="month-title">{{ month.name }}</div>
+                    <table class="mini-cal">
+                        <thead>
+                            <tr>
+                                <th>一</th>
+                                <th>二</th>
+                                <th>三</th>
+                                <th>四</th>
+                                <th>五</th>
+                                <th>六</th>
+                                <th>日</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for week in month.weeks %}
+                            <tr>
+                                {% for day in week %}
+                                {% if day.is_other_month %}
+                                <td class="empty"></td>
+                                {% else %}
+                                <td class="level-{{ day.level }}{% if day.is_today %} today{% endif %}">{{ day.day_number }}</td>
+                                {% endif %}
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+                {% if loop.index0 % 4 == 3 %}</tr>{% endif %}
+                {% endfor %}
+            </table>
+
+            <div class="legend">
+                <span class="legend-label">少</span>
+                <span class="legend-box l0"></span>
+                <span class="legend-box l1"></span>
+                <span class="legend-box l2"></span>
+                <span class="legend-box l3"></span>
+                <span class="legend-label">多</span>
+            </div>
+        </div>
+    </body>
+</html>

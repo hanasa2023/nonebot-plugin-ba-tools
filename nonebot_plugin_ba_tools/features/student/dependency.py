@@ -6,8 +6,14 @@ from nonebot.params import Depends
 from nonebot_plugin_orm import AsyncSession, get_session
 
 from nonebot_plugin_ba_tools.shared import get_subscribe_repository
+from nonebot_plugin_ba_tools.shared.domain.port.html_render_service import (
+    HtmlRenderService,
+)
 from nonebot_plugin_ba_tools.shared.domain.repository.subscribe_repository import (
     SubscribeRepository,
+)
+from nonebot_plugin_ba_tools.shared.infra.adapter.htmlkit_html_render_service import (
+    HtmlkitHtmlRenderService,
 )
 from nonebot_plugin_ba_tools.shared.infra.reposirory.orm_subscribe_repository import (
     OrmSubscribeRepository,
@@ -35,17 +41,17 @@ from .infra.service.schaledb_service import (
     SchaleDBService,
 )
 
-__all__ = [
-    "get_schaledb_service",
-    "get_student_data_synchronizer",
-    "get_student_information_use_case",
-    "get_student_repository",
-    "get_student_subscription_use_case",
-    "get_student_information_use_case_for_task",
-    "get_student_repository_for_task",
-    "get_subscribe_repository_for_task",
-    "task_context",
-]
+# __all__ = [
+#     "get_schaledb_service",
+#     "get_student_data_synchronizer",
+#     "get_student_information_use_case",
+#     "get_student_information_use_case_for_task",
+#     "get_student_repository",
+#     "get_student_repository_for_task",
+#     "get_student_subscription_use_case",
+#     "get_subscribe_repository_for_task",
+#     "task_context",
+# ]
 
 
 async def get_student_repository(
@@ -69,6 +75,15 @@ async def get_schaledb_service() -> StudentDataGateway:
         StudentDataGateway: SchaleDB 学生数据网关实例
     """
     return SchaleDBService()
+
+
+async def get_html_render_service() -> HtmlRenderService:
+    """获取 HTML 渲染服务
+
+    Returns:
+        HtmlRenderService: HTML 渲染服务实例
+    """
+    return HtmlkitHtmlRenderService()
 
 
 async def get_student_data_synchronizer(
@@ -103,6 +118,7 @@ async def get_student_subscription_use_case(
 
 async def get_student_information_use_case(
     student_repository: StudentRepository = Depends(get_student_repository),
+    html_render_service: HtmlRenderService = Depends(get_html_render_service),
 ) -> StudentInformationUseCase:
     """获取学生信息查询用例（Handler 专用）
 
@@ -112,7 +128,10 @@ async def get_student_information_use_case(
     Returns:
         StudentInformationUseCase: 学生信息查询用例
     """
-    return StudentInformationUseCase(student_repository)
+    return StudentInformationUseCase(
+        student_repository,
+        html_render_service,
+    )
 
 
 def get_student_repository_for_task(
@@ -147,6 +166,20 @@ def get_subscribe_repository_for_task(
     return OrmSubscribeRepository(session)
 
 
+def get_html_render_service_for_task() -> HtmlRenderService:
+    """获取 HTML 渲染服务（计划任务专用）
+
+    用于计划任务和其他非 Handler 场景。
+
+    Args:
+        session: 数据库会话
+
+    Returns:
+        HtmlRenderer: HTML 渲染器实例
+    """
+    return HtmlkitHtmlRenderService()
+
+
 def get_student_information_use_case_for_task(
     session: AsyncSession,
 ) -> StudentInformationUseCase:
@@ -161,7 +194,8 @@ def get_student_information_use_case_for_task(
         StudentInformationUseCase: 学生信息查询用例
     """
     student_repository = get_student_repository_for_task(session)
-    return StudentInformationUseCase(student_repository)
+    html_render_service = get_html_render_service_for_task()
+    return StudentInformationUseCase(student_repository, html_render_service)
 
 
 @asynccontextmanager
@@ -185,7 +219,11 @@ async def task_context() -> AsyncGenerator[dict[str, Any], None]:
         # 构造所有需要的依赖
         student_repository = get_student_repository_for_task(session)
         subscribe_repository = get_subscribe_repository_for_task(session)
-        student_information_use_case = StudentInformationUseCase(student_repository)
+        html_render_service = get_html_render_service_for_task()
+        student_information_use_case = StudentInformationUseCase(
+            student_repository,
+            html_render_service,
+        )
         student_subscription_use_case = StudentSubscriptionUseCase(subscribe_repository)
 
         # 返回依赖字典
