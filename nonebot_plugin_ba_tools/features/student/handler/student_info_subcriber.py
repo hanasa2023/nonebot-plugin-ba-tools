@@ -20,11 +20,11 @@ async def send_birthday_info() -> None:
 
         # 使用任务上下文获取依赖
         async with task_context() as ctx:
-            student_info_use_case = ctx["student_information_use_case"]
+            student_birthday_use_case = ctx["student_birthday_use_case"]
             subscribe_repository = ctx["subscribe_repository"]
 
             # 获取当天过生日的学生
-            students = await student_info_use_case.get_birthday_students_today()
+            students = await student_birthday_use_case.get_birthday_students_today()
 
             if not students:
                 logger.debug("今天没有学生过生日")

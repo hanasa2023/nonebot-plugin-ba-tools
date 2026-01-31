@@ -4,28 +4,23 @@ require("nonebot_plugin_orm")
 require("nonebot_plugin_localstore")
 require("nonebot_plugin_alconna")
 require("nonebot_plugin_uninfo")
+require("nonebot_plugin_htmlkit")
 
 from .config import Config
 from .config import ConfigManager as ConfigManager
 from .features.student import (
     Students,
-    birthday_matcher,
-    birthday_subscriber,
     send_birthday_info,
-    student_info_matcher,
-    update_student_info_matcher,
+    student_matcher,
 )
 from .shared import Subscriptions, get_subscribe_repository
 
 __all__ = [
     "Students",
     "Subscriptions",
-    "birthday_matcher",
-    "birthday_subscriber",
     "get_subscribe_repository",
     "send_birthday_info",
-    "student_info_matcher",
-    "update_student_info_matcher",
+    "student_matcher",
 ]
 
 __version__ = "0.5.9.post3"
