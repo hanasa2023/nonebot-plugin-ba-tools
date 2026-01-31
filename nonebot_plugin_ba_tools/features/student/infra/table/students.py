@@ -27,3 +27,60 @@ class Students(Model):
 
     avatars: Mapped[list[str]] = mapped_column(JSON, default=list)
     """学生的头像 URL 列表（JSON 格式）"""
+
+    school: Mapped[str | None] = mapped_column(nullable=True)
+    """学校"""
+
+    club: Mapped[str | None] = mapped_column(nullable=True)
+    """社团"""
+
+    star_grade: Mapped[int | None] = mapped_column(nullable=True)
+    """星级"""
+
+    squad_type: Mapped[str | None] = mapped_column(nullable=True)
+    """编队类型"""
+
+    tactic_role: Mapped[str | None] = mapped_column(nullable=True)
+    """战术角色"""
+
+    position: Mapped[str | None] = mapped_column(nullable=True)
+    """站位"""
+
+    bullet_type: Mapped[str | None] = mapped_column(nullable=True)
+    """攻击属性"""
+
+    armor_type: Mapped[str | None] = mapped_column(nullable=True)
+    """护甲类型"""
+
+    weapon_type: Mapped[str | None] = mapped_column(nullable=True)
+    """武器类型"""
+
+    character_age: Mapped[str | None] = mapped_column(nullable=True)
+    """年龄"""
+
+    height: Mapped[str | None] = mapped_column(nullable=True)
+    """身高"""
+
+    birthday_str: Mapped[str | None] = mapped_column(nullable=True)
+    """生日显示用字符串"""
+
+    character_voice: Mapped[str | None] = mapped_column(nullable=True)
+    """声优"""
+
+    illustrator: Mapped[str | None] = mapped_column(nullable=True)
+    """画师"""
+
+    hobby: Mapped[str | None] = mapped_column(nullable=True)
+    """爱好"""
+
+    profile_introduction: Mapped[str | None] = mapped_column(nullable=True)
+    """简介"""
+
+    street_adaptation: Mapped[int | None] = mapped_column(nullable=True)
+    """街道适应性"""
+
+    outdoor_adaptation: Mapped[int | None] = mapped_column(nullable=True)
+    """室外适应性"""
+
+    indoor_adaptation: Mapped[int | None] = mapped_column(nullable=True)
+    """室内适应性"""

@@ -195,12 +195,52 @@ class SchaleDBService(StudentDataGateway):
                 f"学生 {student_id} ({personal_name} {family_name}) 没有有效的头像"
             )
 
+        # 提取扩展字段
+        school = primary_form.get("School")
+        club = primary_form.get("Club")
+        star_grade = primary_form.get("StarGrade")
+        squad_type = primary_form.get("SquadType")
+        tactic_role = primary_form.get("TacticRole")
+        position = primary_form.get("Position")
+        bullet_type = primary_form.get("BulletType")
+        armor_type = primary_form.get("ArmorType")
+        weapon_type = primary_form.get("WeaponType")
+        character_age = primary_form.get("CharacterAge")
+        height = primary_form.get("CharHeightMetric")
+        birthday_display = primary_form.get("Birthday")
+        character_voice = primary_form.get("CharacterVoice")
+        illustrator = primary_form.get("Illustrator")
+        hobby = primary_form.get("Hobby")
+        profile_introduction = primary_form.get("ProfileIntroduction")
+        street_adaptation = primary_form.get("StreetBattleAdaptation")
+        outdoor_adaptation = primary_form.get("OutdoorBattleAdaptation")
+        indoor_adaptation = primary_form.get("IndoorBattleAdaptation")
+
         return Student(
             id=student_id,
             name=name,
             nicknames=nicknames,
             birthday=birthday,
             avatars=avatars,
+            school=str(school) if school else None,
+            club=str(club) if club else None,
+            star_grade=int(star_grade) if star_grade is not None else None,
+            squad_type=str(squad_type) if squad_type else None,
+            tactic_role=str(tactic_role) if tactic_role else None,
+            position=str(position) if position else None,
+            bullet_type=str(bullet_type) if bullet_type else None,
+            armor_type=str(armor_type) if armor_type else None,
+            weapon_type=str(weapon_type) if weapon_type else None,
+            character_age=str(character_age) if character_age else None,
+            height=str(height) if height else None,
+            birthday_str=str(birthday_display) if birthday_display else None,
+            character_voice=str(character_voice) if character_voice else None,
+            illustrator=str(illustrator) if illustrator else None,
+            hobby=str(hobby) if hobby else None,
+            profile_introduction=str(profile_introduction) if profile_introduction else None,
+            street_adaptation=int(street_adaptation) if street_adaptation is not None else None,
+            outdoor_adaptation=int(outdoor_adaptation) if outdoor_adaptation is not None else None,
+            indoor_adaptation=int(indoor_adaptation) if indoor_adaptation is not None else None,
         )
 
     @staticmethod

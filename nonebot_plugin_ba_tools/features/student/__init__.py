@@ -3,6 +3,7 @@ from nonebot_plugin_orm import get_session
 
 from .application import StudentDataSynchronizer
 from .handler.get_student_birthday import birthday_matcher
+from .handler.get_student_info import student_info_matcher
 from .handler.student_info_subcriber import send_birthday_info
 from .handler.subscribe_student_birthday import birthday_subscriber
 from .handler.update_student_info import update_student_info_matcher
@@ -15,6 +16,7 @@ __all__ = [
     "birthday_matcher",
     "birthday_subscriber",
     "send_birthday_info",
+    "student_info_matcher",
     "update_student_info_matcher",
 ]
 

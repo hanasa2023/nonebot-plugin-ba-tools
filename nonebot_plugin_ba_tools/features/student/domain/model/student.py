@@ -32,6 +32,63 @@ class Student:
     avatars: list[str]
     """学生的头像 URL 列表"""
 
+    school: str | None = None
+    """学校"""
+
+    club: str | None = None
+    """社团"""
+
+    star_grade: int | None = None
+    """星级"""
+
+    squad_type: str | None = None
+    """编队类型（Main/Support）"""
+
+    tactic_role: str | None = None
+    """战术角色"""
+
+    position: str | None = None
+    """站位"""
+
+    bullet_type: str | None = None
+    """攻击属性"""
+
+    armor_type: str | None = None
+    """护甲类型"""
+
+    weapon_type: str | None = None
+    """武器类型"""
+
+    character_age: str | None = None
+    """年龄"""
+
+    height: str | None = None
+    """身高"""
+
+    birthday_str: str | None = None
+    """生日显示用字符串"""
+
+    character_voice: str | None = None
+    """声优"""
+
+    illustrator: str | None = None
+    """画师"""
+
+    hobby: str | None = None
+    """爱好"""
+
+    profile_introduction: str | None = None
+    """简介"""
+
+    street_adaptation: int | None = None
+    """街道适应性"""
+
+    outdoor_adaptation: int | None = None
+    """室外适应性"""
+
+    indoor_adaptation: int | None = None
+    """室内适应性"""
+
     def has_birthday_today(self) -> bool:
         """检查今天是否是这个学生的生日
 

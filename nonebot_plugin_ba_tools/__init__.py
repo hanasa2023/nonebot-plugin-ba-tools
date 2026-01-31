@@ -12,6 +12,7 @@ from .features.student import (
     birthday_matcher,
     birthday_subscriber,
     send_birthday_info,
+    student_info_matcher,
     update_student_info_matcher,
 )
 from .shared import Subscriptions, get_subscribe_repository
@@ -23,6 +24,7 @@ __all__ = [
     "birthday_subscriber",
     "get_subscribe_repository",
     "send_birthday_info",
+    "student_info_matcher",
     "update_student_info_matcher",
 ]
 

@@ -29,5 +29,5 @@ class HtmlkitHtmlRenderService(HtmlRenderService):
             dpi=120,
             max_width=1000,
             device_height=1200,
-            allow_refit=False,
+            allow_refit=True,
         )
