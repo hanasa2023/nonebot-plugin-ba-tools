@@ -124,7 +124,9 @@ def get_table_size(table: Tag) -> tuple[int, int]:
     height: float = 0.0
     style_width: str | list[str] | None = table.get("style")
     if isinstance(style_width, str):
-        match_width: re.Match[str] | None = re.search(r"width\s*:\s*(\d+(\.\d+)?)px", style_width)
+        match_width: re.Match[str] | None = re.search(
+            r"width\s*:\s*(\d+(\.\d+)?)px", style_width
+        )
         if match_width:
             _w: str = match_width.group(1)
             width += float(_w)
@@ -132,7 +134,9 @@ def get_table_size(table: Tag) -> tuple[int, int]:
     for tr in trs:
         style_height: str | list[str] | None = tr.get("style")
         if isinstance(style_height, str):
-            match_height: re.Match[str] | None = re.search(r"height\s*:\s*(\d+(\.\d+)?)px", style_height)
+            match_height: re.Match[str] | None = re.search(
+                r"height\s*:\s*(\d+(\.\d+)?)px", style_height
+            )
             if match_height:
                 _h: str = match_height.group(1)
                 height += float(_h)

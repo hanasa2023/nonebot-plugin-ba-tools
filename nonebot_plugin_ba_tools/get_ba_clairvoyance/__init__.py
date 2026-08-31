@@ -27,7 +27,9 @@ get_clairvoyance: type[AlconnaMatcher] = on_alconna(clairvoyance, use_cmd_start=
 async def _(server: Match[str]) -> None:
     if server.available:
         pre_msg: Receipt | None = None
-        msg: UniMessage[Image] | None = await get_img(f"{server.result}未来视", "千里眼")
+        msg: UniMessage[Image] | None = await get_img(
+            f"{server.result}未来视", "千里眼"
+        )
         if msg:
             if ConfigManager.get().pic.loading_switch:
                 pre_msg = await UniMessage.text("拼命加载图片中……").send()
