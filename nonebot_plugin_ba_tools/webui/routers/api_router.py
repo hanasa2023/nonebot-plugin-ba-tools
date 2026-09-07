@@ -20,7 +20,10 @@ api_router = APIRouter(
 @api_router.post("/login")
 async def login(data: HTTPBasicCredentials):
     config = ConfigManager.get()
-    if data.username != config.webui.username and data.password != config.webui.password:
+    if (
+        data.username != config.webui.username
+        and data.password != config.webui.password
+    ):
         raise HTTPException(
             status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",

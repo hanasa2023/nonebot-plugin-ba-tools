@@ -48,7 +48,9 @@ async def get_student_by_id(student_id: int) -> Student:
     if not student_folder.exists():
         student_folder.mkdir(parents=True, exist_ok=True)
 
-    students: list[Student] = await StudentDataLoader(DATA_STUDENTS_JSON_FILE_PATH).load_students()
+    students: list[Student] = await StudentDataLoader(
+        DATA_STUDENTS_JSON_FILE_PATH
+    ).load_students()
     for student in students:
         if student.id == student_id:
             async with aiofiles.open(student_json_path, "w", encoding="utf-8") as f:
@@ -56,7 +58,9 @@ async def get_student_by_id(student_id: int) -> Student:
             return student
         this_student_json_path = student_folder / f"{student.id}.json"
         if not this_student_json_path.exists():
-            async with aiofiles.open(this_student_json_path, "w", encoding="utf-8") as f:
+            async with aiofiles.open(
+                this_student_json_path, "w", encoding="utf-8"
+            ) as f:
                 await f.write(json.dumps(student, ensure_ascii=False, indent=2))
     raise DataLoadError(f"ID为{student_id}的学生不存在！")
 
@@ -71,9 +75,13 @@ async def get_students_by_birth_month(month: str) -> list[Student]:
         list[Student]: 在某月过生日的学生列表
     """
     students_in_month: list[Student] = []
-    students: list[Student] = await StudentDataLoader(DATA_STUDENTS_JSON_FILE_PATH).load_students()
+    students: list[Student] = await StudentDataLoader(
+        DATA_STUDENTS_JSON_FILE_PATH
+    ).load_students()
     for student in students:
-        birthday_match: re.Match[str] | None = re.search(r"(\d+)月(\d+)日", student.birthday)
+        birthday_match: re.Match[str] | None = re.search(
+            r"(\d+)月(\d+)日", student.birthday
+        )
         if birthday_match:
             month_str: str = birthday_match.group(1)
             if month_str == month:
