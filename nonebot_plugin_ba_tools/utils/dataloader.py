@@ -52,7 +52,9 @@ class DataLoader:
             if not folder.exists():
                 folder.mkdir(parents=True, exist_ok=True)
             # 从网络下载文件
-            logger.debug(f"数据文件不存在，尝试通过网络下载，文件路径：{self.file_path}")
+            logger.debug(
+                f"数据文件不存在，尝试通过网络下载，文件路径：{self.file_path}"
+            )
             data = await self.download()
             await self.write(data)
             return data
