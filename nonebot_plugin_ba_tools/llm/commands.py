@@ -35,7 +35,11 @@ def init_chat() -> Chat | None:
         return None
     try:
         models = ConfigManager.get().chat.models
-        model = next(model for model in models if model.name == ConfigManager.get().chat.current_model)
+        model = next(
+            model
+            for model in models
+            if model.name == ConfigManager.get().chat.current_model
+        )
         return Chat(
             api_key=model.api_key,
             base_url=model.base_url,
@@ -117,7 +121,11 @@ chat_commands: type[AlconnaMatcher] = on_alconna(
             ),
             Option(
                 "-c|--change",
-                Args["model_name", str, Field(completion=lambda: "请输入要更换的模型名称")],
+                Args[
+                    "model_name",
+                    str,
+                    Field(completion=lambda: "请输入要更换的模型名称"),
+                ],
                 dest="change",
                 help_text="更换模型",
             ),
@@ -190,8 +198,14 @@ async def _(preset: Match[str], session: Uninfo) -> None:
         await chat.finish("未启用聊天功能")
     if session.scene.type == SceneType.GROUP:
         logger.info(f"session: {session.scene.id}")
-        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
-        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        is_group_owner = (
+            session.member and session.member.role and session.member.role.id == "OWNER"
+        )
+        is_group_admin = (
+            session.member
+            and session.member.role
+            and session.member.role.id == "ADMINISTRATOR"
+        )
         if is_group_owner or is_group_admin or is_superuser(session.user.id):
             msg = c.change_preset(preset.result)
             await chat_commands.finish(msg)
@@ -213,8 +227,14 @@ async def _(session: Uninfo) -> None:
         await chat.finish("未启用聊天功能")
     if session.scene.type == SceneType.GROUP:
         logger.info(f"session: {session.scene.id}")
-        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
-        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        is_group_owner = (
+            session.member and session.member.role and session.member.role.id == "OWNER"
+        )
+        is_group_admin = (
+            session.member
+            and session.member.role
+            and session.member.role.id == "ADMINISTRATOR"
+        )
         if is_group_owner or is_group_admin or is_superuser(session.user.id):
             msg = c.reset_preset()
             await chat_commands.finish(msg)
@@ -244,8 +264,14 @@ async def _() -> None:
 @chat_commands.assign("mode.toggle")
 async def _(session: Uninfo) -> None:
     if session.scene.type == SceneType.GROUP:
-        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
-        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        is_group_owner = (
+            session.member and session.member.role and session.member.role.id == "OWNER"
+        )
+        is_group_admin = (
+            session.member
+            and session.member.role
+            and session.member.role.id == "ADMINISTRATOR"
+        )
         if is_group_owner or is_group_admin or is_superuser(session.user.id):
             cfg = ConfigManager.get()
             cfg.chat.reply_mode = "text" if cfg.chat.reply_mode == "image" else "image"
@@ -274,8 +300,14 @@ async def _(session: Uninfo) -> None:
         else:
             await chat_commands.finish("只有超级用户可以启用聊天功能")
     elif session.scene.type == SceneType.GROUP:
-        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
-        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        is_group_owner = (
+            session.member and session.member.role and session.member.role.id == "OWNER"
+        )
+        is_group_admin = (
+            session.member
+            and session.member.role
+            and session.member.role.id == "ADMINISTRATOR"
+        )
         if is_group_owner or is_group_admin or is_superuser(session.user.id):
             cfg = ConfigManager.get()
             cfg.chat.enable = True
@@ -296,8 +328,14 @@ async def _(session: Uninfo) -> None:
         else:
             await chat_commands.finish("只有超级用户可以禁用聊天功能")
     elif session.scene.type == SceneType.GROUP:
-        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
-        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        is_group_owner = (
+            session.member and session.member.role and session.member.role.id == "OWNER"
+        )
+        is_group_admin = (
+            session.member
+            and session.member.role
+            and session.member.role.id == "ADMINISTRATOR"
+        )
         if is_group_owner or is_group_admin or is_superuser(session.user.id):
             cfg = ConfigManager.get()
             cfg.chat.enable = False
@@ -314,18 +352,28 @@ async def _(session: Uninfo) -> None:
             cfg = ConfigManager.get()
             cfg.chat.enable = not cfg.chat.enable
             ConfigManager.set(cfg)
-            await chat_commands.finish(f"已{'启用' if ConfigManager.get().chat.enable else '禁用'}聊天功能")
+            await chat_commands.finish(
+                f"已{'启用' if ConfigManager.get().chat.enable else '禁用'}聊天功能"
+            )
         else:
             await chat_commands.finish("只有超级用户可以切换聊天功能状态")
 
     elif session.scene.type == SceneType.GROUP:
-        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
-        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        is_group_owner = (
+            session.member and session.member.role and session.member.role.id == "OWNER"
+        )
+        is_group_admin = (
+            session.member
+            and session.member.role
+            and session.member.role.id == "ADMINISTRATOR"
+        )
         if is_group_owner or is_group_admin or is_superuser(session.user.id):
             cfg = ConfigManager.get()
             cfg.chat.enable = not cfg.chat.enable
             ConfigManager.set(cfg)
-            await chat_commands.finish(f"已{'启用' if ConfigManager.get().chat.enable else '禁用'}聊天功能")
+            await chat_commands.finish(
+                f"已{'启用' if ConfigManager.get().chat.enable else '禁用'}聊天功能"
+            )
         else:
             await chat_commands.finish("只有群主和(超级)管理员可以切换聊天功能状态")
 
@@ -342,13 +390,21 @@ async def _() -> None:
 @chat_commands.assign("model.change")
 async def _(model_name: Match[str], session: Uninfo) -> None:
     if session.scene.type == SceneType.GROUP:
-        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
-        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        is_group_owner = (
+            session.member and session.member.role and session.member.role.id == "OWNER"
+        )
+        is_group_admin = (
+            session.member
+            and session.member.role
+            and session.member.role.id == "ADMINISTRATOR"
+        )
         if is_group_owner or is_group_admin or is_superuser(session.user.id):
             cfg = ConfigManager.get()
             models = cfg.chat.models
             try:
-                model = next(model for model in models if model.name == model_name.result)
+                model = next(
+                    model for model in models if model.name == model_name.result
+                )
                 cfg.chat.current_model = model.name
                 ConfigManager.set(cfg)
                 await chat_commands.finish(f"已更换模型为{model.name}")
@@ -361,7 +417,9 @@ async def _(model_name: Match[str], session: Uninfo) -> None:
             cfg = ConfigManager.get()
             models = cfg.chat.models
             try:
-                model = next(model for model in models if model.name == model_name.result)
+                model = next(
+                    model for model in models if model.name == model_name.result
+                )
                 cfg.chat.current_model = model.name
                 ConfigManager.set(cfg)
                 await chat_commands.finish(f"已更换模型为{model.name}")

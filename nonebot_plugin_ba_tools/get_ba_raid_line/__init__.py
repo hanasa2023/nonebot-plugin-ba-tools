@@ -40,7 +40,9 @@ _score: Alconna[Any] = Alconna(
 )
 calc_score: type[AlconnaMatcher] = on_alconna(_score, use_cmd_start=True)
 
-_time: Alconna[Any] = Alconna("ba总力战时间计算", Args["server", str], Args["boss_name", str], Args["point", int])
+_time: Alconna[Any] = Alconna(
+    "ba总力战时间计算", Args["server", str], Args["boss_name", str], Args["point", int]
+)
 calc_time: type[AlconnaMatcher] = on_alconna(_time, use_cmd_start=True)
 
 _boss: Alconna[Any] = Alconna("ba可用boss")
@@ -62,7 +64,9 @@ async def _(server: Match[str]) -> None:
         pre_msg: Receipt | None = None
         msg: UniMessage[Image] | None = None
         async with httpx.AsyncClient() as ctx:
-            response: httpx.Response = await ctx.get(f"{ARONA_API_URL}/api/raid/line/{server_id}")
+            response: httpx.Response = await ctx.get(
+                f"{ARONA_API_URL}/api/raid/line/{server_id}"
+            )
             logger.debug(response.status_code)
             if response.status_code == 200:
                 msg = UniMessage.image(url=response.json()["data"]["imgUrl"])
@@ -92,7 +96,9 @@ async def _(server: Match[str]) -> None:
         pre_msg: Receipt | None = None
         msg: UniMessage[Image] | None = None
         async with httpx.AsyncClient() as ctx:
-            response: httpx.Response = await ctx.get(f"{ARONA_API_URL}/api/lineChange/{server_id}")
+            response: httpx.Response = await ctx.get(
+                f"{ARONA_API_URL}/api/lineChange/{server_id}"
+            )
             logger.debug(response.status_code)
             if response.status_code == 200:
                 msg = UniMessage.image(url=response.json()["data"]["imgUrl"])
@@ -122,7 +128,9 @@ async def _(server: Match[str]) -> None:
         pre_msg: Receipt | None = None
         msg: UniMessage[Image] | None = None
         async with httpx.AsyncClient() as ctx:
-            response: httpx.Response = await ctx.get(f"{ARONA_API_URL}/api/raid/memberChange/{server_id}")
+            response: httpx.Response = await ctx.get(
+                f"{ARONA_API_URL}/api/raid/memberChange/{server_id}"
+            )
             logger.debug(response.status_code)
             if response.status_code == 200:
                 msg = UniMessage.image(url=response.json()["data"]["imgUrl"])
@@ -209,7 +217,9 @@ async def _(results: Arparma) -> None:
 @get_boss_list.handle()
 async def _() -> None:
     async with httpx.AsyncClient() as ctx:
-        response: httpx.Response = await ctx.get(f"{ARONA_CDN_URL}/data/available-list.json")
+        response: httpx.Response = await ctx.get(
+            f"{ARONA_CDN_URL}/data/available-list.json"
+        )
         if response.status_code == 200:
             walkthroughs: list[str] = response.json()["boss"]
             msg = "可用的攻略有：\n"
