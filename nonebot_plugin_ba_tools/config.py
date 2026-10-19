@@ -37,7 +37,9 @@ except Exception:
 
 
 if not config_path.exists():
-    logger.info(f"配置文件不存在，正在创建默认配置文件至{config_path}, 请修改配置文件后重启")
+    logger.info(
+        f"配置文件不存在，正在创建默认配置文件至{config_path}, 请修改配置文件后重启"
+    )
     copyfile(Path(__file__).parent / "default_config.yaml", config_path)
 
 
@@ -193,7 +195,9 @@ class ConfigManager:
             type_validate_python(
                 Config,
                 yaml.safe_load(
-                    (Path(__file__).parent / "default_config.yaml").read_text(encoding="utf-8"),
+                    (Path(__file__).parent / "default_config.yaml").read_text(
+                        encoding="utf-8"
+                    ),
                 ),
             )
         )
