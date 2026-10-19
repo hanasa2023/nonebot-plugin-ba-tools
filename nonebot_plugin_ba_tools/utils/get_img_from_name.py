@@ -12,7 +12,9 @@ require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Image, UniMessage
 
 
-async def get_img(name: str, type: str, middle_route: str = "strategy") -> UniMessage[Image] | None:
+async def get_img(
+    name: str, type: str, middle_route: str = "strategy"
+) -> UniMessage[Image] | None:
     """创建图片，若本地不存在，则从网站缓存到本地
 
     Args:
