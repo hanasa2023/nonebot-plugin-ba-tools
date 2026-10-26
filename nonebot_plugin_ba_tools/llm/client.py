@@ -19,7 +19,9 @@ from .utils import str_presenter
 
 
 class Chat:
-    def __init__(self, api_key: str, base_url: str, preset_path: Path, model: str) -> None:
+    def __init__(
+        self, api_key: str, base_url: str, preset_path: Path, model: str
+    ) -> None:
         """创建Chat实例
 
         Args:
