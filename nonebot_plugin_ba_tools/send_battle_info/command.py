@@ -27,8 +27,14 @@ async def _(status: Match[str], session: Uninfo) -> None:
     if session.scene.type == SceneType.GROUP:
         service: BilibiliService = BilibiliService()
         await service.initialize()
-        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
-        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        is_group_owner = (
+            session.member and session.member.role and session.member.role.id == "OWNER"
+        )
+        is_group_admin = (
+            session.member
+            and session.member.role
+            and session.member.role.id == "ADMINISTRATOR"
+        )
         if is_group_owner or is_group_admin or is_superuser(session.user.id):
             if status.available:
                 if status.result == "开启":
