@@ -18,7 +18,9 @@ from nonebot_plugin_alconna import (
 from nonebot_plugin_alconna.uniseg import Receipt
 
 _better_student: Alconna[Any] = Alconna("ba人权")
-get_better_student: type[AlconnaMatcher] = on_alconna(_better_student, use_cmd_start=True)
+get_better_student: type[AlconnaMatcher] = on_alconna(
+    _better_student, use_cmd_start=True
+)
 
 
 @get_better_student.handle()

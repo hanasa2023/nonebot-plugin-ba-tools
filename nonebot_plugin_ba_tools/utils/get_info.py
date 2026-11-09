@@ -30,7 +30,9 @@ def get_cpu_info() -> dict[str, str]:
                     break
     elif platform.system() == "Darwin":
         cpu_info["processor_name"] = (
-            subprocess.check_output(["sysctl", "-n", "machdep.cpu.brand_string"]).decode().strip()
+            subprocess.check_output(["sysctl", "-n", "machdep.cpu.brand_string"])
+            .decode()
+            .strip()
         )
 
     return cpu_info
@@ -87,7 +89,9 @@ def get_system_info() -> dict[str, str]:
         "arch": platform.architecture()[0],
         "machine": platform.machine(),
         "processor": platform.processor(),
-        "boot_time": datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S"),
+        "boot_time": datetime.fromtimestamp(psutil.boot_time()).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        ),
     }
 
     return system_info
