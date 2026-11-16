@@ -49,7 +49,9 @@ async def _() -> None:
 
 # TODO: 添加命令别名
 birthday_info: Alconna[Any] = Alconna("ba学生生日订阅", Args["status", str])
-birthday_info_switch: type[AlconnaMatcher] = on_alconna(birthday_info, use_cmd_start=True)
+birthday_info_switch: type[AlconnaMatcher] = on_alconna(
+    birthday_info, use_cmd_start=True
+)
 
 
 @birthday_info_switch.assign("status")
@@ -57,8 +59,14 @@ async def _(status: Match[str], session: Uninfo) -> None:
     global GROUP_LIST
     if session.scene.type == SceneType.GROUP:
         logger.info(f"session: {session.scene.id}")
-        is_group_owner = session.member and session.member.role and session.member.role.id == "OWNER"
-        is_group_admin = session.member and session.member.role and session.member.role.id == "ADMINISTRATOR"
+        is_group_owner = (
+            session.member and session.member.role and session.member.role.id == "OWNER"
+        )
+        is_group_admin = (
+            session.member
+            and session.member.role
+            and session.member.role.id == "ADMINISTRATOR"
+        )
         if is_group_owner or is_group_admin or is_superuser(session.user.id):
             if status.available:
                 if status.result == "开启":

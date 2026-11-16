@@ -18,7 +18,9 @@ from nonebot_plugin_alconna import (
 from nonebot_plugin_alconna.uniseg import Receipt
 
 _simple_appraise: Alconna[Any] = Alconna("ba角色简评")
-get_simple_appraise: type[AlconnaMatcher] = on_alconna(_simple_appraise, use_cmd_start=True)
+get_simple_appraise: type[AlconnaMatcher] = on_alconna(
+    _simple_appraise, use_cmd_start=True
+)
 
 
 @get_simple_appraise.handle()

@@ -41,7 +41,11 @@ async def send_birthday_info() -> None:
             month: str = match.group(1)
             day: str = match.group(2)
             # 若该学生今日生日，则推送群消息
-            if int(month) == current_month and int(day) == current_day and hash_map.get(student.personal_name) is None:
+            if (
+                int(month) == current_month
+                and int(day) == current_day
+                and hash_map.get(student.personal_name) is None
+            ):
                 hash_map[student.personal_name] = True
 
                 message = (
