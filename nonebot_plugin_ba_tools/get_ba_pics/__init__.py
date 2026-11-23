@@ -71,9 +71,13 @@ async def _(result: Arparma, target: MsgTarget):
                 logger.debug(response.json())
                 if response.json()["message"] != "success":
                     await get_pic.finish(response.json()["message"])
-                illust_list.extend([Illust(**illust) for illust in response.json()["data"]["illusts"]])
+                illust_list.extend(
+                    [Illust(**illust) for illust in response.json()["data"]["illusts"]]
+                )
                 for illust in illust_list:
-                    pic: UniMessage[Image | Text] = UniMessage.image(url=illust.image_url)
+                    pic: UniMessage[Image | Text] = UniMessage.image(
+                        url=illust.image_url
+                    )
                     if ConfigManager.get().pic.send_pic_info:
                         m = pic + UniMessage.text(
                             f"""
@@ -86,7 +90,9 @@ async def _(result: Arparma, target: MsgTarget):
                     else:
                         m = pic
                     if ConfigManager.get().pic.max_pic_num >= 10:
-                        nodes = [CustomNode(uid=str(target.self_id), name="", content=m)]
+                        nodes = [
+                            CustomNode(uid=str(target.self_id), name="", content=m)
+                        ]
                         msg: Reference | UniMessage[Any] = Reference(nodes=nodes)
                     else:
                         msg = m
